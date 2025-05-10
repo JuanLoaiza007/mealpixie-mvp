@@ -13,7 +13,6 @@ import {
   ArrowRight,
   Users,
   Target,
-  CheckCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,7 @@ import { assets } from "@/assets/assets";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
+  const getStartedRoute = "/tools/vision";
 
   useEffect(() => {
     const onScroll = () => {
@@ -35,10 +35,6 @@ export default function Home() {
     visible: { opacity: 1, y: 0 },
   };
 
-  const handleGetStarted = () => {
-    window.alert("Coming soon!");
-  };
-
   return (
     <div className="flex flex-col w-full min-h-screen max-w-screen overflow-hidden">
       {/* Navigation */}
@@ -48,20 +44,24 @@ export default function Home() {
           transition-colors backdrop-blur
           ${
             scrolled
-              ? "bg-background/50 supports-[backdrop-filter]:bg-background/30 border-b"
+              ? "bg-background/150 supports-[backdrop-filter]:bg-background/85 border-b"
               : "bg-transparent border-none"
           }
         `}
       >
         <div className="container flex h-16 items-center justify-between p-4">
-          <div className="flex items-center gap-2 font-bold text-xl">
+          <Link
+            className="flex items-center gap-2 font-bold text-xl select-none"
+            href="/"
+          >
             <img
               src={assets.logo}
               alt="MealPixie Logo"
               className="h-10 w-10 object-contain"
+              draggable={false}
             />
             <span className="text-orange-500">MealPixie</span>
-          </div>
+          </Link>
           <nav className="flex items-center gap-4">
             <div className="hidden md:flex gap-4">
               <Link
@@ -83,18 +83,19 @@ export default function Home() {
                 Problema
               </Link>
             </div>
-            <Button
-              variant="default"
-              className="bg-orange-500 hover:bg-orange-600"
-              onClick={handleGetStarted}
-            >
-              Comenzar
-            </Button>
+            <Link className="flex items-center gap-2" href={getStartedRoute}>
+              <Button
+                variant="default"
+                className="bg-orange-500 hover:bg-orange-600"
+              >
+                Comenzar
+              </Button>
+            </Link>
           </nav>
         </div>
       </header>
 
-      <main className="flex-1 py-14">
+      <main className="flex-1 py-14 bg-white">
         {/* Hero Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -119,14 +120,14 @@ export default function Home() {
                 Tu asistente nutricional visual e instantáneo. Fotografía tu
                 comida y obtén información al momento.
               </p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button
-                  className="bg-orange-500 hover:bg-orange-600 flex items-center"
-                  onClick={handleGetStarted}
-                >
+              <Link
+                className="flex flex-col sm:flex-row gap-2"
+                href={getStartedRoute}
+              >
+                <Button className="bg-orange-500 hover:bg-orange-600 flex items-center">
                   Probar ahora <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </div>
+              </Link>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 20 }}
