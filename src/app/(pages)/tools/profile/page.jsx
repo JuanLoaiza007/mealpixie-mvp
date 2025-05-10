@@ -46,7 +46,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="flex-1 flex flex-col mx-auto px-4 overflow-y-auto gap-4 justify-center">
+    <main className="flex-1 flex flex-col mx-auto overflow-y-auto gap-4 justify-center">
       <h1 className="text-2xl font-bold">Perfil del usuario</h1>
       <section className="flex flex-col md:flex-row gap-4">
         <ImcCard weight={form.weight} height={form.height} />

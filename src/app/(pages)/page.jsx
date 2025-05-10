@@ -17,6 +17,7 @@ import {
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { assets } from "@/assets/assets";
+import { APP_NAME } from "@/config/constantsApp";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -56,11 +57,11 @@ export default function Home() {
           >
             <img
               src={assets.logo}
-              alt="MealPixie Logo"
+              alt="{APP_NAME} Logo"
               className="h-10 w-10 object-contain"
               draggable={false}
             />
-            <span className="text-orange-500">MealPixie</span>
+            <span className="text-orange-500">{APP_NAME}</span>
           </Link>
           <nav className="flex items-center gap-4">
             <div className="hidden md:flex gap-4">
@@ -114,7 +115,7 @@ export default function Home() {
                 Conoce tu comida al instante
               </span>
               <h1 className="text-3xl font-bold sm:text-5xl md:text-6xl">
-                MealPixie
+                {APP_NAME}
               </h1>
               <p className="text-xl text-muted-foreground">
                 Tu asistente nutricional visual e instantáneo. Fotografía tu
@@ -137,7 +138,7 @@ export default function Home() {
             >
               <img
                 src={assets.demo}
-                alt="MealPixie App Demo"
+                alt="{APP_NAME} App Demo"
                 className="relative w-[80%] md:w-full max-w-md overflow-hidden rounded-xl border shadow-xl"
               />
             </motion.div>
@@ -201,7 +202,7 @@ export default function Home() {
           <div className="container px-4 md:px-40">
             <div className="flex flex-col items-center text-center space-y-6">
               <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl pt-14">
-                ¿Para quién es MealPixie?
+                ¿Para quién es {APP_NAME}?
               </h2>
               <p className="max-w-lg text-muted-foreground md:text-xl">
                 Nuestra aplicación está diseñada para diversos perfiles de
@@ -254,7 +255,7 @@ export default function Home() {
                 Funcionalidades
               </h2>
               <p className="max-w-lg text-muted-foreground md:text-xl">
-                MealPixie ofrece múltiples herramientas para analizar tus
+                {APP_NAME} ofrece múltiples herramientas para analizar tus
                 alimentos al instante.
               </p>
               <div className="flex flex-col sm:flex-row flex-wrap gap-6 justify-center">
@@ -323,13 +324,13 @@ export default function Home() {
           <div className="flex items-center gap-2 font-bold">
             <img
               src={assets.logo}
-              alt="MealPixie Logo"
+              alt="{APP_NAME} Logo"
               className="h-10 w-10 object-contain"
             />
-            <span>MealPixie</span>
+            <span>{APP_NAME}</span>
           </div>
           <p className="text-center text-sm text-muted-foreground md:text-left">
-            © 2025 MealPixie. Todos los derechos reservados.
+            © 2025 {APP_NAME}. Todos los derechos reservados.
           </p>
         </div>
       </footer>
