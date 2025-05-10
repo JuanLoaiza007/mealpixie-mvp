@@ -13,10 +13,4 @@ export const userNavRoutes = [
     href: "/tools/profile",
     icon: UserCircle,
   },
-  {
-    id: "home",
-    label: "Inicio",
-    href: "/",
-    icon: HomeIcon,
-  },
 ];
