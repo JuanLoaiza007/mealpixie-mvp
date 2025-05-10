@@ -17,7 +17,7 @@ import {
   goalOptions,
 } from "@/components/schemas/userProfile";
 import { ImcCard } from "@/components/ui/features/profile/imcCard";
-import { useUserProfile } from "@/hooks/userProfile";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function ProfilePage() {
   const { profile, loading, updateProfile } = useUserProfile();
