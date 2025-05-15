@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { userNavRoutes } from "@/config/userNavRoutes";
 import { useMobileTopBar } from "@/context/mobileTopBar";
 import { useEffect } from "react";
+import { print_log } from "@/utils/development";
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -17,6 +18,7 @@ export default function MobileNav() {
 
   useEffect(() => {
     setTitle(null);
+    print_log("Topbar title reset");
     const actualRoute = userNavRoutes.find((route) => route.href === pathname);
     setShowNav(actualRoute?.tags.includes("functionality"));
   }, [pathname]);
@@ -24,7 +26,7 @@ export default function MobileNav() {
   return (
     <>
       {title && (
-        <nav className="fixed top-0 bg-white z-50 flex py-2 px-0 md:hidden w-full gap-2">
+        <nav className="fixed top-0 bg-white inset-x-0 z-50 border-b flex pt-1 pb-2 md:hidden gap-0">
           <Button
             variant="ghost"
             className="p-0 m-0 h-auto w-auto shadow-none"
@@ -36,7 +38,7 @@ export default function MobileNav() {
         </nav>
       )}
       {showNav && (
-        <nav className="fixed bottom-0 inset-x-0 bg-white border-t z-50 flex justify-around pt-2 pb-1 md:hidden shadow-md">
+        <nav className="fixed bottom-0 bg-white inset-x-0 z-50 border-t flex justify-around pt-2 pb-1 md:hidden">
           {userNavRoutes
             .filter((route) => route.tags.includes("functionality"))
             .map(({ id, label, href, icon: Icon }) => {
