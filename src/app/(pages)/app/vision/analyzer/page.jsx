@@ -21,7 +21,7 @@ const NUM_TOGETHER_REQUESTS = 3;
 
 export default function AnalyzerPage() {
   const { imageUrl } = useImage();
-  const { title, setTitle } = useMobileTopBar();
+  const { setTitle } = useMobileTopBar();
   const [results, setResults] = useState({ together: [], gemini: "" });
   const [loading, setLoading] = useState({ together: false, gemini: false });
   const [errors, setErrors] = useState({ together: null, gemini: null });
@@ -35,6 +35,9 @@ export default function AnalyzerPage() {
     : "";
 
   useEffect(() => {
+    // Override title for mobileTopBar
+    setTitle("Analyzer");
+
     // Create assistants
     assistants.current.together = createVisionAssistant({
       systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
@@ -43,11 +46,6 @@ export default function AnalyzerPage() {
       systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
     });
   }, []);
-
-  useEffect(() => {
-    setTitle("Analyzer");
-    print_log("Topbar title set to 'Analyzer'");
-  }, [title, setTitle]);
 
   const analyzeImage = useCallback(async () => {
     if (!imageUrl || loading.together || loading.gemini) return;

@@ -18,11 +18,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { assets } from "@/assets/assets";
 import { APP_NAME } from "@/config/constantsApp";
-import { userNavRoutes } from "@/config/userNavRoutes";
+import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
 
 export default function Home() {
   const APP_MAIN_ROUTE = userNavRoutes.find((route) =>
-    route.tags.includes("main-functionality")
+    route.tags.includes(NAV_TAGS.mainPage)
   );
   const getStartedRoute = APP_MAIN_ROUTE?.href;
   const [scrolled, setScrolled] = useState(false);

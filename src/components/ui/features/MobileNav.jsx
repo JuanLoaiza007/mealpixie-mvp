@@ -5,26 +5,25 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { userNavRoutes } from "@/config/userNavRoutes";
+import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
 import { useMobileTopBar } from "@/context/mobileTopBar";
-import { print_log } from "@/utils/development";
 
 export default function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const { title, setTitle } = useMobileTopBar();
+  const { title } = useMobileTopBar();
+  const [showTopBar, setShowTopBar] = useState(false);
   const [showNav, setShowNav] = useState(false);
 
   useEffect(() => {
-    setTitle(null);
-    print_log(`MobileNav: Title reset due to pathname change to: ${pathname}`);
     const actualRoute = userNavRoutes.find((route) => route.href === pathname);
-    setShowNav(actualRoute?.tags.includes("functionality"));
+    setShowTopBar(actualRoute?.tags.includes(NAV_TAGS.requiredTopBar));
+    setShowNav(actualRoute?.tags.includes(NAV_TAGS.page));
   }, [pathname]);
 
   return (
     <>
-      {title && (
+      {showTopBar && (
         <nav className="fixed top-0 bg-white inset-x-0 z-50 border-b flex pt-1 pb-2 md:hidden gap-0">
           <Button
             variant="ghost"
@@ -39,7 +38,7 @@ export default function MobileNav() {
       {showNav && (
         <nav className="fixed bottom-0 bg-white inset-x-0 z-50 border-t flex justify-around pt-2 pb-1 md:hidden">
           {userNavRoutes
-            .filter((route) => route.tags.includes("functionality"))
+            .filter((route) => route.tags.includes(NAV_TAGS.page))
             .map(({ id, label, href, icon: Icon }) => {
               const isActive = pathname === href;
               return (
