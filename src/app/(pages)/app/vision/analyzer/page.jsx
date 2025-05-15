@@ -1,5 +1,4 @@
 "use client";
-
 import { useImage } from "@/context/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createVisionAssistant } from "@/utils/togheter-factory";
@@ -12,14 +11,17 @@ import {
   SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
   TASK as GEMINI_TASK,
 } from "@/config/gemini/feature-analyzer";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import AiResponseCard from "@/components/ui/features/vision/AiResponseCard";
+import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
+import { print_error } from "@/utils/development";
+import { useSetMobileTopBarTitle } from "@/context/mobileTopBar";
+import Screen from "@/components/ui/features/common/Screen";
 
 const NUM_TOGETHER_REQUESTS = 3;
 
 export default function AnalyzerPage() {
   const { imageUrl } = useImage();
+  const setTitle = useSetMobileTopBarTitle();
   const [results, setResults] = useState({ together: [], gemini: "" });
   const [loading, setLoading] = useState({ together: false, gemini: false });
   const [errors, setErrors] = useState({ together: null, gemini: null });
@@ -33,13 +35,17 @@ export default function AnalyzerPage() {
     : "";
 
   useEffect(() => {
+    // Initialize topbar title for mobile
+    setTitle("Analyzer");
+
+    // Create assistants
     assistants.current.together = createVisionAssistant({
       systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
     });
     assistants.current.gemini = createGeminiAssistant({
       systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
     });
-  }, []);
+  }, [setTitle]);
 
   const analyzeImage = useCallback(async () => {
     if (!imageUrl || loading.together || loading.gemini) return;
@@ -68,7 +74,7 @@ export default function AnalyzerPage() {
           together: [...prev.together, fullResponse],
         }));
       } catch (error) {
-        console.error("TogetherAI Error:", error);
+        print_error("TogetherAI Error:", error);
         setErrors((prev) => ({ ...prev, together: "Error al analizar." }));
         setLoading({ together: false, gemini: false });
         return;
@@ -86,26 +92,24 @@ export default function AnalyzerPage() {
       );
       setResults((prev) => ({ ...prev, gemini: geminiResponse }));
     } catch (error) {
-      console.error("Gemini Error:", error);
+      print_error("Gemini Error:", error);
       setErrors((prev) => ({ ...prev, gemini: "Error al generar respuesta." }));
     } finally {
       setLoading((prev) => ({ ...prev, gemini: false }));
     }
   }, [imageUrl]);
 
+  const toggleReasoning = useCallback(() => {
+    setShowReasoning((prev) => !prev);
+  }, []);
+
   return (
-    <main className="flex flex-col gap-2">
-      <h1 className="text-2xl font-bold">Analyzer</h1>
+    // Screen component is mandatory for vision functionalities
+    <Screen inPageTitle="Analyzer">
       {imageUrl ? (
-        <div className="flex flex-col md:flex-row gap-4 items-start">
-          <div className="flex flex-col items-center">
-            <div className="w-full md:w-100 md:h-100 overflow-hidden rounded-lg shadow-md">
-              <img
-                src={imageUrl}
-                alt="Analysis Image"
-                className="fit-contain"
-              />
-            </div>
+        <>
+          <div className="flex flex-1 flex-col items-center">
+            <ImagePreviewCard imageUrl={imageUrl} alt="Analysis Image" />
             <button
               onClick={analyzeImage}
               className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -117,63 +121,21 @@ export default function AnalyzerPage() {
               <p className="mt-1 text-sm text-red-500">{errors.together}</p>
             )}
           </div>
-
-          <div className="flex-1 border rounded-md p-4 h-full w-full">
-            {analysisMessage && (
-              <p
-                className={`mt-1 text-sm text-gray-700 ${
-                  loading.together || loading.gemini ? "animate-pulse" : ""
-                }`}
-              >
-                {analysisMessage}
-              </p>
-            )}
-            {loading.gemini ? (
-              <div className="flex items-center gap-2">
-                <Loader2 className="animate-spin w-5 h-5" />
-                Generando...
-              </div>
-            ) : results.gemini ? (
-              <div className="space-y-2 text-sm">
-                {results.together.length > 0 && (
-                  <button
-                    className="text-blue-500 hover:underline text-xs flex items-center gap-1"
-                    onClick={() => setShowReasoning(!showReasoning)}
-                  >
-                    {showReasoning ? (
-                      <>
-                        Mostrar Razonamiento <ChevronUp className="w-4 h-4" />
-                      </>
-                    ) : (
-                      <>
-                        Mostrar Razonamiento <ChevronDown className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                )}
-                {showReasoning && (
-                  <div className="border rounded-md p-2 bg-gray-50 text-xs text-gray-600 max-h-80 overflow-y-auto">
-                    <h3 className="font-semibold mb-1">Razonamiento:</h3>
-                    <Markdown remarkPlugins={[remarkGfm]}>
-                      {results.together.join("\n\n")}
-                    </Markdown>
-                  </div>
-                )}
-                <Markdown remarkPlugins={[remarkGfm]}>
-                  {results.gemini}
-                </Markdown>
-              </div>
-            ) : (
-              <p className="text-gray-600">Esperando análisis...</p>
-            )}
-            {errors.gemini && (
-              <p className="mt-2 text-sm text-red-500">{errors.gemini}</p>
-            )}
-          </div>
-        </div>
+          <AiResponseCard
+            className="w-full lg:w-2/3"
+            isLoadingVision={loading.together}
+            isLoadingText={loading.gemini}
+            visionAnalysisMessage={analysisMessage}
+            reasoningText={results.together.join("\n\n")}
+            finalResponseText={results.gemini}
+            showReasoning={showReasoning}
+            onToggleReasoning={toggleReasoning}
+            responseTextError={errors.gemini}
+          />
+        </>
       ) : (
         <p className="text-center text-gray-600 mb-4">No image selected yet.</p>
       )}
-    </main>
+    </Screen>
   );
 }
