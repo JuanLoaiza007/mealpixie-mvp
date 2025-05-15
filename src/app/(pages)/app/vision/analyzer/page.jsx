@@ -13,7 +13,7 @@ import {
 } from "@/config/gemini/feature-analyzer";
 import AiResponseCard from "@/components/ui/features/vision/AiResponseCard";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { print_error } from "@/utils/development";
+import { print_error, print_log } from "@/utils/development";
 import { useSetMobileTopBarTitle } from "@/context/mobileTopBar";
 import Screen from "@/components/ui/features/common/Screen";
 
@@ -45,7 +45,7 @@ export default function AnalyzerPage() {
     assistants.current.gemini = createGeminiAssistant({
       systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
     });
-  }, [setTitle]);
+  }, []);
 
   const analyzeImage = useCallback(async () => {
     if (!imageUrl || loading.together || loading.gemini) return;
