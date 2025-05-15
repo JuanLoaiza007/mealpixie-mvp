@@ -20,7 +20,7 @@ export default function MobileNav() {
     print_log(`MobileNav: Title reset due to pathname change to: ${pathname}`);
     const actualRoute = userNavRoutes.find((route) => route.href === pathname);
     setShowNav(actualRoute?.tags.includes("functionality"));
-  }, [pathname, setTitle]);
+  }, [pathname]);
 
   return (
     <>

@@ -47,7 +47,7 @@ export default function AnalyzerPage() {
   useEffect(() => {
     setTitle("Analyzer");
     print_log("Topbar title set to 'Analyzer'");
-  }, [title]);
+  }, [title, setTitle]);
 
   const analyzeImage = useCallback(async () => {
     if (!imageUrl || loading.together || loading.gemini) return;
