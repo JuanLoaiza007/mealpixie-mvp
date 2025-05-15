@@ -18,6 +18,7 @@ import {
 } from "@/components/schemas/userProfile";
 import { ImcCard } from "@/components/ui/features/profile/imcCard";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { APP_VERSION } from "@/config/constantsApp";
 
 export default function ProfilePage() {
   const { profile, loading, updateProfile } = useUserProfile();
@@ -142,6 +143,9 @@ export default function ProfilePage() {
             </div>
           </CardContent>
         </Card>
+      </section>
+      <section className="md:hidden text-xs text-slate-400 items-center mx-auto">
+        v{APP_VERSION}
       </section>
     </main>
   );

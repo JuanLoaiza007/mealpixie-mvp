@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { userNavRoutes } from "@/config/userNavRoutes";
 import { useState } from "react";
 import { assets } from "@/assets/assets";
-import { APP_NAME } from "@/config/constantsApp";
+import { APP_NAME, APP_VERSION } from "@/config/constantsApp";
 
 export default function SidebarNav() {
   const [collapsed, setCollapsed] = useState(false);
@@ -38,26 +38,35 @@ export default function SidebarNav() {
         </Button>
       </div>
 
-      <nav className="flex flex-col mt-4 gap-1">
-        {userNavRoutes.map(({ id, label, icon: Icon, href }) => {
-          const isActive = pathname === href;
-          return (
-            <Link key={id} href={href} className="w-full">
-              <Button
-                variant="ghost"
-                className={cn(
-                  `flex items-center gap-3 w-full rounded-none text-muted-foreground px-4 py-2 transition-all hover:text-orange-500 hover:bg-orange-100/50 ${
-                    collapsed ? "justify-center" : "justify-start"
-                  }`,
-                  isActive && "text-orange-500 bg-orange-100"
-                )}
-              >
-                <Icon className="w-5 h-5" />
-                {!collapsed && <span className="font-medium">{label}</span>}
-              </Button>
-            </Link>
-          );
-        })}
+      <nav className="flex flex-col h-full justify-between w-full">
+        <div className="flex flex-col mt-4 gap-1 justify-between">
+          {userNavRoutes
+            .filter((route) => route.tags.includes("functionality"))
+            .map(({ id, label, href, icon: Icon }) => {
+              const isActive = pathname === href;
+              return (
+                <Link key={id} href={href} className="w-full">
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      `flex items-center gap-3 w-full rounded-none text-muted-foreground px-4 py-2 transition-all hover:text-orange-500 hover:bg-orange-100/50 ${
+                        collapsed ? "justify-center" : "justify-start"
+                      }`,
+                      isActive && "text-orange-500 bg-orange-100"
+                    )}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {!collapsed && <span className="font-medium">{label}</span>}
+                  </Button>
+                </Link>
+              );
+            })}
+        </div>
+        {!collapsed && (
+          <span className="text-xs text-slate-400 mx-auto mb-2">
+            v{APP_VERSION}
+          </span>
+        )}
       </nav>
     </aside>
   );
