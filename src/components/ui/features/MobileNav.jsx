@@ -24,7 +24,7 @@ export default function MobileNav() {
   return (
     <>
       {title && (
-        <aside className="fixed top-0 bg-white z-50 flex py-2 px-0 md:hidden w-full gap-2">
+        <nav className="fixed top-0 bg-white z-50 flex py-2 px-0 md:hidden w-full gap-2">
           <Button
             variant="ghost"
             className="p-0 m-0 h-auto w-auto shadow-none"
@@ -33,7 +33,7 @@ export default function MobileNav() {
             <ArrowLeft className="h-5 w-5 text-black" />
           </Button>
           <span className="text-lg font-semibold text-black">{title}</span>
-        </aside>
+        </nav>
       )}
       {showNav && (
         <nav className="fixed bottom-0 inset-x-0 bg-white border-t z-50 flex justify-around pt-2 pb-1 md:hidden shadow-md">
