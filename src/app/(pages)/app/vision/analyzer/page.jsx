@@ -37,6 +37,7 @@ export default function AnalyzerPage() {
   useEffect(() => {
     // Initialize topbar title for mobile
     setTitle("Analyzer");
+    print_log("Topbar title set to 'Analyzer'");
 
     // Create assistants
     assistants.current.together = createVisionAssistant({
