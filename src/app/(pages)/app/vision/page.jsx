@@ -7,6 +7,7 @@ import { useState, useCallback } from "react";
 import ImageSourceDialog from "@/components/ui/features/vision/imageSourceDialog";
 import { useImage } from "@/context/image";
 import { visionFeatures } from "@/constants/visionFeatures";
+import { SUPPORTED_IMAGE_TYPES } from "@/config/togheter/common";
 
 export default function VisionToolsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -15,15 +16,17 @@ export default function VisionToolsPage() {
 
   const handleImageSelected = useCallback(
     (file) => {
-      // TO-DO: add image type validation
-      // const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-      // if (!allowedTypes.includes(file.type)) {
-      //   alert("Formato no soportado. Usa JPG, PNG o WEBP.");
-      //   return;
-      // }
+      if (!SUPPORTED_IMAGE_TYPES.includes(file.type)) {
+        alert("Formato no soportado. Usa JPG, PNG o WEBP.");
+        return;
+      }
       setIsDialogOpen(false);
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result);
+      };
+
+      reader.readAsDataURL(file);
     },
     [setImageUrl]
   );
