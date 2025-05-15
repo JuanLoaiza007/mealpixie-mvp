@@ -1,6 +1,4 @@
-// src/app/(pages)/app/vision/page.jsx
 "use client";
-
 import Link from "next/link";
 import { ImagePlus, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -12,11 +10,17 @@ import { visionFeatures } from "@/constants/visionFeatures";
 
 export default function VisionToolsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDragging, setIsDragging] = useState(false); // 🔧 Nuevo estado
+  const [isDragging, setIsDragging] = useState(false);
   const { imageUrl, setImageUrl } = useImage();
 
   const handleImageSelected = useCallback(
     (file) => {
+      // TO-DO: add image type validation
+      // const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+      // if (!allowedTypes.includes(file.type)) {
+      //   alert("Formato no soportado. Usa JPG, PNG o WEBP.");
+      //   return;
+      // }
       setIsDialogOpen(false);
       const url = URL.createObjectURL(file);
       setImageUrl(url);
@@ -28,17 +32,16 @@ export default function VisionToolsPage() {
     setImageUrl(null);
   }, [setImageUrl]);
 
-  // Drag & drop handlers
   const onDragOver = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(true); // 🟢 Activar animación
+    setIsDragging(true);
   }, []);
 
   const onDragLeave = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(false); // 🔴 Quitar animación
+    setIsDragging(false);
   }, []);
 
   const onDrop = useCallback(
