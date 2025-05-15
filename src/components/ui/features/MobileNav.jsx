@@ -24,7 +24,7 @@ export default function MobileNav() {
   return (
     <>
       {showTopBar && (
-        <nav className="fixed top-0 bg-white inset-x-0 z-50 border-b flex pt-1 pb-2 md:hidden gap-0">
+        <nav className="fixed top-0 bg-white inset-x-0 z-50 border-b flex py-3 md:hidden gap-0">
           <Button
             variant="ghost"
             className="p-0 m-0 h-auto w-auto shadow-none"
