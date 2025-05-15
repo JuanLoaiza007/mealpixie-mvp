@@ -9,6 +9,7 @@ import { useImage } from "@/context/image";
 import { visionFeatures } from "@/constants/visionFeatures";
 import { SUPPORTED_IMAGE_TYPES } from "@/config/togheter/common";
 
+// TO-DO: Catch exception when no together API key is provided
 export default function VisionToolsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
