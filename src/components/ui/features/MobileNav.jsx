@@ -1,24 +1,43 @@
+// src/components/ui/features/MobileNav.jsx
 "use client";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { userNavRoutes } from "@/config/userNavRoutes";
-import { useMobileTopBar } from "@/context/mobileTopBar";
-import { useEffect } from "react";
+import {
+  useMobileTopBarTitle,
+  useSetMobileTopBarTitle,
+} from "@/context/mobileTopBar";
 import { print_log } from "@/utils/development";
 
 export default function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const title = useMobileTopBarTitle();
+  const setTitle = useSetMobileTopBarTitle();
   const [showNav, setShowNav] = useState(false);
-  const { title, setTitle } = useMobileTopBar();
 
   useEffect(() => {
-    setTitle(null);
-    print_log("Topbar title reset");
+    if (router.isReady) {
+      const handleRouteChange = () => {
+        setTitle(null);
+        print_log("MobileNav: Title reset on route change");
+      };
+
+      print_log("MobileNav: Attaching routeChangeStart listener");
+      router.events.on("routeChangeStart", handleRouteChange);
+
+      return () => {
+        print_log("MobileNav: Removing routeChangeStart listener");
+        router.events.off("routeChangeStart", handleRouteChange);
+      };
+    }
+  }, [router, setTitle, router.isReady]);
+
+  useEffect(() => {
     const actualRoute = userNavRoutes.find((route) => route.href === pathname);
     setShowNav(actualRoute?.tags.includes("functionality"));
   }, [pathname]);

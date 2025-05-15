@@ -46,7 +46,7 @@ export default function AnalyzerPage() {
     assistants.current.gemini = createGeminiAssistant({
       systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
     });
-  }, []);
+  }, [setTitle]);
 
   const analyzeImage = useCallback(async () => {
     if (!imageUrl || loading.together || loading.gemini) return;
