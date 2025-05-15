@@ -14,14 +14,5 @@ export function MobileTopBarProvider({ children }) {
   );
 }
 
-// 3. Export the hook to get the title
-export const useMobileTopBarTitle = () => {
-  const { title } = useContext(MobileTopBarContext);
-  return title;
-};
-
-// 4. Export the hook to set the title
-export const useSetMobileTopBarTitle = () => {
-  const { setTitle } = useContext(MobileTopBarContext);
-  return setTitle;
-};
+// 3. Export the hook
+export const useMobileTopBar = () => useContext(MobileTopBarContext);

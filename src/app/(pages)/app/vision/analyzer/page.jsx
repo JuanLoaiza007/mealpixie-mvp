@@ -14,14 +14,14 @@ import {
 import AiResponseCard from "@/components/ui/features/vision/AiResponseCard";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { print_error, print_log } from "@/utils/development";
-import { useSetMobileTopBarTitle } from "@/context/mobileTopBar";
+import { useMobileTopBar } from "@/context/mobileTopBar";
 import Screen from "@/components/ui/features/common/Screen";
 
 const NUM_TOGETHER_REQUESTS = 3;
 
 export default function AnalyzerPage() {
   const { imageUrl } = useImage();
-  const setTitle = useSetMobileTopBarTitle();
+  const { title, setTitle } = useMobileTopBar();
   const [results, setResults] = useState({ together: [], gemini: "" });
   const [loading, setLoading] = useState({ together: false, gemini: false });
   const [errors, setErrors] = useState({ together: null, gemini: null });
@@ -35,10 +35,6 @@ export default function AnalyzerPage() {
     : "";
 
   useEffect(() => {
-    // Initialize topbar title for mobile
-    setTitle("Analyzer");
-    print_log("Topbar title set to 'Analyzer'");
-
     // Create assistants
     assistants.current.together = createVisionAssistant({
       systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
@@ -46,7 +42,12 @@ export default function AnalyzerPage() {
     assistants.current.gemini = createGeminiAssistant({
       systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
     });
-  }, [setTitle]);
+  }, []);
+
+  useEffect(() => {
+    setTitle("Analyzer");
+    print_log("Topbar title set to 'Analyzer'");
+  }, [title]);
 
   const analyzeImage = useCallback(async () => {
     if (!imageUrl || loading.together || loading.gemini) return;
