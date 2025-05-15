@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { userNavRoutes } from "@/config/userNavRoutes";
+import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
 import { useState } from "react";
 import { assets } from "@/assets/assets";
 import { APP_NAME, APP_VERSION } from "@/config/constantsApp";
@@ -41,7 +41,7 @@ export default function SidebarNav() {
       <nav className="flex flex-col h-full justify-between w-full">
         <div className="flex flex-col mt-4 gap-1 justify-between">
           {userNavRoutes
-            .filter((route) => route.tags.includes("functionality"))
+            .filter((route) => route.tags.includes(NAV_TAGS.page))
             .map(({ id, label, href, icon: Icon }) => {
               const isActive = pathname === href;
               return (
