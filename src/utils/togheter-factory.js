@@ -26,7 +26,7 @@ export function createVisionAssistant({
     throw new Error("systemInstruction is required.");
   }
 
-  const client = new Together({ API_KEY });
+  const client = new Together({ apiKey: API_KEY });
 
   return {
     /**

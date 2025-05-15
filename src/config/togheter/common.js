@@ -1,4 +1,4 @@
-export const SUPPORTED_IMAGE_TYPES = ["jpg", "jpeg", "png"];
+export const SUPPORTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export const API_KEY = process.env.NEXT_PUBLIC_TOGETHER_API_KEY;
 
