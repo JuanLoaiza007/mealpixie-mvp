@@ -1,63 +1,73 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import {
   API_KEY,
-  DEFAULT_MODEL_NAME,
   DEFAULT_GENERATION_CONFIG,
+  DEFAULT_MODEL_NAME,
 } from "@/config/gemini/common";
+import { GoogleGenAI } from "@google/genai";
+
+// Initialize the Gem in a client with your API key
+const genAI = new GoogleGenAI({
+  apiKey: API_KEY,
+});
 
 /**
- * Factory function to create a Gemini-based assistant.
+ * Generic factory to interact with Google Gemini models.
  *
- * @param {Object} options - Assistant configuration options.
- * @param {string} [options.modelName=DEFAULT_MODEL_NAME] - Name of the Gemini model to use.
- * @param {string} options.systemInstruction - Prompt to guide the assistant's behavior.
- * @param {Object} [options.generationConfig=DEFAULT_GENERATION_CONFIG] - Generation parameters.
- * @returns {Object} An assistant instance with a `chat` method.
+ * @param {Object} params
+ * @param {string} params.modelName - Name of the Gem ina model to use (e.g., "gemini-2.0-flash").
+ * @param {string} params.systemInstruction - System-level instruction for the model.
+ * @param {string} params.task - User prompt or task description.
+ * @param {Array<{ role: string, text: string }>} [params.history=[]] - Conversation history.
+ * @param {Object} [params.generationConfig={}] - Additional generation settings (e.g., temperature, maxTokens).
+ * @param {Object} params.responseSchema - JSON-schema for validating the response.
+ *
+ * @returns {Promise<string>} Streamed model output as a string.
  */
-export function createGeminiAssistant({
+export async function generateWithGemini({
   modelName = DEFAULT_MODEL_NAME,
   systemInstruction,
+  task,
+  history = [],
   generationConfig = DEFAULT_GENERATION_CONFIG,
+  responseSchema,
 }) {
-  if (!API_KEY) {
-    throw new Error("Gemini API key is required.");
+  // Build default config, then merge overrides
+  const config = {
+    responseMimeType: "application/json",
+    responseSchema,
+    systemInstruction: [{ text: systemInstruction }],
+    ...generationConfig,
+  };
+
+  // Construct the message sequence
+  const contents = [];
+
+  // Append any prior conversation
+  for (const msg of history) {
+    contents.push({
+      role: msg.role,
+      parts: [{ text: msg.text }],
+    });
   }
 
-  if (!systemInstruction) {
-    throw new Error("systemInstruction is required.");
-  }
-
-  const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({
-    model: modelName,
-    systemInstruction: systemInstruction.trim(),
+  // User task/message
+  contents.push({
+    role: "user",
+    parts: [{ text: task }],
   });
 
-  return {
-    /**
-     * Sends a message to the Gemini assistant and returns its response.
-     *
-     * @async
-     * @param {Array<{ sender: string, text: string }>} history - Previous chat messages.
-     * @param {string} userMessage - The user's input message.
-     * @returns {Promise<string>} Assistant's reply.
-     */
-    async chat(history = [], userMessage) {
-      try {
-        const session = model.startChat({
-          generationConfig,
-          history: history.map((message) => ({
-            author: message.sender,
-            content: message.text,
-          })),
-        });
+  // Call the streaming API
+  const stream = await genAI.models.generateContentStream({
+    model: modelName,
+    config,
+    contents,
+  });
 
-        const result = await session.sendMessage(userMessage);
-        return result.response.text();
-      } catch (error) {
-        console.error("GeminiAssistant.chat error:", error);
-        throw new Error("Failed to communicate with Gemini.");
-      }
-    },
-  };
+  // Aggregate streamed chunks
+  let result = "";
+  for await (const chunk of stream) {
+    result += chunk.text;
+  }
+
+  return result;
 }

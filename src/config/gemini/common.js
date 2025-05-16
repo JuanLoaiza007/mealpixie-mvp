@@ -1,3 +1,5 @@
+import { Type } from "@google/genai";
+
 export const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
 export const DEFAULT_MODEL_NAME = "gemini-2.0-flash";
