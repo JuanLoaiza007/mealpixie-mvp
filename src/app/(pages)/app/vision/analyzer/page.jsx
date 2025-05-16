@@ -15,9 +15,17 @@ import {
 } from "@/config/gemini/feature-analyzer";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import Screen from "@/components/ui/features/common/Screen";
+import HealthScoreChart from "@/components/ui/features/vision/analyzer/HealthScoreChart";
+import NutritionPieCharts from "@/components/ui/features/vision/analyzer/NutritionPieChart";
 
 const NUM_VISION_REQUESTS = 3;
 
@@ -57,9 +65,7 @@ export default function AnalyzerPage() {
           imageUrl,
           TOGETHER_TASK
         );
-        for await (const part of stream) {
-          text += part;
-        }
+        for await (const part of stream) text += part;
         preds.push(text);
         setVisionOutputs((prev) => [...prev, text]);
       } catch {
@@ -97,25 +103,70 @@ export default function AnalyzerPage() {
         <p className="text-center text-gray-500">Select an image to analyze.</p>
       ) : (
         <div className="flex flex-col md:flex-row gap-2">
-          {/* Image and Analyze Button */}
-          <ImagePreviewCard imageUrl={imageUrl} alt="Analysis Image">
-            <Button
-              className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
-              disabled={loading.vision || loading.text}
-              onClick={analyzeImage}
+          <section className="flex flex-col gap-2">
+            <ImagePreviewCard
+              className="w-full sm md:w-60 lg:w-100 gap-0"
+              imageUrl={imageUrl}
+              alt="Analysis Image"
             >
-              {(loading.vision || loading.text) && (
-                <Loader2 className="animate-spin mr-2" />
-              )}
-              {loading.vision
-                ? `Analizando con modelo de visión ${analysisPhase}/${NUM_VISION_REQUESTS}`
-                : loading.text
-                ? "Generando respuesta final"
-                : "Analizar imagen"}
-            </Button>
-          </ImagePreviewCard>
-          {/* Results Column */}
-          <div className="flex-1 flex flex-col gap-2">
+              <Button
+                className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
+                disabled={loading.vision || loading.text}
+                onClick={analyzeImage}
+              >
+                {(loading.vision || loading.text) && (
+                  <Loader2 className="animate-spin mr-2" />
+                )}
+                {loading.vision
+                  ? `Analizando con modelo de visión ${analysisPhase}/${NUM_VISION_REQUESTS}`
+                  : loading.text
+                  ? "Generando respuesta final"
+                  : "Analizar imagen"}
+              </Button>
+            </ImagePreviewCard>
+
+            <Card className="w-full sm md:w-60 lg:w-100 gap-0">
+              <CardHeader className="gap-0">
+                <CardTitle className="text-xl ">
+                  {finalResult?.isFood
+                    ? finalResult.name
+                    : "No he detectado nada"}
+                </CardTitle>
+                <button
+                  className="flex items-center text-orange-500 underline text-xs my-2"
+                  onClick={togglePreds}
+                >
+                  {showPredictions ? (
+                    <>
+                      <ChevronUp />
+                      <span className="ml-1">Ocultar predicciones</span>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown />
+                      <span className="ml-1">Mostrar predicciones</span>
+                    </>
+                  )}
+                </button>
+                {showPredictions && (
+                  <div className="text-xs mb-4 border-1 border-slate-200 p-2 max-h-40 overflow-auto rounded-md">
+                    {visionOutputs.map((o, i) => (
+                      <p key={i} className="mb-6 font-light">
+                        Predicción {i + 1}: {o}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent className="gap-0">
+                <p className="text-sm md:text-md mb-2">
+                  {finalResult?.description}
+                </p>
+              </CardContent>
+            </Card>
+          </section>
+
+          <section className="flex flex-col gap-2">
             {error && (
               <Card>
                 <CardHeader>
@@ -127,59 +178,21 @@ export default function AnalyzerPage() {
 
             {finalResult && (
               <>
-                <Card className="gap-0">
-                  <CardHeader>
-                    <CardTitle className="text-xl">
-                      {finalResult.isFood
-                        ? finalResult.name
-                        : "No Food Detected"}
-                      <button
-                        className="flex items-center text-blue-600 underline text-xs my-2"
-                        onClick={togglePreds}
-                      >
-                        {showPredictions ? (
-                          <>
-                            <ChevronUp />
-                            Ocultar predicciones
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown />
-                            Mostrar predicciones
-                          </>
-                        )}
-                      </button>
-
-                      {showPredictions && (
-                        <div className="text-xs mb-4 border-1 border-slate-200 p-2 max-h-60 overflow-auto rounded-md">
-                          {visionOutputs.map((o, i) => (
-                            <p key={i} className="mb-6 font-light">
-                              Predicción {i + 1}: {o}
-                            </p>
-                          ))}
-                        </div>
-                      )}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm md:text-md mb-4">
-                      {finalResult.description}
-                    </p>
-                  </CardContent>
-                </Card>
-
                 {finalResult.isFood && (
                   <div className="grid grid-cols-2 gap-2">
                     <Card className="gap-0">
                       <CardHeader className="px-4">
-                        <CardTitle className="text-sm md:text-md">
+                        <CardTitle className="text-sm md:text-md flex items-center text-orange-500">
+                          <CheckCircle className="mr-2" />
                           Ventajas
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="px-4">
-                        <ul className="list-disc list-inside text-xs md:text-sm">
+                        <ul className="list-disc list-inside text-xs md:text-sm ">
                           {finalResult.advantages.map((adv, i) => (
-                            <li key={i}>{adv}</li>
+                            <li key={i} className="flex items-center">
+                              - {adv}
+                            </li>
                           ))}
                         </ul>
                       </CardContent>
@@ -187,16 +200,52 @@ export default function AnalyzerPage() {
 
                     <Card className="gap-0">
                       <CardHeader className="px-4">
-                        <CardTitle className="text-sm md:text-md">
+                        <CardTitle className="text-sm md:text-md flex items-center text-orange-500">
+                          <AlertTriangle className="mr-2" />
                           Desventajas
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="px-4">
                         <ul className="list-disc list-inside text-xs md:text-sm">
                           {finalResult.disadvantages.map((dis, i) => (
-                            <li key={i}>{dis}</li>
+                            <li key={i} className="flex items-center">
+                              - {dis}
+                            </li>
                           ))}
                         </ul>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {finalResult.isFood && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <Card className="gap-0">
+                      <CardHeader>
+                        <CardTitle className="text-sm text-orange-500">
+                          Información nutricional
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <NutritionPieCharts
+                          data={finalResult.mainCharacteristics}
+                          size={50}
+                        />
+                      </CardContent>
+                    </Card>
+                    <Card className="gap-0">
+                      <CardHeader className="py-0 gap-0">
+                        <CardTitle className="text-sm text-orange-500">
+                          Puntuación de salud
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="py-0 gap-0">
+                        <HealthScoreChart
+                          score={finalResult.healthProbability}
+                        />
+                        <p className="text-xs text-center mt-2">
+                          {finalResult.healthProbability}% Saludable
+                        </p>
                       </CardContent>
                     </Card>
                   </div>
@@ -207,7 +256,7 @@ export default function AnalyzerPage() {
                 )}
               </>
             )}
-          </div>
+          </section>
         </div>
       )}
     </Screen>

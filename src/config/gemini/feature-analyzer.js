@@ -16,8 +16,9 @@ export const TASK = `A continuación se te dan las predicciones del modelo de vi
 - La terminología usada debe ser reconocible en colombia pero debe ser neutra.
 - El nombre es corto y no debe exceder de 10 palabras.
 - La descripción es corta y no debe exceder un parrafo corto donde se presenta información básica y relevante sobre el alimento.
-- La lista de ventajas y desventajas cada una debe tener exactamente 5 items donde se describan las propiedades nutricionales para dummies pero redactadas de forma seria. Una ventajas nutricionales asociadas a ese alimento (ej. "Alto en fibra") y una lista de desventajas nutricionales (ej. "Puede contener grasas saturadas"), cada una con una breve explicación en lenguaje sencillo (una frase).
+- La lista de ventajas y desventajas cada una debe tener exactamente 3 items donde se describan las propiedades nutricionales para dummies pero redactadas de forma seria. Una ventajas nutricionales asociadas a ese alimento (ej. "Alto en fibra") y una lista de desventajas nutricionales (ej. "Puede contener grasas saturadas"), cada una con una breve explicación en lenguaje sencillo (una frase).
 - Calificar en una escala de 0 a 100 lo saludable de un alimento, donde 0 es peor y 100 es mejor.
+- Para mainCharacteristics debes elegir exactamente 6 propiedades nutricionales como vitaminas, calorias, proteínas, etc. Cada una de estas propiedades debe tener una calificacion porcentaje de contenido entre 0 y 100.
 - No se permitirá el análisis de varios ingredientes separados, varios dulces diferentes, o varias frutas distintas si no forman parte de un plato preparado.
 - Si la probabilidad de que sea un alimento es muy baja (no muchas predicciones coinciden), la respuesta debe ser:
 {
@@ -70,6 +71,20 @@ export const RESPONSE_SCHEMA = {
       type: Type.ARRAY,
       items: {
         type: Type.STRING,
+      },
+    },
+    mainCharacteristics: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          name: {
+            type: Type.STRING,
+          },
+          percentage: {
+            type: Type.NUMBER,
+          },
+        },
       },
     },
   },
