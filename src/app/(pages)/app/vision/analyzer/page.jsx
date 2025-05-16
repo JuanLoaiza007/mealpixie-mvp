@@ -13,19 +13,14 @@ import {
   TASK as GEMINI_TASK,
   RESPONSE_SCHEMA as GEMINI_RESPONSE_SCHEMA,
 } from "@/config/gemini/feature-analyzer";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Loader2,
-  ChevronDown,
-  ChevronUp,
-  CheckCircle,
-  AlertTriangle,
-} from "lucide-react";
-import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import Screen from "@/components/ui/features/common/Screen";
-import HealthScoreChart from "@/components/ui/features/vision/analyzer/HealthScoreChart";
-import NutritionPieCharts from "@/components/ui/features/vision/analyzer/NutritionPieChart";
+import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
+import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { InstructionCard } from "@/components/ui/features/vision/analyzer/InstructionCard";
+import { PredictionCard } from "@/components/ui/features/vision/analyzer/PredictionCard";
+import { DetailSection } from "@/components/ui/features/vision/analyzer/DetailSection";
+import { NutritionSection } from "@/components/ui/features/vision/analyzer/NutritionSection";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 const NUM_VISION_REQUESTS = 3;
 
@@ -109,61 +104,24 @@ export default function AnalyzerPage() {
               imageUrl={imageUrl}
               alt="Analysis Image"
             >
-              <Button
-                className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
-                disabled={loading.vision || loading.text}
+              <AnalyzeButton
                 onClick={analyzeImage}
-              >
-                {(loading.vision || loading.text) && (
-                  <Loader2 className="animate-spin mr-2" />
-                )}
-                {loading.vision
-                  ? `Analizando con modelo de visión ${analysisPhase}/${NUM_VISION_REQUESTS}`
-                  : loading.text
-                  ? "Generando respuesta final"
-                  : "Analizar imagen"}
-              </Button>
+                loading={loading}
+                phase={analysisPhase}
+                total={NUM_VISION_REQUESTS}
+              />
             </ImagePreviewCard>
 
-            <Card className="w-full sm md:w-60 lg:w-100 gap-0">
-              <CardHeader className="gap-0">
-                <CardTitle className="text-xl ">
-                  {finalResult?.isFood
-                    ? finalResult.name
-                    : "No he detectado nada"}
-                </CardTitle>
-                <button
-                  className="flex items-center text-orange-500 underline text-xs my-2"
-                  onClick={togglePreds}
-                >
-                  {showPredictions ? (
-                    <>
-                      <ChevronUp />
-                      <span className="ml-1">Ocultar predicciones</span>
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown />
-                      <span className="ml-1">Mostrar predicciones</span>
-                    </>
-                  )}
-                </button>
-                {showPredictions && (
-                  <div className="text-xs mb-4 border-1 border-slate-200 p-2 max-h-40 overflow-auto rounded-md">
-                    {visionOutputs.map((o, i) => (
-                      <p key={i} className="mb-6 font-light">
-                        Predicción {i + 1}: {o}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </CardHeader>
-              <CardContent className="gap-0">
-                <p className="text-sm md:text-md mb-2">
-                  {finalResult?.description}
-                </p>
-              </CardContent>
-            </Card>
+            {!finalResult ? (
+              <InstructionCard />
+            ) : (
+              <PredictionCard
+                finalResult={finalResult}
+                showPredictions={showPredictions}
+                toggle={togglePreds}
+                visionOutputs={visionOutputs}
+              />
+            )}
           </section>
 
           <section className="flex flex-col gap-2">
@@ -176,85 +134,14 @@ export default function AnalyzerPage() {
               </Card>
             )}
 
-            {finalResult && (
-              <>
-                {finalResult.isFood && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <Card className="gap-0">
-                      <CardHeader className="px-4">
-                        <CardTitle className="text-sm md:text-md flex items-center text-orange-500">
-                          <CheckCircle className="mr-2" />
-                          Ventajas
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="px-4">
-                        <ul className="list-disc list-inside text-xs md:text-sm ">
-                          {finalResult.advantages.map((adv, i) => (
-                            <li key={i} className="flex items-center">
-                              - {adv}
-                            </li>
-                          ))}
-                        </ul>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="gap-0">
-                      <CardHeader className="px-4">
-                        <CardTitle className="text-sm md:text-md flex items-center text-orange-500">
-                          <AlertTriangle className="mr-2" />
-                          Desventajas
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="px-4">
-                        <ul className="list-disc list-inside text-xs md:text-sm">
-                          {finalResult.disadvantages.map((dis, i) => (
-                            <li key={i} className="flex items-center">
-                              - {dis}
-                            </li>
-                          ))}
-                        </ul>
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-
-                {finalResult.isFood && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <Card className="gap-0">
-                      <CardHeader>
-                        <CardTitle className="text-sm text-orange-500">
-                          Información nutricional
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <NutritionPieCharts
-                          data={finalResult.mainCharacteristics}
-                          size={50}
-                        />
-                      </CardContent>
-                    </Card>
-                    <Card className="gap-0">
-                      <CardHeader className="py-0 gap-0">
-                        <CardTitle className="text-sm text-orange-500">
-                          Puntuación de salud
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="py-0 gap-0">
-                        <HealthScoreChart
-                          score={finalResult.healthProbability}
-                        />
-                        <p className="text-xs text-center mt-2">
-                          {finalResult.healthProbability}% Saludable
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-
-                {!finalResult.isFood && showPredictions && (
-                  <p className="text-xs">{finalResult.reasoning}</p>
-                )}
-              </>
+            {finalResult && finalResult.isFood && (
+              <DetailSection finalResult={finalResult} />
+            )}
+            {finalResult && finalResult.isFood && (
+              <NutritionSection finalResult={finalResult} />
+            )}
+            {!finalResult?.isFood && showPredictions && (
+              <p className="text-xs">{finalResult.reasoning}</p>
             )}
           </section>
         </div>
