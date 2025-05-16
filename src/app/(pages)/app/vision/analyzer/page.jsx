@@ -1,6 +1,8 @@
 "use client";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useImage } from "@/context/image";
+import { useRouter } from "next/navigation";
 import { useMobileTopBar } from "@/context/mobileTopBar";
 import { createVisionAssistant } from "@/utils/togheter-factory";
 import { generateWithGemini } from "@/utils/gemini-factory";
@@ -21,11 +23,13 @@ import { PredictionCard } from "@/components/ui/features/vision/analyzer/Predict
 import { DetailSection } from "@/components/ui/features/vision/analyzer/DetailSection";
 import { NutritionSection } from "@/components/ui/features/vision/analyzer/NutritionSection";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
 
 const NUM_VISION_REQUESTS = 3;
 
 export default function AnalyzerPage() {
   const { imageUrl } = useImage();
+  const router = useRouter();
   const { setTitle } = useMobileTopBar();
   const visionAssistant = useRef(null);
 
@@ -35,6 +39,15 @@ export default function AnalyzerPage() {
   const [loading, setLoading] = useState({ vision: false, text: false });
   const [error, setError] = useState(null);
   const [showPredictions, setShowPredictions] = useState(false);
+
+  useEffect(() => {
+    if (!imageUrl) {
+      const destinationRoute = userNavRoutes.find((route) =>
+        route.tags.includes(NAV_TAGS.mainPage)
+      );
+      router.push(destinationRoute.href);
+    }
+  }, [imageUrl, router]);
 
   useEffect(() => {
     setTitle("Analyzer");
@@ -92,60 +105,61 @@ export default function AnalyzerPage() {
 
   const togglePreds = () => setShowPredictions((v) => !v);
 
+  // Mientras redirige, no mostramos nada
+  if (!imageUrl) {
+    return null;
+  }
+
   return (
     <Screen inPageTitle="Analyzer">
-      {!imageUrl ? (
-        <p className="text-center text-gray-500">Select an image to analyze.</p>
-      ) : (
-        <div className="flex flex-col md:flex-row gap-2">
-          <section className="flex flex-col gap-2">
-            <ImagePreviewCard
-              className="w-full sm md:w-60 lg:w-100 gap-0"
-              imageUrl={imageUrl}
-              alt="Analysis Image"
-            >
-              <AnalyzeButton
-                onClick={analyzeImage}
-                loading={loading}
-                phase={analysisPhase}
-                total={NUM_VISION_REQUESTS}
-              />
-            </ImagePreviewCard>
+      <div className="flex flex-col md:flex-row gap-2">
+        <section className="flex flex-col gap-2">
+          <ImagePreviewCard
+            className="w-full sm md:w-60 lg:w-100 gap-0"
+            imageUrl={imageUrl}
+            alt="Analysis Image"
+          >
+            <AnalyzeButton
+              onClick={analyzeImage}
+              loading={loading}
+              phase={analysisPhase}
+              total={NUM_VISION_REQUESTS}
+            />
+          </ImagePreviewCard>
 
-            {!finalResult ? (
-              <InstructionCard />
-            ) : (
-              <PredictionCard
-                finalResult={finalResult}
-                showPredictions={showPredictions}
-                toggle={togglePreds}
-                visionOutputs={visionOutputs}
-              />
-            )}
-          </section>
+          {!finalResult ? (
+            <InstructionCard />
+          ) : (
+            <PredictionCard
+              finalResult={finalResult}
+              showPredictions={showPredictions}
+              toggle={togglePreds}
+              visionOutputs={visionOutputs}
+            />
+          )}
+        </section>
 
-          <section className="flex flex-col gap-2">
-            {error && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Error</CardTitle>
-                </CardHeader>
-                <CardContent>{error}</CardContent>
-              </Card>
-            )}
+        <section className="flex flex-col gap-2">
+          {error && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Error</CardTitle>
+              </CardHeader>
+              <CardContent>{error}</CardContent>
+            </Card>
+          )}
 
-            {finalResult && finalResult.isFood && (
-              <DetailSection finalResult={finalResult} />
-            )}
-            {finalResult && finalResult.isFood && (
-              <NutritionSection finalResult={finalResult} />
-            )}
-            {!finalResult?.isFood && showPredictions && (
-              <p className="text-xs">{finalResult.reasoning}</p>
-            )}
-          </section>
-        </div>
-      )}
+          {finalResult && finalResult.isFood && (
+            <DetailSection finalResult={finalResult} />
+          )}
+          {finalResult && finalResult.isFood && (
+            <NutritionSection finalResult={finalResult} />
+          )}
+          {!finalResult?.isFood && showPredictions && (
+            <p className="text-xs">{finalResult.reasoning}</p>
+          )}
+        </section>
+      </div>
     </Screen>
   );
 }
