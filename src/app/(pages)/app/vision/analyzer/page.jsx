@@ -22,7 +22,7 @@ import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { DetailSection } from "@/components/ui/features/vision/analyzer/DetailSection";
 import { NutritionSection } from "@/components/ui/features/vision/analyzer/NutritionSection";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
+import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
 const NUM_VISION_REQUESTS = 3;
 
@@ -39,11 +39,9 @@ export default function AnalyzerPage() {
   const [error, setError] = useState(null);
   const [showPredictions, setShowPredictions] = useState(false);
 
-  const functionInfo = {
-    title: "Analyzer",
-    content:
-      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento, fruta, snack o cualquier cosa comestible, detectaremos su nombre, ventajas, desventajas, sus propiedades nutricionales e incluso le daremos una calificación en una escala de 0 a 100 para conocer que tan saludable es!.",
-  };
+  const functionInfo = userNavRoutes.find(
+    (route) => route.id === NAV_IDS.analyzer
+  );
 
   useEffect(() => {
     if (!imageUrl) {
@@ -55,7 +53,7 @@ export default function AnalyzerPage() {
   }, [imageUrl, router]);
 
   useEffect(() => {
-    setTitle(functionInfo.title);
+    setTitle(functionInfo.label);
     visionAssistant.current = createVisionAssistant({
       systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
     });
@@ -116,7 +114,7 @@ export default function AnalyzerPage() {
   }
 
   return (
-    <Screen inPageTitle={functionInfo.title}>
+    <Screen inPageTitle={functionInfo.label}>
       <div className="flex flex-col md:flex-row gap-2">
         <section className="flex flex-col gap-2">
           <ImagePreviewCard

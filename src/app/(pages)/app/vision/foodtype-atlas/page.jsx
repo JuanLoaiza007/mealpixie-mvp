@@ -26,7 +26,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
+import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
 const NUM_VISION_REQUESTS = 5;
 
@@ -43,11 +43,9 @@ export default function FoodTypeAtlasPage() {
   const [error, setError] = useState(null);
   const [showPredictions, setShowPredictions] = useState(false);
 
-  const functionInfo = {
-    title: "FoodType Atlas",
-    content:
-      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento podremos clasificar sus componentes por tipo nutricional.",
-  };
+  const functionInfo = userNavRoutes.find(
+    (route) => route.id === NAV_IDS.foodTypeAtlas
+  );
 
   useEffect(() => {
     if (!imageUrl) {
@@ -59,7 +57,7 @@ export default function FoodTypeAtlasPage() {
   }, [imageUrl, router]);
 
   useEffect(() => {
-    setTitle(functionInfo.title);
+    setTitle(functionInfo.label);
     visionAssistant.current = createVisionAssistant({
       systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
     });
@@ -121,7 +119,7 @@ export default function FoodTypeAtlasPage() {
   }
 
   return (
-    <Screen inPageTitle={functionInfo.title}>
+    <Screen inPageTitle={functionInfo.label}>
       <div className="flex flex-col md:flex-row gap-2">
         <section className="flex flex-col gap-2">
           <ImagePreviewCard
