@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useImage } from "@/context/image";
 import { useRouter } from "next/navigation";
@@ -18,8 +17,8 @@ import {
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
-import { InstructionCard } from "@/components/ui/features/vision/analyzer/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/vision/analyzer/PredictionCard";
+import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
+import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { DetailSection } from "@/components/ui/features/vision/analyzer/DetailSection";
 import { NutritionSection } from "@/components/ui/features/vision/analyzer/NutritionSection";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -40,6 +39,12 @@ export default function AnalyzerPage() {
   const [error, setError] = useState(null);
   const [showPredictions, setShowPredictions] = useState(false);
 
+  const functionInfo = {
+    title: "Analyzer",
+    content:
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento, fruta, snack o cualquier cosa comestible, detectaremos su nombre, ventajas, desventajas, sus propiedades nutricionales e incluso le daremos una calificación en una escala de 0 a 100 para conocer que tan saludable es!.",
+  };
+
   useEffect(() => {
     if (!imageUrl) {
       const destinationRoute = userNavRoutes.find((route) =>
@@ -50,7 +55,7 @@ export default function AnalyzerPage() {
   }, [imageUrl, router]);
 
   useEffect(() => {
-    setTitle("Analyzer");
+    setTitle(functionInfo.title);
     visionAssistant.current = createVisionAssistant({
       systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
     });
@@ -111,7 +116,7 @@ export default function AnalyzerPage() {
   }
 
   return (
-    <Screen inPageTitle="Analyzer">
+    <Screen inPageTitle={functionInfo.title}>
       <div className="flex flex-col md:flex-row gap-2">
         <section className="flex flex-col gap-2">
           <ImagePreviewCard
@@ -128,7 +133,7 @@ export default function AnalyzerPage() {
           </ImagePreviewCard>
 
           {!finalResult ? (
-            <InstructionCard />
+            <InstructionCard functionInfo={functionInfo} />
           ) : (
             <PredictionCard
               finalResult={finalResult}
