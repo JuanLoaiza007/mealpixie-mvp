@@ -8,25 +8,29 @@ import { generateWithGemini } from "@/utils/gemini-factory";
 import {
   SYSTEM_INSTRUCTIONS as TOGETHER_SYSTEM_INSTRUCTIONS,
   TASK as TOGETHER_TASK,
-} from "@/config/together/feature-analyzer";
+} from "@/config/together/feature-foodtype-atlas";
 import {
   SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
   TASK as GEMINI_TASK,
   RESPONSE_SCHEMA as GEMINI_RESPONSE_SCHEMA,
-} from "@/config/gemini/feature-analyzer";
+} from "@/config/gemini/feature-foodtype-atlas";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
-import { DetailSection } from "@/components/ui/features/vision/analyzer/DetailSection";
-import { NutritionSection } from "@/components/ui/features/vision/analyzer/NutritionSection";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
 
-const NUM_VISION_REQUESTS = 3;
+const NUM_VISION_REQUESTS = 5;
 
-export default function AnalyzerPage() {
+export default function FoodTypeAtlasPage() {
   const { imageUrl } = useImage();
   const router = useRouter();
   const { setTitle } = useMobileTopBar();
@@ -40,9 +44,9 @@ export default function AnalyzerPage() {
   const [showPredictions, setShowPredictions] = useState(false);
 
   const functionInfo = {
-    title: "Analyzer",
+    title: "FoodType Atlas",
     content:
-      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento, fruta, snack o cualquier cosa comestible, detectaremos su nombre, ventajas, desventajas, sus propiedades nutricionales e incluso le daremos una calificación en una escala de 0 a 100 para conocer que tan saludable es!.",
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento podremos clasificar sus componentes por tipo nutricional.",
   };
 
   useEffect(() => {
@@ -100,9 +104,11 @@ export default function AnalyzerPage() {
         responseSchema: GEMINI_RESPONSE_SCHEMA,
         history: [],
       });
+      console.log(jsonResponse);
       setFinalResult(JSON.parse(jsonResponse));
-    } catch {
+    } catch (e) {
       setError("Error generating final response.");
+      console.error(e);
     } finally {
       setLoading((prev) => ({ ...prev, text: false }));
     }
@@ -110,7 +116,6 @@ export default function AnalyzerPage() {
 
   const togglePreds = () => setShowPredictions((v) => !v);
 
-  // Mientras redirige, no mostramos nada
   if (!imageUrl) {
     return null;
   }
@@ -135,12 +140,16 @@ export default function AnalyzerPage() {
           {!finalResult ? (
             <InstructionCard functionInfo={functionInfo} />
           ) : (
-            <PredictionCard
-              finalResult={finalResult}
-              showPredictions={showPredictions}
-              toggle={togglePreds}
-              visionOutputs={visionOutputs}
-            />
+            <>
+              {process.env.NODE_ENV === "development" && (
+                <PredictionCard
+                  finalResult={finalResult}
+                  showPredictions={showPredictions}
+                  toggle={togglePreds}
+                  visionOutputs={visionOutputs}
+                />
+              )}
+            </>
           )}
         </section>
 
@@ -154,14 +163,38 @@ export default function AnalyzerPage() {
             </Card>
           )}
 
-          {finalResult && finalResult.isFood && (
-            <DetailSection finalResult={finalResult} />
+          {finalResult && !finalResult.isFoodDetected && (
+            <Card>
+              <CardHeader>
+                <CardTitle>No se detectaron alimentos</CardTitle>
+              </CardHeader>
+              <CardContent>{finalResult.message}</CardContent>
+            </Card>
           )}
-          {finalResult && finalResult.isFood && (
-            <NutritionSection finalResult={finalResult} />
-          )}
-          {!finalResult?.isFood && showPredictions && (
-            <p className="text-xs">{finalResult.reasoning}</p>
+
+          {finalResult && finalResult.isFoodDetected && (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+              {finalResult.classifications.map((c, i) => (
+                <Card className={"gap-2 justify-between"}>
+                  <CardHeader className={"text-orange-500"}>
+                    <CardTitle>{c.type}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-center">
+                      {c.items.map((item, i) => (
+                        <>
+                          {item}
+                          {i !== c.items.length - 1 ? ", " : "."}
+                        </>
+                      ))}
+                    </p>
+                  </CardContent>
+                  <CardFooter>
+                    <p className="text-xs">{c.definition}</p>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
           )}
         </section>
       </div>
