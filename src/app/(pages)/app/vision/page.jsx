@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useImage } from "@/context/image";
 import { visionFeatures } from "@/constants/visionFeatures";
-import { SUPPORTED_IMAGE_TYPES } from "@/config/togheter/common";
+import { SUPPORTED_IMAGE_TYPES } from "@/config/together/common";
 import ImageSourceDialog from "@/components/ui/features/vision/imageSourceDialog";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 

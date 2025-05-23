@@ -9,7 +9,7 @@ import { generateWithGemini } from "@/utils/gemini-factory";
 import {
   SYSTEM_INSTRUCTIONS as TOGETHER_SYSTEM_INSTRUCTIONS,
   TASK as TOGETHER_TASK,
-} from "@/config/togheter/feature-analyzer";
+} from "@/config/together/feature-analyzer";
 import {
   SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
   TASK as GEMINI_TASK,

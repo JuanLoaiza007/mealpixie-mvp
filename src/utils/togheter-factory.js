@@ -3,7 +3,7 @@ import {
   API_KEY,
   DEFAULT_MODEL_NAME,
   DEFAULT_TASK,
-} from "@/config/togheter/common";
+} from "@/config/together/common";
 
 /**
  * Factory for creating a TogetherAI-based vision assistant.
