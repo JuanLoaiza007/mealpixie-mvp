@@ -1,4 +1,15 @@
-import { Camera, UserCircle, HomeIcon } from "lucide-react";
+import {
+  Camera,
+  Utensils,
+  Hash,
+  BookOpen,
+  Thermometer,
+  FileText,
+  DollarSign,
+  Ruler,
+  HomeIcon,
+  UserCircle,
+} from "lucide-react";
 
 export const NAV_TAGS = {
   root: "root",
@@ -8,82 +19,110 @@ export const NAV_TAGS = {
   requiredTopBar: "required-top-bar",
 };
 
+export const NAV_IDS = {
+  home: "home",
+  vision: "vision",
+  profile: "profile",
+  analyzer: "analyzer",
+  instaRecipe: "insta-recipe",
+  portionScan: "portion-scan",
+  foodTypeAtlas: "foodtype-atlas",
+  freshSense: "fresh-sense",
+  labelLens: "label-lens",
+  pricePeek: "price-peek",
+  sizeSage: "size-sage",
+};
+
 export const userNavRoutes = [
   {
-    id: "home",
+    id: NAV_IDS.home,
     label: "Inicio",
     href: "/",
     icon: HomeIcon,
     tags: [NAV_TAGS.root],
   },
   {
-    id: "vision",
+    id: NAV_IDS.vision,
     label: "Visión",
     href: "/app/vision",
     icon: Camera,
     tags: [NAV_TAGS.mainPage, NAV_TAGS.page],
   },
   {
-    id: "profile",
+    id: NAV_IDS.profile,
     label: "Perfil",
     href: "/app/profile",
     icon: UserCircle,
     tags: [NAV_TAGS.page],
   },
   {
-    id: "analyzer",
-    label: "Analizador",
+    id: NAV_IDS.analyzer,
+    label: "Analyzer",
+    description:
+      "Obtén información de este comestible, como ventajas y desventajas nutricionales.",
+    long_description:
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento, fruta, snack o cualquier cosa comestible, detectaremos su nombre, ventajas, desventajas, sus propiedades nutricionales e incluso le daremos una calificación en una escala de 0 a 100 para conocer que tan saludable es!.",
     href: "/app/vision/analyzer",
     icon: Camera,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
   {
-    id: "insta-recipe",
+    id: NAV_IDS.instaRecipe,
     label: "InstaRecipe",
+    description:
+      "Si es una foto de varios ingredientes, genera sugerencias de recetas.",
     href: "/app/vision/insta-recipe",
-    icon: Camera,
+    icon: Utensils,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
   {
-    id: "portion-scan",
+    id: NAV_IDS.portionScan,
     label: "PortionScan",
+    description: "Detecta la cantidad visible de ingredientes contables.",
     href: "/app/vision/portion-scan",
-    icon: Camera,
+    icon: Hash,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
   {
-    id: "food-type-atlas",
+    id: NAV_IDS.foodTypeAtlas,
     label: "FoodType Atlas",
-    href: "/app/vision/food-type-atlas",
-    icon: Camera,
+    description: "Clasifica cada alimento por tipo. nutricional",
+    long_description:
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento podremos clasificar sus componentes por tipo nutricional.",
+    href: "/app/vision/foodtype-atlas",
+    icon: BookOpen,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
   {
-    id: "fresh-sense",
+    id: NAV_IDS.freshSense,
     label: "FreshSense",
+    description: "Identifica cocción o frescura por color.",
     href: "/app/vision/fresh-sense",
-    icon: Camera,
+    icon: Thermometer,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
   {
-    id: "label-lens",
+    id: NAV_IDS.labelLens,
     label: "LabelLens",
+    description: "Extrae y organiza información de etiquetas.",
     href: "/app/vision/label-lens",
-    icon: Camera,
+    icon: FileText,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
   {
-    id: "price-peek",
+    id: NAV_IDS.pricePeek,
     label: "PricePeek",
+    description: "Estima el costo por unidad o porción.",
     href: "/app/vision/price-peek",
-    icon: Camera,
+    icon: DollarSign,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
   {
-    id: "size-sage",
+    id: NAV_IDS.sizeSage,
     label: "SizeSage",
+    description: "Mide dimensiones y volumen con referencia.",
     href: "/app/vision/size-sage",
-    icon: Camera,
+    icon: Ruler,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
 ];

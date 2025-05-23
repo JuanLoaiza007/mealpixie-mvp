@@ -7,11 +7,11 @@ export function InstructionCard({ functionInfo }) {
     <Card className="w-full sm md:w-60 lg:w-100 gap-1 bg-amber-100">
       <CardHeader className="gap-1">
         <CardTitle className="text-xl text-orange-500">
-          {functionInfo.title}
+          {functionInfo.label}
         </CardTitle>
       </CardHeader>
       <CardContent className="text-sm md:text-md">
-        {functionInfo.content}
+        {functionInfo.long_description}
       </CardContent>
     </Card>
   );

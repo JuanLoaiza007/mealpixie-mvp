@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useImage } from "@/context/image";
-import { visionFeatures } from "@/constants/visionFeatures";
 import { SUPPORTED_IMAGE_TYPES } from "@/config/together/common";
 import ImageSourceDialog from "@/components/ui/features/vision/imageSourceDialog";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
+import { userNavRoutes, NAV_TAGS } from "@/config/userNavRoutes";
 
 export default function VisionToolsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -117,30 +117,32 @@ export default function VisionToolsPage() {
 
         {/* Tarjetas de funciones */}
         <section className="grid gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
-          {visionFeatures.map((feat) => {
-            const card = (
-              <Card
-                key={feat.name}
-                className="aspect-square w-full hover:shadow-md transition-shadow duration-200 flex flex-col items-center justify-center overflow-hidden p-0 px-2 md:px-4 gap-2"
-              >
-                {feat.icon}
-                <h3 className="font-semibold text-center">{feat.name}</h3>
-                <p className="text-xs text-slate-500 text-center">
-                  {feat.description}
-                </p>
-              </Card>
-            );
+          {userNavRoutes.map((feat) => {
+            if (feat.tags.includes(NAV_TAGS.functionality)) {
+              const card = (
+                <Card
+                  key={feat.id}
+                  className="aspect-square w-full hover:shadow-md transition-shadow duration-200 flex flex-col items-center justify-center overflow-hidden p-0 px-2 md:px-4 gap-2"
+                >
+                  <feat.icon className="h-6 w-6 text-orange-500" />
+                  <h3 className="font-semibold text-center">{feat.label}</h3>
+                  <p className="text-xs text-slate-500 text-center">
+                    {feat.description}
+                  </p>
+                </Card>
+              );
 
-            // Si no hay imagen, abrimos diálogo de carga
-            return imageUrl ? (
-              <Link key={feat.name} href={feat.href}>
-                {card}
-              </Link>
-            ) : (
-              <div key={feat.name} onClick={() => setRequiredDialogOpen(true)}>
-                {card}
-              </div>
-            );
+              // Si no hay imagen, abrimos diálogo de carga
+              return imageUrl ? (
+                <Link key={feat.id} href={feat.href}>
+                  {card}
+                </Link>
+              ) : (
+                <div key={feat.id} onClick={() => setRequiredDialogOpen(true)}>
+                  {card}
+                </div>
+              );
+            }
           })}
         </section>
       </section>
