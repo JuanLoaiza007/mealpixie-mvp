@@ -71,6 +71,8 @@ export const userNavRoutes = [
     label: "InstaRecipe",
     description:
       "Si es una foto de varios ingredientes, genera sugerencias de recetas.",
+    long_description:
+      "Presiona analizar para empezar a estudiar tu imagen. Si son ingredientes, podremos detectar que ingredientes son y que recetas se pueden hacer con ellos.",
     href: "/app/vision/insta-recipe",
     icon: Utensils,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
