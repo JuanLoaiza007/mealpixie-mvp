@@ -102,7 +102,6 @@ export default function FoodTypeAtlasPage() {
         responseSchema: GEMINI_RESPONSE_SCHEMA,
         history: [],
       });
-      console.log(jsonResponse);
       setFinalResult(JSON.parse(jsonResponse));
     } catch (e) {
       setError("Error generating final response.");
