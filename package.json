@@ -11,7 +11,7 @@
     "test:watch": "jest --watch",
     "docs:generate": "jsdoc -c jsdoc.json",
     "docs:serve": "npx http-server docs -p 8080",
-    "docs:deploy": "npm run docs:generate && gh-pages -d docs",
+    "docs:deploy": "npm run docs:generate && gh-pages -d docs"
   },
   "dependencies": {
     "@google/genai": "^0.14.1",
