@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import ImageSourceDialog from '@/components/ui/features/vision/ImageSourceDialog';
+import ImageSourceDialog from '@/components/ui/features/vision/imageSourceDialog';
 
 jest.mock('@/utils/media', () => ({
   handleTakePhoto: jest.fn(),

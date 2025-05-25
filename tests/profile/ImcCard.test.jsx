@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { ImcCard } from '@/components/ui/features/profile/ImcCard';
+import { ImcCard } from '@/components/ui/features/profile/imcCard';
 
 jest.mock('@/components/schemas/userProfile', () => ({
   userProfileSchema: {
