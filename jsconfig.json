@@ -12,7 +12,10 @@
       "@/pages/*": ["pages/*"],
       "@/public/*": ["public/*"],
       "@/lib/*": ["lib/*"],
-      "@/db/*": ["db/*"]
+      "@/db/*": ["db/*"],
+      "@/config/*": ["config/*"],
+      "@/assets/*": ["assets/*"],
+      "@/services/*": ["services/*"]
     }
   }
 }
