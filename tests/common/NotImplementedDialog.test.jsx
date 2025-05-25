@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import NotImplementedDialog from '@/components/ui/features/common/NotImplementedDialog';
+import NotImplementedDialog from '@/components/ui/features/common/notImplementedDialog';
 
 jest.mock('@/components/ui/dialog', () => ({
   Dialog: ({ open, onOpenChange, children }) => (
