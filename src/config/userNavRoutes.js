@@ -108,6 +108,10 @@ export const userNavRoutes = [
     label: "LabelLens",
     description: "Extrae y organiza información de etiquetas.",
     href: "/app/vision/label-lens",
+    description:
+      "Extrae información de etiquetas nutricionales y organízala en un formato fácil de leer.",
+    long_description:
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento podremos extraer información de etiquetas nutricionales y organizarla en un formato fácil de entender.",
     icon: FileText,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
