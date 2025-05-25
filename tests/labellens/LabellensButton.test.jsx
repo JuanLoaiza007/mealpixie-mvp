@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { LabelLensButton } from '@/components/ui/features/vision/labellens/LabelLensButton';
+import { LabelLensButton } from '@/components/ui/features/vision/labellens/LabellensButton';
 
 jest.mock('lucide-react', () => ({
   Loader2: (props) => <svg data-testid="loader-icon" {...props} />,
