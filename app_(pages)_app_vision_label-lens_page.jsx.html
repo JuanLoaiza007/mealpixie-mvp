@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/(pages)/app/vision/label-lens/page.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/(pages)/app/vision/label-lens/page.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useImage } from "@/context/image";
+import { useRouter } from "next/navigation";
+import { useMobileTopBar } from "@/context/mobileTopBar";
+import { createVisionAssistant } from "@/utils/togheter-factory";
+import { generateWithGemini } from "@/utils/gemini-factory";
+import {
+  SYSTEM_INSTRUCTIONS as TOGETHER_SYSTEM_INSTRUCTIONS,
+  TASK as TOGETHER_TASK,
+} from "@/config/together/feature-labellens";
+import {
+  SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
+  TASK as GEMINI_TASK,
+  RESPONSE_SCHEMA as GEMINI_RESPONSE_SCHEMA,
+} from "@/config/gemini/feature-labellens";
+import Screen from "@/components/ui/features/common/Screen";
+import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
+import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { NAV_IDS, NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
+
+
+import { PortionCard } from "@/components/ui/features/vision/labellens/PortionCard";
+import { NutrientCard } from "@/components/ui/features/vision/labellens/NutrientCard";
+import { LabelLensButton } from "@/components/ui/features/vision/labellens/LabellensButton";
+import { VitaminCard } from "@/components/ui/features/vision/labellens/VitaminCard";
+import { IngredientsCard } from "@/components/ui/features/vision/labellens/IngredientsCard";
+import { ErrorCard } from "@/components/ui/features/vision/labellens/ErrorCard";
+
+const NUM_VISION_REQUESTS = 3;
+
+/**
+ * Analyzes a nutritional label image using OCR and AI to extract and present structured nutritional information.
+ *
+ * @component
+ * @remarks
+ * - Uses a vision assistant and Gemini AI to process image text and generate structured nutrition data.
+ * - Performs multiple OCR passes (defined by NUM_VISION_REQUESTS) to improve accuracy.
+ * - Displays result cards such as nutrients, vitamins, portion, and ingredients using tab navigation.
+ * - Handles various UI states including loading, error, and fallback navigation.
+ * - Requires `imageUrl` from context and redirects if not present.
+ * @returns {JSX.Element} Nutrition label analysis interface with image preview, processing button, and results display.
+ * @example
+ * // Used as a route/page component for OCR analysis
+ * export default function NutritionOCRPage() {
+ *   return &lt;NutritionOCRPage />;
+ * }
+ */
+export default function NutritionOCRPage() {
+  const { imageUrl } = useImage();
+  const router = useRouter();
+  const { setTitle } = useMobileTopBar();
+  const visionAssistant = useRef(null);
+
+  const [outputs, setOutputs] = useState([]);
+  const [phase, setPhase] = useState(0);
+  const [finalResult, setFinalResult] = useState(null);
+  const [loading, setLoading] = useState({ vision: false, text: false });
+  const [error, setError] = useState(null);
+
+  const functionInfo = userNavRoutes.find(
+    (route) => route.id === NAV_IDS.labelLens
+  );
+
+  useEffect(() => {
+    if (!imageUrl) {
+      const fallback = userNavRoutes.find((r) =>
+        r.tags.includes(NAV_TAGS.mainPage)
+      );
+      router.push(fallback.href);
+    }
+  }, [imageUrl, router]);
+
+  useEffect(() => {
+    setTitle(functionInfo.label);
+    visionAssistant.current = createVisionAssistant({
+      systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
+    });
+  }, [setTitle]);
+
+  /**
+   * Performs OCR analysis on an image and generates a structured response using AI.
+   *
+   * @param {string} imageUrl — The URL of the image to be analyzed (required).
+   * @throws {Error} If the image cannot be processed or if generating the final response fails.
+   * @returns {Promise&lt;void>} Resolves when the OCR analysis and response generation are complete.
+   *
+   * @example
+   * // Example usage within a React component with a valid imageUrl:
+   * analyzeOCR().then(() => {
+   *   console.log("OCR and response processing completed.");
+   * });
+   */
+  const analyzeOCR = useCallback(async () => {
+    if (!imageUrl) return;
+    setError(null);
+    setOutputs([]);
+    setFinalResult(null);
+    setLoading({ vision: true, text: false });
+    setPhase(1);
+
+    const preds = [];
+    for (let i = 0; i &lt; NUM_VISION_REQUESTS; i++) {
+      try {
+        let text = "";
+        const stream = await visionAssistant.current.analyzeImage(
+          imageUrl,
+          TOGETHER_TASK
+        );
+        for await (const part of stream) text += part;
+        preds.push(text);
+        setOutputs((prev) => [...prev, text]);
+      } catch {
+        setError("No se pudo procesar la imagen.");
+        setLoading({ vision: false, text: false });
+        return;
+      }
+      setPhase(i + 2);
+    }
+
+    setLoading({ vision: false, text: true });
+    try {
+      const formattedInput =
+        `${GEMINI_TASK}\n\nPredicciones OCR:\n` +
+        preds.map((p, i) => `- OCR ${i + 1}:\n${p}`).join("\n\n");
+
+      const jsonResponse = await generateWithGemini({
+        systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
+        task: formattedInput,
+        responseSchema: GEMINI_RESPONSE_SCHEMA,
+        history: [],
+      });
+
+      console.log("Respuesta de Gemini:", jsonResponse);
+      setFinalResult(JSON.parse(jsonResponse));
+    } catch {
+      setError("Error generando respuesta final.");
+    } finally {
+      setLoading((prev) => ({ ...prev, text: false }));
+    }
+  }, [imageUrl]);
+
+  if (!imageUrl) return null;
+
+  return (
+    &lt;Screen inPageTitle={functionInfo.label}>
+      &lt;div className="flex flex-col md:flex-row gap-2">
+        &lt;section className="flex flex-col gap-2">
+          &lt;ImagePreviewCard
+            className="w-full sm md:w-60 lg:w-100 gap-0"
+            imageUrl={imageUrl}
+            alt="Etiqueta Nutricional"
+          >
+            &lt;LabelLensButton
+              onClick={analyzeOCR}
+              loading={loading}
+              phase={phase}
+              total={NUM_VISION_REQUESTS}
+            />
+          &lt;/ImagePreviewCard>
+          &lt;InstructionCard functionInfo={functionInfo} />
+        &lt;/section>
+        &lt;section className="flex flex-col gap-2">
+          {error &amp;&amp; (
+            &lt;ErrorCard title="Error" message={`${error} Asegúrate de que la imagen esté clara y enfocada.`} />
+          )}
+
+          {finalResult?.isValidLabel &amp;&amp; (
+            &lt;div className="w-full space-y-4">
+              &lt;PortionCard portion={finalResult.portion} />
+              &lt;Tabs defaultValue="nutrients" className="w-full">
+                &lt;TabsList className="flex flex-wrap gap-2 justify-start">
+                  {finalResult?.fields?.length > 0 &amp;&amp; (
+                    &lt;TabsTrigger value="nutrients">Nutrientes&lt;/TabsTrigger>
+                  )}
+                  {finalResult?.vitaminsAndMinerals?.length > 0 &amp;&amp; (
+                    &lt;TabsTrigger value="vitamins">Vitaminas&lt;/TabsTrigger>
+                  )}
+                  {finalResult.ingredients &amp;&amp; (
+                    &lt;TabsTrigger value="ingredients">Ingredientes&lt;/TabsTrigger>
+                  )}
+                &lt;/TabsList>
+
+                &lt;TabsContent value="nutrients">
+                  &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                    {finalResult.fields?.map((field, index) => (
+                      &lt;NutrientCard field={field} key={index} />
+                    ))}
+                  &lt;/div>
+                &lt;/TabsContent>
+
+                &lt;TabsContent value="vitamins">
+                  &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
+                    {finalResult.vitaminsAndMinerals?.map((item, index) => (
+                      &lt;VitaminCard item={item} key={index} />
+                    ))}
+                  &lt;/div>
+                &lt;/TabsContent>
+
+                &lt;TabsContent value="ingredients">
+                  &lt;IngredientsCard ingredients={finalResult.ingredients} />
+                &lt;/TabsContent>
+              &lt;/Tabs>
+            &lt;/div>
+          )}
+
+          {!finalResult?.isValidLabel &amp;&amp; finalResult?.reasoning &amp;&amp; (
+            &lt;ErrorCard title="No se pudo interpretar la etiqueta" message={finalResult.reasoning} />
+          )}
+        &lt;/section>
+      &lt;/div>
+    &lt;/Screen>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue May 27 2025 01:23:13 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>components/ui/features/vision/labellens/nutrientIcons.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/ui/features/vision/labellens/nutrientIcons.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+import {
+	Droplet,
+	Flame,
+	Drumstick,
+	Candy,
+	SprayCan,
+	Utensils,
+	Wheat,
+	Egg,
+	HeartPulse,
+	Info,
+} from "lucide-react";
+
+const nutrientIcons = {
+	calorías: &lt;Flame className="w-5 h-5 text-orange-500" />,
+	energía: &lt;Flame className="w-5 h-5 text-orange-500" />,
+	"valor energético": &lt;Flame className="w-5 h-5 text-orange-500" />,
+	"energía total": &lt;Flame className="w-5 h-5 text-orange-500" />,
+	"calories": &lt;Flame className="w-5 h-5 text-orange-500" />,
+
+	grasas: &lt;Droplet className="w-5 h-5 text-yellow-600" />,
+	"grasas totales": &lt;Droplet className="w-5 h-5 text-yellow-600" />,
+	"contenido graso": &lt;Droplet className="w-5 h-5 text-yellow-600" />,
+	"grasa total": &lt;Droplet className="w-5 h-5 text-yellow-600" />,
+
+	"grasas saturadas": &lt;Droplet className="w-5 h-5 text-yellow-800" />,
+	"saturated fat": &lt;Droplet className="w-5 h-5 text-yellow-800" />,
+	"grasa saturada": &lt;Droplet className="w-5 h-5 text-yellow-800" />,
+
+	"grasas trans": &lt;Droplet className="w-5 h-5 text-yellow-400" />,
+	"trans fat": &lt;Droplet className="w-5 h-5 text-yellow-400" />,
+
+	azúcares: &lt;Candy className="w-5 h-5 text-pink-600" />,
+	azúcar: &lt;Candy className="w-5 h-5 text-pink-600" />,
+	"azúcar total": &lt;Candy className="w-5 h-5 text-pink-600" />,
+	"contenido de azúcar": &lt;Candy className="w-5 h-5 text-pink-600" />,
+
+	proteínas: &lt;Drumstick className="w-5 h-5 text-amber-700" />,
+	proteína: &lt;Drumstick className="w-5 h-5 text-amber-700" />,
+	"contenido proteico": &lt;Drumstick className="w-5 h-5 text-amber-700" />,
+	"proteínas totales": &lt;Drumstick className="w-5 h-5 text-amber-700" />,
+
+	sodio: &lt;SprayCan className="w-5 h-5 text-sky-600" />,
+	sal: &lt;SprayCan className="w-5 h-5 text-sky-600" />,
+	"contenido de sodio": &lt;SprayCan className="w-5 h-5 text-sky-600" />,
+
+	carbohidratos: &lt;Utensils className="w-5 h-5 text-lime-600" />,
+	"carbohidratos totales": &lt;Utensils className="w-5 h-5 text-lime-600" />,
+	carbohidrato: &lt;Utensils className="w-5 h-5 text-lime-600" />,
+	carbs: &lt;Utensils className="w-5 h-5 text-lime-600" />,
+
+	fibra: &lt;Wheat className="w-5 h-5 text-lime-800" />,
+	"fibra dietaria": &lt;Wheat className="w-5 h-5 text-lime-800" />,
+	"fibra total": &lt;Wheat className="w-5 h-5 text-lime-800" />,
+
+	colesterol: &lt;HeartPulse className="w-5 h-5 text-red-600" />,
+
+	huevo: &lt;Egg className="w-5 h-5 text-zinc-500" />,
+
+	"vitamina a": &lt;HeartPulse className="w-5 h-5 text-green-600" />,
+	"vitamina c": &lt;HeartPulse className="w-5 h-5 text-green-600" />,
+	"vitamina d": &lt;HeartPulse className="w-5 h-5 text-green-600" />,
+	"vitamina b": &lt;HeartPulse className="w-5 h-5 text-green-600" />,
+	"vitaminas": &lt;HeartPulse className="w-5 h-5 text-green-600" />,
+	hierro: &lt;HeartPulse className="w-5 h-5 text-green-700" />,
+	calcio: &lt;HeartPulse className="w-5 h-5 text-blue-700" />,
+	zinc: &lt;HeartPulse className="w-5 h-5 text-purple-600" />,
+	potasio: &lt;HeartPulse className="w-5 h-5 text-amber-600" />,
+};
+
+/**
+ * Returns a corresponding nutrient icon component based on the given field name.
+ *
+ * @param {string} name — The name of the nutrient field to match (required).
+ * @returns {JSX.Element} The JSX icon component representing the nutrient, or a default info icon if no match is found.
+ * @example
+ * getIconForField("Grasas Totales");
+ * // Returns: &lt;Droplet className="w-5 h-5 text-yellow-600" />
+ *
+ * getIconForField("Vitamin D");
+ * // Returns: &lt;HeartPulse className="w-5 h-5 text-green-600" />
+ */
+export function getIconForField(name) {
+	const key = name.toLowerCase().trim();
+	for (const nutrient in nutrientIcons) {
+		if (key.includes(nutrient)) return nutrientIcons[nutrient];
+	}
+	return &lt;Info className="w-5 h-5 text-muted-foreground" />;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue May 27 2025 01:23:13 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

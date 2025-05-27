@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>components/ui/features/vision/labellens/NutrientCard.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/ui/features/vision/labellens/NutrientCard.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+import { motion } from "framer-motion";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getIconForField } from "./nutrientIcons";
+import { getImpactLevel } from "./impactLevel";
+
+/**
+ * Displays a card summarizing nutritional information for a specific nutrient, including its value, explanation, and health impact.
+ *
+ * @component
+ * @param {Object} props - The props object.
+ * @param {Object} props.field - Nutrient data object. Required.
+ * @param {string} props.field.name - Name of the nutrient. Required.
+ * @param {string|number} props.field.value - Measured value of the nutrient. Required.
+ * @param {string} props.field.explanation - Brief explanation of the nutrient. Required.
+ * @param {string} [props.field.healthImpact] - Description of the nutrient's health impact. Optional.
+ * @param {string} [props.field.impactLevel] - Internal impact level used for determining badge color/label. Optional.
+ * @remarks
+ * Uses Framer Motion for entrance and interaction animations. Dynamically selects an icon and impact badge based on nutrient type and health data.
+ * @returns {JSX.Element} A card element with labeled nutrient details and a visual health impact indicator.
+ * @example
+ * &lt;NutrientCard 
+ *   field={{
+ *     name: "Sodio",
+ *     value: "120mg",
+ *     explanation: "El sodio es un mineral esencial para la función muscular y nerviosa.",
+ *     healthImpact: "Alto contenido puede elevar la presión arterial.",
+ *     impactLevel: "high"
+ *   }}
+ * />
+ */
+export function NutrientCard({ field }) {
+  const impact = getImpactLevel(field.impactLevel || field.healthImpact);
+
+  return (
+    &lt;motion.div
+    initial={{ opacity: 0, y: 12 }}
+    animate={{ opacity: 1, y: 0 }}
+    whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
+    whileTap={{ scale: 0.97 }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+    >
+      &lt;Card className="flex flex-col h-full shadow-md border border-border">
+        &lt;CardHeader className="flex flex-row items-center justify-between gap-3 pb-2">
+          &lt;div className="flex items-center gap-3">
+            {getIconForField(field.name)}
+            &lt;CardTitle className="text-base text-foreground">{field.name}&lt;/CardTitle>
+          &lt;/div>
+          &lt;Badge variant={impact.color}>{impact.label}&lt;/Badge>
+        &lt;/CardHeader>
+        &lt;CardContent className="text-sm text-muted-foreground">
+          &lt;p>
+            &lt;span className="font-semibold text-foreground">Valor:&lt;/span>{" "}
+            {field.value}
+          &lt;/p>
+          &lt;p>
+            &lt;span className="font-semibold text-foreground">¿Qué es?&lt;/span>{" "}
+            {field.explanation}
+          &lt;/p>
+          &lt;p>
+            &lt;span className="font-semibold text-foreground">Impacto:&lt;/span>{" "}
+            {field.healthImpact}
+          &lt;/p>
+        &lt;/CardContent>
+      &lt;/Card>
+    &lt;/motion.div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue May 27 2025 01:23:13 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
