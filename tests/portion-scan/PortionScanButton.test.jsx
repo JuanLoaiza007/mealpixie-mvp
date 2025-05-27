@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { PortionScanButton } from '@/components/ui/features/vision/portion-scan/PortionScanButton';
+import { PortionScanButton } from '@/components/ui/features/vision/portion-scan/PortionscanButton';
 
 jest.mock('lucide-react', () => ({
   Loader2: (props) => <svg data-testid="loader-icon" {...props} />,
