@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>components/ui/features/vision/portion-scan/PortionResultCard.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/ui/features/vision/portion-scan/PortionResultCard.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+import { motion } from "framer-motion";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Utensils, Hash, Weight, Flame } from "lucide-react";
+
+/**
+ * Capitalizes the first letter of each word in a given string.
+ *
+ * @param {string} str — The input string to be formatted (required).
+ * @returns {string} The formatted string with each word capitalized.
+ *
+ * @example
+ * const name = formatName("john doe");
+ * console.log(name); // "John Doe"
+ */
+const formatName = (str) =>
+	str.replace(/\b\w/g, (char) => char.toUpperCase());
+
+/**
+ * Renders a visual card displaying portion details such as count, estimated weight, and calories.
+ *
+ * @component
+ *
+ * @param {Object} props - Component props.
+ * @param {Object} props.item - The portion item data to display. Required.
+ * @param {string} props.item.name - Name of the food item. Required.
+ * @param {number} props.item.count - Quantity of the item. Required.
+ * @param {number} [props.item.estimatedWeightKg] - Estimated weight in kilograms. Optional.
+ * @param {number} [props.item.estimatedCalories] - Estimated calories in kcal. Optional.
+ *
+ * @remarks
+ * - Uses Framer Motion for entry and hover animations.
+ * - Displays visual icons with data, styled using Lucide icons.
+ * - Format function capitalizes the item name for better readability.
+ *
+ * @returns {JSX.Element} A motion-wrapped card displaying formatted portion information.
+ *
+ * @example
+ * &lt;PortionResultCard
+ *   item={{
+ *     name: "manzana",
+ *     count: 2,
+ *     estimatedWeightKg: 0.3,
+ *     estimatedCalories: 150
+ *   }}
+ * />
+ */
+
+export function PortionResultCard({ item }) {
+	return (
+		&lt;motion.div
+			initial={{ opacity: 0, y: 12 }}
+			animate={{ opacity: 1, y: 0 }}
+			whileHover={{ scale: 1.02 }}
+			transition={{ duration: 0.3 }}
+		>
+			&lt;Card className="h-full shadow-sm border border-border">
+				&lt;CardHeader className="flex flex-row items-center justify-between pb-2">
+					&lt;div className="flex items-center gap-3">
+						&lt;Utensils className="w-5 h-5 text-orange-600" />
+						&lt;CardTitle className="text-base text-foreground">
+							{formatName(item.name)}
+						&lt;/CardTitle>
+					&lt;/div>
+					&lt;span className="text-lg font-bold text-orange-700">
+						× {item.count}
+					&lt;/span>
+				&lt;/CardHeader>
+				&lt;CardContent className="text-sm text-muted-foreground space-y-2">
+					&lt;p className="flex items-center gap-2">
+						&lt;Hash className="w-4 h-4 text-muted-foreground" />
+						&lt;span>
+							&lt;strong>Cantidad:&lt;/strong> {item.count}
+						&lt;/span>
+					&lt;/p>
+					{item.estimatedWeightKg &amp;&amp; (
+						&lt;p className="flex items-center gap-2">
+							&lt;Weight className="w-4 h-4 text-muted-foreground" />
+							&lt;span>
+								&lt;strong>Peso estimado:&lt;/strong>{" "}
+								{item.estimatedWeightKg.toFixed(2)} kg
+							&lt;/span>
+						&lt;/p>
+					)}
+					{item.estimatedCalories &amp;&amp; (
+						&lt;p className="flex items-center gap-2">
+							&lt;Flame className="w-4 h-4 text-muted-foreground" />
+							&lt;span>
+								&lt;strong>Calorías estimadas:&lt;/strong>{" "}
+								{item.estimatedCalories} kcal
+							&lt;/span>
+						&lt;/p>
+					)}
+				&lt;/CardContent>
+			&lt;/Card>
+		&lt;/motion.div>
+	);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue May 27 2025 04:17:01 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

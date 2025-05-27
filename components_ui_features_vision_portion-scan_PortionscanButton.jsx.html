@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>components/ui/features/vision/labellens/LabellensButton.jsx - Documentation</title>
+    <title>components/ui/features/vision/portion-scan/PortionscanButton.jsx - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">components/ui/features/vision/labellens/LabellensButton.jsx</h1>
+    <h1 class="page-title">components/ui/features/vision/portion-scan/PortionscanButton.jsx</h1>
     
 
     
@@ -52,34 +52,51 @@ import { Loader2, ScanLine } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
- * Renders an animated button for initiating label scanning and displaying OCR or analysis status.
+ * Button component for initiating or displaying the progress of a portion scan process.
  *
  * @component
- * @param {Object} props - The props object.
- * @param {Function} props.onClick - Callback function triggered on button click. Required.
- * @param {Object} props.loading - Loading state flags. Required.
- * @param {boolean} props.loading.vision - Indicates if OCR extraction is in progress. Required.
- * @param {boolean} props.loading.text - Indicates if nutritional analysis is in progress. Required.
- * @param {number} props.phase - Current OCR phase or step number. Required.
- * @param {number} props.total - Total number of OCR steps. Required.
+ *
+ * @param {Object} props - Component props.
+ * @param {function} props.onClick - Callback function triggered on button click. Required.
+ * @param {Object} props.loading - Loading state object. Required.
+ * @param {boolean} props.loading.vision - Indicates if the vision process is ongoing. Required.
+ * @param {boolean} props.loading.text - Indicates if the text analysis is ongoing. Required.
+ * @param {number} props.phase - Current step in the scanning process. Required.
+ * @param {number} props.total - Total number of vision scanning steps. Required.
+ *
  * @remarks
- * Combines Framer Motion for entrance and state transitions, and AnimatePresence for smooth content changes. Button is styled and disabled during loading phases.
- * @returns {JSX.Element} An animated scanning button with status-dependent icons and text.
+ * - Uses Framer Motion for entry, hover, and content transition animations.
+ * - Dynamically updates the button label based on scanning or text analysis phase.
+ * - Displays appropriate icons (Loader2 or ScanLine) based on loading state.
+ *
+ * @returns {JSX.Element} A styled, animated button that initiates or shows progress of a portion scan.
+ *
  * @example
- * &lt;LabelLensButton 
+ * &lt;PortionScanButton
  *   onClick={handleScan}
  *   loading={{ vision: true, text: false }}
- *   phase={1}
+ *   phase={2}
  *   total={3}
  * />
  */
-export function LabelLensButton({ onClick, loading, phase, total }) {
+
+export function PortionScanButton({ onClick, loading, phase, total }) {
   const isLoading = loading.vision || loading.text;
 
+  /**
+   * Returns a status message based on the current loading state.
+   *
+   * @returns {string} A user-friendly status message reflecting the current operation.
+   *
+   * @example
+   * // Assuming loading.vision is true, phase is 2, and total is 5:
+   * const message = getText();
+   * console.log(message); // "Extrayendo Porciones 2/5"
+   */
   const getText = () => {
-    if (loading.vision) return `Extrayendo texto OCR ${phase}/${total}`;
-    if (loading.text) return "Analizando contenido nutricional";
-    return "Escanear etiqueta";
+    if (loading.vision) return `Extrayendo Porciones ${phase}/${total}`;
+    if (loading.text) return "Analizando contenido de porciones";
+    return "Escanear porciones";
   };
 
   return (

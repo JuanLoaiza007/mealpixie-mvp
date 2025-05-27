@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>app/(pages)/app/vision/label-lens/page.jsx - Documentation</title>
+    <title>app/(pages)/app/vision/portion-scan/page.jsx - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">app/(pages)/app/vision/label-lens/page.jsx</h1>
+    <h1 class="page-title">app/(pages)/app/vision/portion-scan/page.jsx</h1>
     
 
     
@@ -55,46 +55,41 @@ import { generateWithGemini } from "@/utils/gemini-factory";
 import {
   SYSTEM_INSTRUCTIONS as TOGETHER_SYSTEM_INSTRUCTIONS,
   TASK as TOGETHER_TASK,
-} from "@/config/together/feature-labellens";
+} from "@/config/together/feature-portion-scan";
 import {
   SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
   TASK as GEMINI_TASK,
   RESPONSE_SCHEMA as GEMINI_RESPONSE_SCHEMA,
-} from "@/config/gemini/feature-labellens";
+} from "@/config/gemini/feature-portion-scan";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { NAV_IDS, NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
-
-
-import { PortionCard } from "@/components/ui/features/vision/labellens/PortionCard";
-import { NutrientCard } from "@/components/ui/features/vision/labellens/NutrientCard";
-import { LabelLensButton } from "@/components/ui/features/vision/labellens/LabellensButton";
-import { VitaminCard } from "@/components/ui/features/vision/labellens/VitaminCard";
-import { IngredientsCard } from "@/components/ui/features/vision/labellens/IngredientsCard";
-import { ErrorCard } from "@/components/ui/features/vision/labellens/ErrorCard";
+import { PortionResultCard } from "@/components/ui/features/vision/portion-scan/PortionResultCard";
+import { PortionScanButton } from "@/components/ui/features/vision/portion-scan/PortionscanButton";
 
 const NUM_VISION_REQUESTS = 3;
 
 /**
- * Analyzes a nutritional label image using OCR and AI to extract and present structured nutritional information.
+ * Analyzes a nutrition label image to extract and summarize portion-related information.
  *
  * @component
+ *
+ * @param {Object} props - Component props (none required directly).
+ *
  * @remarks
- * - Uses a vision assistant and Gemini AI to process image text and generate structured nutrition data.
- * - Performs multiple OCR passes (defined by NUM_VISION_REQUESTS) to improve accuracy.
- * - Displays result cards such as nutrients, vitamins, portion, and ingredients using tab navigation.
- * - Handles various UI states including loading, error, and fallback navigation.
- * - Requires `imageUrl` from context and redirects if not present.
- * @returns {JSX.Element} Nutrition label analysis interface with image preview, processing button, and results display.
+ * - Uses `useEffect` to manage image presence and top bar title on mount.
+ * - Leverages a vision assistant (Together AI) for image analysis, and Gemini for final result summarization.
+ * - Invokes asynchronous streams and JSON parsing with potential UI state updates.
+ * - Redirects if no image is available, and provides visual feedback during processing.
+ *
+ * @returns {JSX.Element} The rendered UI with image preview, action button, instructions, and results or error messages.
+ *
  * @example
- * // Used as a route/page component for OCR analysis
- * export default function NutritionOCRPage() {
- *   return &lt;NutritionOCRPage />;
- * }
+ * // Usage within a parent route where `useImage()` provides a valid `imageUrl`:
+ * &lt;PortionScan />
  */
-export default function NutritionOCRPage() {
+export default function PortionScan() {
   const { imageUrl } = useImage();
   const router = useRouter();
   const { setTitle } = useMobileTopBar();
@@ -107,7 +102,7 @@ export default function NutritionOCRPage() {
   const [error, setError] = useState(null);
 
   const functionInfo = userNavRoutes.find(
-    (route) => route.id === NAV_IDS.labelLens
+    (route) => route.id === NAV_IDS.portionScan
   );
 
   useEffect(() => {
@@ -127,19 +122,18 @@ export default function NutritionOCRPage() {
   }, [setTitle]);
 
   /**
-   * Performs OCR analysis on an image and generates a structured response using AI.
+   * Analyzes a scanned image of portions using a vision model and processes the results with a text model.
    *
-   * @param {string} imageUrl — The URL of the image to be analyzed (required).
-   * @throws {Error} If the image cannot be processed or if generating the final response fails.
-   * @returns {Promise&lt;void>} Resolves when the OCR analysis and response generation are complete.
+   * @async
+   * @function
+   * @returns {Promise&lt;void>} A promise that resolves when the analysis is complete.
+   * @throws {Error} Throws an error if the image processing or final response generation fails.
    *
    * @example
-   * // Example usage within a React component with a valid imageUrl:
-   * analyzeOCR().then(() => {
-   *   console.log("OCR and response processing completed.");
-   * });
+   * // Will start processing the image when imageUrl is defined:
+   * await analyzePortionScan();
    */
-  const analyzeOCR = useCallback(async () => {
+  const analyzePortionScan = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
     setOutputs([]);
@@ -169,7 +163,7 @@ export default function NutritionOCRPage() {
     setLoading({ vision: false, text: true });
     try {
       const formattedInput =
-        `${GEMINI_TASK}\n\nPredicciones OCR:\n` +
+        `${GEMINI_TASK}\n\nPredicciones Portion Scan:\n` +
         preds.map((p, i) => `- OCR ${i + 1}:\n${p}`).join("\n\n");
 
       const jsonResponse = await generateWithGemini({
@@ -192,15 +186,15 @@ export default function NutritionOCRPage() {
 
   return (
     &lt;Screen inPageTitle={functionInfo.label}>
-      &lt;div className="flex flex-col md:flex-row gap-2">
+      &lt;div className="flex flex-col md:flex-row gap-2 w-full">
         &lt;section className="flex flex-col gap-2">
           &lt;ImagePreviewCard
             className="w-full sm md:w-60 lg:w-100 gap-0"
             imageUrl={imageUrl}
             alt="Etiqueta Nutricional"
           >
-            &lt;LabelLensButton
-              onClick={analyzeOCR}
+            &lt;PortionScanButton
+              onClick={analyzePortionScan}
               loading={loading}
               phase={phase}
               total={NUM_VISION_REQUESTS}
@@ -208,47 +202,16 @@ export default function NutritionOCRPage() {
           &lt;/ImagePreviewCard>
           &lt;InstructionCard functionInfo={functionInfo} />
         &lt;/section>
-        &lt;section className="flex flex-col gap-2">
+        &lt;section className="flex flex-col gap-2 w-full">
           {error &amp;&amp; (
             &lt;ErrorCard title="Error" message={`${error} Asegúrate de que la imagen esté clara y enfocada.`} />
           )}
 
-          {finalResult?.isValidLabel &amp;&amp; (
-            &lt;div className="w-full space-y-4">
-              &lt;PortionCard portion={finalResult.portion} />
-              &lt;Tabs defaultValue="nutrients" className="w-full">
-                &lt;TabsList className="flex flex-wrap gap-2 justify-start">
-                  {finalResult?.fields?.length > 0 &amp;&amp; (
-                    &lt;TabsTrigger value="nutrients">Nutrientes&lt;/TabsTrigger>
-                  )}
-                  {finalResult?.vitaminsAndMinerals?.length > 0 &amp;&amp; (
-                    &lt;TabsTrigger value="vitamins">Vitaminas&lt;/TabsTrigger>
-                  )}
-                  {finalResult.ingredients &amp;&amp; (
-                    &lt;TabsTrigger value="ingredients">Ingredientes&lt;/TabsTrigger>
-                  )}
-                &lt;/TabsList>
-
-                &lt;TabsContent value="nutrients">
-                  &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
-                    {finalResult.fields?.map((field, index) => (
-                      &lt;NutrientCard field={field} key={index} />
-                    ))}
-                  &lt;/div>
-                &lt;/TabsContent>
-
-                &lt;TabsContent value="vitamins">
-                  &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
-                    {finalResult.vitaminsAndMinerals?.map((item, index) => (
-                      &lt;VitaminCard item={item} key={index} />
-                    ))}
-                  &lt;/div>
-                &lt;/TabsContent>
-
-                &lt;TabsContent value="ingredients">
-                  &lt;IngredientsCard ingredients={finalResult.ingredients} />
-                &lt;/TabsContent>
-              &lt;/Tabs>
+          {finalResult?.hasCountableItems &amp;&amp; (
+            &lt;div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2">
+              {finalResult?.items.map((item, index) => (
+                &lt;PortionResultCard key={index} item={item} />
+              ))}
             &lt;/div>
           )}
 
