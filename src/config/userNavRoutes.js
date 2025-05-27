@@ -79,6 +79,8 @@ export const userNavRoutes = [
     id: NAV_IDS.portionScan,
     label: "PortionScan",
     description: "Detecta la cantidad visible de ingredientes contables.",
+    long_description: 
+      "Detecta y cuenta alimentos visibles como manzanas, huevos, rebanadas de pan o galletas. Perfecto para cuando no hay etiqueta nutricional pero necesitas entender cuántas porciones hay en tu plato.",
     href: "/app/vision/portion-scan",
     icon: Hash,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
