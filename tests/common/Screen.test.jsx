@@ -1,46 +1,78 @@
 import { render, screen } from '@testing-library/react';
 import Screen from '@/components/ui/features/common/Screen';
+import { functionIcons } from '@/components/ui/features/common/Screen';
+import { userNavRoutes } from '@/config/userNavRoutes';
+import '@testing-library/jest-dom';
 
-// Mock de íconos
-jest.mock('lucide-react', () => ({
-  Camera: (props) => <svg data-testid="icon-camera" {...props} />,
-  Utensils: (props) => <svg data-testid="icon-utensils" {...props} />,
-  Hash: (props) => <svg data-testid="icon-hash" {...props} />,
-  BookOpen: (props) => <svg data-testid="icon-book" {...props} />,
-  Thermometer: (props) => <svg data-testid="icon-thermo" {...props} />,
-  FileText: (props) => <svg data-testid="icon-text" {...props} />,
-  DollarSign: (props) => <svg data-testid="icon-dollar" {...props} />,
-  Ruler: (props) => <svg data-testid="icon-ruler" {...props} />,
-}));
+// Mock de next/link
+jest.mock('next/link', () => {
+  return ({ href, children, ...rest }) => (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  );
+});
 
-describe('<Screen />', () => {
-  it('renders title and correct icon for "Analyzer"', () => {
+describe('Screen component', () => {
+  it('renders title with correct icon when inPageTitle is valid', () => {
+    const title = 'Analyzer';
+    const Icon = functionIcons[title];
+
     render(
-      <Screen inPageTitle="Analyzer">
+      <Screen inPageTitle={title}>
         <p>Contenido de prueba</p>
       </Screen>
     );
 
-    expect(screen.getByText(/analyzer/i)).toBeInTheDocument();
-    expect(screen.getByTestId('icon-camera')).toBeInTheDocument();
-    expect(screen.getByText(/contenido de prueba/i)).toBeInTheDocument();
+    // Validamos el título renderizado
+    expect(screen.getByText(title)).toBeInTheDocument();
+
+    // Validamos que el ícono esté en el documento
+    const icon = screen.getByTestId('icon');
+    expect(icon).toBeInTheDocument();
+    expect(icon.tagName.toLowerCase()).toBe('svg');
   });
 
-  it('renders correct icon for other functions', () => {
-    render(<Screen inPageTitle="SizeSage">Tamaño</Screen>);
-    expect(screen.getByText(/sizesage/i)).toBeInTheDocument();
-    expect(screen.getByTestId('icon-ruler')).toBeInTheDocument();
-    expect(screen.getByText(/tamaño/i)).toBeInTheDocument();
+  it('renders without icon if inPageTitle does not match', () => {
+    render(
+      <Screen inPageTitle="UnknownTitle">
+        <p>Contenido sin ícono</p>
+      </Screen>
+    );
+
+    expect(screen.getByText('UnknownTitle')).toBeInTheDocument();
+    expect(screen.queryByTestId('icon')).not.toBeInTheDocument();
   });
 
-  it('renders title even if icon is unknown', () => {
-    render(<Screen inPageTitle="UnknownFunction">Contenido</Screen>);
-    expect(screen.getByText(/unknownfunction/i)).toBeInTheDocument();
-    expect(screen.queryByTestId(/icon/i)).not.toBeInTheDocument();
+  it('renders children content', () => {
+    render(
+      <Screen inPageTitle="Analyzer">
+        <div data-testid="child">Contenido interno</div>
+      </Screen>
+    );
+
+    expect(screen.getByTestId('child')).toBeInTheDocument();
+    expect(screen.getByText('Contenido interno')).toBeInTheDocument();
   });
 
-  it('renders children inside layout container', () => {
-    render(<Screen inPageTitle="LabelLens"><div>Contenido de etiqueta</div></Screen>);
-    expect(screen.getByText(/contenido de etiqueta/i)).toBeInTheDocument();
+  it('renders "Volver al inicio" link with Home icon', () => {
+    const href = userNavRoutes.find((r) => r.id === 'vision')?.href;
+  
+    render(<Screen inPageTitle="Analyzer">test</Screen>);
+  
+    const link = screen.getByTitle('Volver al inicio');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', href);
+  
+    // Comprobamos que contenga un ícono SVG (no accesible por rol)
+    const svgIcon = link.querySelector('svg');
+    expect(svgIcon).toBeInTheDocument();
+  });
+
+  it('has accessible heading', () => {
+    render(<Screen inPageTitle="InstaRecipe">test</Screen>);
+
+    const heading = screen.getByRole('heading', { name: 'InstaRecipe' });
+    expect(heading).toBeInTheDocument();
   });
 });

@@ -45,9 +45,6 @@ const formatName = (str) =>
  *   }}
  * />
  */
-jsx
-Copiar
-Editar
 
 export function PortionResultCard({ item }) {
 	return (

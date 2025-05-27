@@ -46,7 +46,7 @@ export default function Screen({ inPageTitle, children, ...props }) {
   return (
     <div className="flex w-full flex-wrap">
       <h1 className="hidden md:flex md:items-center md:gap-2 md:my-2 text-2xl font-bold">
-        {Icon && <Icon className="w-6 h-6" />}
+        {Icon && <Icon className="w-6 h-6" data-testid="icon" />}
         {inPageTitle}
       </h1>
 
