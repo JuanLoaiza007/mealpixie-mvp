@@ -1,3 +1,4 @@
+import { userNavRoutes } from "@/config/userNavRoutes";
 import {
   Camera,
   Utensils,
@@ -7,7 +8,10 @@ import {
   FileText,
   DollarSign,
   Ruler,
+  Home,
 } from "lucide-react";
+
+import Link from "next/link";
 
 export const functionIcons = {
   Analyzer: Camera,
@@ -45,6 +49,15 @@ export default function Screen({ inPageTitle, children, ...props }) {
         {Icon && <Icon className="w-6 h-6" />}
         {inPageTitle}
       </h1>
+
+      <Link
+        href={userNavRoutes.find((route) => route.id === "vision").href}
+        className="absolute right-4 top-4 text-muted-foreground hover:text-foreground transition-colors"
+        title="Volver al inicio"
+      >
+        <Home className="w-5 h-5 text-orange-500" />
+      </Link>
+
       <div className="flex flex-col lg:flex-row mt-12 w-full gap-2" {...props}>
         {children}
       </div>
