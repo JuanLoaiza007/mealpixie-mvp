@@ -1,0 +1,12 @@
+{
+  "source": {
+    "include": ["src/components", "src/lib", "src/components/schemas", "src/app"],
+    "includePattern": "\\.(js|jsx|ts|tsx)$",
+    "excludePattern": "(node_modules|docs)"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true,
+    "template": "node_modules/docdash"
+  }
+}
