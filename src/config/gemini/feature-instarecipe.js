@@ -1,6 +1,6 @@
 import { Type } from "@google/genai";
 
-export const SYSTEM_INSTRUCTIONS = `Eres un asistente de IA especializado en análisis de imágenes de alimentos. Tu función principal es identificar los ingredientes presentes en una foto que muestre varios alimentos crudos o preparados y, a partir de ellos, generar sugerencias de recetas.`;
+export const SYSTEM_INSTRUCTIONS = `Eres un asistente de IA especializado en análisis de imágenes de alimentos. Tu función principal es identificar los ingredientes presentes en una foto que muestre varios alimentos crudos o preparados y, a partir de ellos, generar la lista de los ingredientes y las sugerencias de recetas.`;
 
 export const TASK = `Recibes las predicciones de un modelo de visión sobre los objetos detectados en una imagen.  
 1. Filtra y conserva únicamente aquellos objetos que correspondan con ingredientes alimenticios.  
@@ -12,7 +12,7 @@ export const TASK = `Recibes las predicciones de un modelo de visión sobre los 
 }
 \`\`\`
 3. Si SÍ se detectan uno o más ingredientes:
-   - Crea un array \`ingredients\` con los nombres de los ingredientes más probables (sin repetir).
+   - Crea un array \`ingredients\` con los nombres de los ingredientes dependiendo de cuantos INGREDIENTES DISTINTOS SE DETECTARON, es decir, si detectaron 3 ingredientes distintos, debería tener un array de 3 strings con los nombres de los ingredientes, es fundamental que NO te pases del número de ingredientes distintos y además NO se debe tener ingredientes repetidos.
    - Genera un array \`suggestions\` con hasta 3 recetas posibles usando exclusivamente esos ingredientes. Cada receta debe tener un campo \`name\` (nombre del plato) y un campo \`description\` (breve descripción).
    - Devuelve la siguiente estructura JSON:
 \`\`\`json
