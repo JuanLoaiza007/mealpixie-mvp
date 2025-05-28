@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/(pages)/app/vision/insta-recipe/page.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/(pages)/app/vision/insta-recipe/page.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useImage } from "@/context/image";
+import { useRouter } from "next/navigation";
+import { useMobileTopBar } from "@/context/mobileTopBar";
+import { createVisionAssistant } from "@/utils/togheter-factory";
+import { generateWithGemini } from "@/utils/gemini-factory";
+import {
+  SYSTEM_INSTRUCTIONS as TOGETHER_SYSTEM_INSTRUCTIONS,
+  TASK as TOGETHER_TASK,
+} from "@/config/together/feature-instarecipe";
+import {
+  SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
+  TASK as GEMINI_TASK,
+  RESPONSE_SCHEMA as GEMINI_RESPONSE_SCHEMA,
+} from "@/config/gemini/feature-instarecipe";
+import Screen from "@/components/ui/features/common/Screen";
+import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
+import { InstaRecipeButton } from "@/components/ui/features/vision/insta-recipe/InstaRecipeButton";
+import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
+import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+
+const NUM_VISION_REQUESTS = 5;
+
+/**
+ * Analyzes an image of food ingredients using AI to extract ingredients and generate recipe suggestions.
+ *
+ * @component
+ * @remarks
+ * - Uses a vision assistant and Gemini AI to process food-related images.
+ * - Performs multiple image analysis requests (defined by NUM_VISION_REQUESTS) to improve output robustness.
+ * - Generates a list of detected ingredients and recipe suggestions based on predictions.
+ * - Displays result cards conditionally based on analysis outcome (ingredients found or not).
+ * - Includes developer-only debug view to inspect raw vision outputs.
+ * - Requires `imageUrl` from context and redirects if not present.
+ * @returns {JSX.Element} Ingredient analysis and recipe suggestion interface with image preview, results, and fallback UI.
+ * @example
+ * // Used as a route/page component for vision-based recipe generation:
+ * export default function IngredientsRecipePage() {
+ *   return &lt;IngredientsRecipePage />;
+ * }
+ */
+export default function IngredientsRecipePage() {
+  const { imageUrl } = useImage();
+  const router = useRouter();
+  const { setTitle } = useMobileTopBar();
+  const visionAssistant = useRef(null);
+
+  const [visionOutputs, setVisionOutputs] = useState([]);
+  const [analysisPhase, setAnalysisPhase] = useState(0);
+  const [finalResult, setFinalResult] = useState(null);
+  const [loading, setLoading] = useState({ vision: false, text: false });
+  const [error, setError] = useState(null);
+  const [showPredictions, setShowPredictions] = useState(false);
+
+  const functionInfo = userNavRoutes.find(
+    (route) => route.id === NAV_IDS.instaRecipe
+  );
+
+  useEffect(() => {
+    if (!imageUrl) {
+      const destinationRoute = userNavRoutes.find((route) =>
+        route.tags.includes(NAV_TAGS.mainPage)
+      );
+      router.push(destinationRoute.href);
+    }
+  }, [imageUrl, router]);
+
+  useEffect(() => {
+    setTitle(functionInfo.label);
+    visionAssistant.current = createVisionAssistant({
+      systemInstruction: TOGETHER_SYSTEM_INSTRUCTIONS,
+    });
+  }, [setTitle]);
+
+  /**
+  * Analyzes an image to detect ingredients and generate suggested recipes.
+  *
+  * @async
+  * @throws {Error} If an error occurs during vision analysis or generation of the final response.
+  * @returns {Promise&lt;void>} Resolves when the vision analysis and response generation are complete.
+  *
+  * @example
+  * analyzeImage().then(() => {
+  *   console.log("Analysis completed");
+  * });
+  */
+  const analyzeIngredients = useCallback(async () => {
+    if (!imageUrl) return;
+    setError(null);
+    setVisionOutputs([]);
+    setFinalResult(null);
+    setShowPredictions(false);
+    setLoading({ vision: true, text: false });
+    setAnalysisPhase(1);
+
+    const preds = [];
+    for (let i = 0; i &lt; NUM_VISION_REQUESTS; i++) {
+      try {
+        let text = "";
+        const stream = await visionAssistant.current.analyzeImage(
+          imageUrl,
+          TOGETHER_TASK
+        );
+        for await (const part of stream) text += part;
+        preds.push(text);
+        setVisionOutputs((prev) => [...prev, text]);
+      } catch {
+        setError("Error during vision analysis.");
+        setLoading({ vision: false, text: false });
+        return;
+      }
+      setAnalysisPhase(i + 2);
+    }
+
+    setLoading({ vision: false, text: true });
+    try {
+      const combined =
+        `${GEMINI_TASK}\n\nPredicciones:\n` +
+        preds.map((p, i) => `- Predicción ${i + 1}:\n${p}`).join("\n\n");
+      const jsonResponse = await generateWithGemini({
+        systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
+        task: combined,
+        responseSchema: GEMINI_RESPONSE_SCHEMA,
+        history: [],
+      });
+      setFinalResult(JSON.parse(jsonResponse));
+    } catch (e) {
+      setError("Error generating final response.");
+      console.error(e);
+    } finally {
+      setLoading((prev) => ({ ...prev, text: false }));
+    }
+  }, [imageUrl]);
+
+  const togglePreds = () => setShowPredictions((v) => !v);
+
+  if (!imageUrl) {
+    return null;
+  }
+
+  return (
+    &lt;Screen inPageTitle={functionInfo.label}>
+      &lt;div className="flex flex-col md:flex-row gap-2">
+        &lt;section className="flex flex-col gap-2">
+          &lt;ImagePreviewCard
+            className="w-full sm md:w-60 lg:w-100 gap-0"
+            imageUrl={imageUrl}
+            alt="Analysis Image"
+          >
+            &lt;InstaRecipeButton
+              onClick={analyzeIngredients}
+              loading={loading}
+              phase={analysisPhase}
+              total={NUM_VISION_REQUESTS}
+            />
+          &lt;/ImagePreviewCard>
+
+          {!finalResult ? (
+            &lt;InstructionCard functionInfo={functionInfo} />
+          ) : (
+            process.env.NODE_ENV === "development" &amp;&amp; (
+              &lt;PredictionCard
+                finalResult={finalResult}
+                showPredictions={showPredictions}
+                toggle={togglePreds}
+                visionOutputs={visionOutputs}
+              />
+            )
+          )}
+        &lt;/section>
+
+        &lt;section className="flex flex-col gap-2">
+          {error &amp;&amp; (
+            &lt;Card>
+              &lt;CardHeader>
+                &lt;CardTitle>Error&lt;/CardTitle>
+              &lt;/CardHeader>
+              &lt;CardContent>{error}&lt;/CardContent>
+            &lt;/Card>
+          )}
+
+          {!error &amp;&amp; finalResult &amp;&amp; !finalResult.isFoodDetected &amp;&amp; (
+            &lt;Card>
+              &lt;CardHeader>
+                &lt;CardTitle>No se detectaron ingredientes&lt;/CardTitle>
+              &lt;/CardHeader>
+              &lt;CardContent>{finalResult.message}&lt;/CardContent>
+            &lt;/Card>
+          )}
+
+          {!error &amp;&amp; finalResult &amp;&amp; finalResult.isFoodDetected &amp;&amp; (
+            &lt;>
+              &lt;Card>
+                &lt;CardHeader>
+                  &lt;CardTitle>Ingredientes&lt;/CardTitle>
+                &lt;/CardHeader>
+                &lt;CardContent>
+                  &lt;ul className="list-disc list-inside">
+                    {finalResult.ingredients.map((ing, idx) => (
+                      &lt;li key={idx}>{ing}&lt;/li>
+                    ))}
+                  &lt;/ul>
+                &lt;/CardContent>
+              &lt;/Card>
+
+              &lt;Card>
+                &lt;CardHeader>
+                  &lt;CardTitle>Recetas&lt;/CardTitle>
+                &lt;/CardHeader>
+                &lt;CardContent>
+                  &lt;ul className="list-decimal list-inside">
+                    {finalResult.suggestions.map((rec, idx) => (
+                      &lt;li key={idx} className="mb-2">
+                        &lt;strong>{rec.name}:&lt;/strong> {rec.description}
+                      &lt;/li>
+                    ))}
+                  &lt;/ul>
+                &lt;/CardContent>
+              &lt;/Card>
+            &lt;/>
+          )}
+        &lt;/section>
+      &lt;/div>
+    &lt;/Screen>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Wed May 28 2025 03:20:18 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
