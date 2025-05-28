@@ -16,7 +16,7 @@ import {
 } from "@/config/gemini/feature-instarecipe";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { InstaRecipeButton } from "@/components/ui/features/vision/InstaRecipeButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import {
@@ -29,6 +29,24 @@ import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
 const NUM_VISION_REQUESTS = 5;
 
+/**
+ * Analyzes an image of food ingredients using AI to extract ingredients and generate recipe suggestions.
+ *
+ * @component
+ * @remarks
+ * - Uses a vision assistant and Gemini AI to process food-related images.
+ * - Performs multiple image analysis requests (defined by NUM_VISION_REQUESTS) to improve output robustness.
+ * - Generates a list of detected ingredients and recipe suggestions based on predictions.
+ * - Displays result cards conditionally based on analysis outcome (ingredients found or not).
+ * - Includes developer-only debug view to inspect raw vision outputs.
+ * - Requires `imageUrl` from context and redirects if not present.
+ * @returns {JSX.Element} Ingredient analysis and recipe suggestion interface with image preview, results, and fallback UI.
+ * @example
+ * // Used as a route/page component for vision-based recipe generation:
+ * export default function IngredientsRecipePage() {
+ *   return <IngredientsRecipePage />;
+ * }
+ */
 export default function IngredientsRecipePage() {
   const { imageUrl } = useImage();
   const router = useRouter();
@@ -62,7 +80,19 @@ export default function IngredientsRecipePage() {
     });
   }, [setTitle]);
 
-  const analyzeImage = useCallback(async () => {
+  /**
+  * Analyzes an image to detect ingredients and generate suggested recipes.
+  *
+  * @async
+  * @throws {Error} If an error occurs during vision analysis or generation of the final response.
+  * @returns {Promise<void>} Resolves when the vision analysis and response generation are complete.
+  *
+  * @example
+  * analyzeImage().then(() => {
+  *   console.log("Analysis completed");
+  * });
+  */
+  const analyzeIngredients = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
     setVisionOutputs([]);
@@ -125,8 +155,8 @@ export default function IngredientsRecipePage() {
             imageUrl={imageUrl}
             alt="Analysis Image"
           >
-            <AnalyzeButton
-              onClick={analyzeImage}
+            <InstaRecipeButton
+              onClick={analyzeIngredients}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
