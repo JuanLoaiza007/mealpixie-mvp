@@ -1,3 +1,21 @@
+/**
+ * Provides high-level instructions to guide an AI assistant in interpreting food imagery for cooking level or freshness.
+ *
+ * @constant
+ * @type {string}
+ * @name SYSTEM_INSTRUCTIONS
+ * @description Defines the assistant's role as a visual food analysis expert tasked with assessing the doneness or freshness of food items based on image color and quality.
+ */
+
+/**
+ * Outlines the specific steps the AI must follow to analyze food images and generate a brief visual assessment with appropriate classification and emoji.
+ *
+ * @constant
+ * @type {string}
+ * @name TASK
+ * @description Guides the assistant to classify the cooking level or freshness of food items using descriptive text and emojis, and to respond appropriately when food is not detected or image quality is insufficient.
+ */
+
 export const SYSTEM_INSTRUCTIONS = `
 Eres un asistente de IA especializado en análisis visual de alimentos para determinar su grado de cocción o nivel de frescura.
 Tu función principal es recibir una imagen de un plato de comida, ingrediente, fruta o snack y analizar su color para indicar el estado actual del alimento.

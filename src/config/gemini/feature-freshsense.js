@@ -1,5 +1,35 @@
 import { Type } from "@google/genai";
 
+/**
+ * Defines the assistant's role for interpreting visual predictions from food images to assess cooking or freshness levels.
+ *
+ * @constant
+ * @type {string}
+ * @name SYSTEM_INSTRUCTIONS
+ * @description System-level prompt that guides the assistant to evaluate multiple visual predictions and infer the state of food items (cooked/fresh) while handling uncertain or invalid cases.
+ */
+
+/**
+ * Describes the multi-step procedure the assistant must follow to consolidate predictions into a reliable, user-facing response about food state.
+ *
+ * @constant
+ * @type {string}
+ * @name TASK
+ * @description Instruction set for evaluating consistency, inferring freshness or cooking levels, rejecting invalid inputs, and formatting the response as JSON.
+ */
+
+/**
+ * JSON schema that defines the expected structure of the assistant's response regarding food freshness or cooking state.
+ *
+ * @constant
+ * @type {object}
+ * @name RESPONSE_SCHEMA
+ * @property {boolean} isFreshnessDetected — Indicates whether the state of the food could be determined reliably.
+ * @property {string} [message] — Optional message shown when freshness/cooking cannot be determined or the image is invalid.
+ * @property {Array<Object>} [results] — List of reliably identified food items with corresponding cooking/freshness assessments and representative emojis.
+ * @description JSON schema used to validate the structure of the assistant’s output regarding food evaluation based on visual predictions.
+ */
+
 export const SYSTEM_INSTRUCTIONS = `Eres un validador experto en análisis de imágenes de alimentos. Tu rol es recibir múltiples predicciones de otro modelo de visión sobre el contenido de una imagen y determinar si estas predicciones permiten inferir el nivel de cocción o frescura de los alimentos detectados.
 
 **Tus tareas incluyen:**
