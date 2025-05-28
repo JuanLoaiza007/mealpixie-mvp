@@ -16,7 +16,7 @@ import {
 } from "@/config/gemini/feature-instarecipe";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { InstaRecipeButton } from "@/components/ui/features/vision/InstaRecipeButton";
+import { InstaRecipeButton } from "@/components/ui/features/vision/insta-recipe/InstaRecipeButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import {
