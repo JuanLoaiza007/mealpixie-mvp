@@ -9,8 +9,8 @@ export function NutritionSection({ finalResult }) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
       <Card className="gap-0">
         <CardHeader>
-          <CardTitle className="text-sm text-orange-500">
-            Información nutricional
+          <CardTitle>
+            <h2 className="text-sm text-orange-500">Información nutricional</h2>
           </CardTitle>
         </CardHeader>
         <CardContent>
