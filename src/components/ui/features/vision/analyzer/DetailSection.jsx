@@ -8,9 +8,11 @@ export function DetailSection({ finalResult }) {
     <>
       <div className="grid grid-cols-2 gap-2">
         <Card className="gap-0">
-          <CardHeader className="px-4">
-            <CardTitle className="text-sm md:text-md flex items-center text-orange-500">
-              <CheckCircle className="mr-2" /> Ventajas
+          <CardHeader className="px-4" data-testid="advantages-header">
+            <CardTitle>
+              <h2 className="text-sm md:text-md flex items-center text-orange-500">
+                <CheckCircle className="mr-2" /> Ventajas
+              </h2>
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4">
@@ -25,9 +27,11 @@ export function DetailSection({ finalResult }) {
         </Card>
 
         <Card className="gap-0">
-          <CardHeader className="px-4">
-            <CardTitle className="text-sm md:text-md flex items-center text-orange-500">
-              <AlertTriangle className="mr-2" /> Desventajas
+          <CardHeader className="px-4" data-testid="disadvantages-header">
+            <CardTitle>
+              <h2 className="text-sm md:text-md flex items-center text-orange-500">
+                <AlertTriangle className="mr-2" /> Desventajas
+              </h2>
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4">
