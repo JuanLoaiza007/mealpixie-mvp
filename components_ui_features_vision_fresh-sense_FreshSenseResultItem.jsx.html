@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>components/ui/features/vision/labellens/ErrorCard.jsx - Documentation</title>
+    <title>components/ui/features/vision/fresh-sense/FreshSenseResultItem.jsx - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">components/ui/features/vision/labellens/ErrorCard.jsx</h1>
+    <h1 class="page-title">components/ui/features/vision/fresh-sense/FreshSenseResultItem.jsx</h1>
     
 
     
@@ -45,44 +45,51 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>"use client";
-import { motion } from "framer-motion";
-import { AlertTriangle } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+            <pre class="prettyprint source linenums"><code>// components/ui/features/vision/fresh-sense/FreshSenseResultItem.jsx
+import React from 'react';
 
 /**
- * Displays a stylized error message card with an icon, title, and message.
+ * Displays a result item with its label, assessment text, and an associated icon.
  *
  * @component
- * @param {Object} props - The props object.
- * @param {string} [props.title="Error"] - Title of the error card. Optional, defaults to "Error".
- * @param {string} [props.message="Ha ocurrido un problema."] - Message content displayed below the title. Optional, defaults to "Ha ocurrido un problema.".
+ *
+ * @param {string} item - The label or name of the result item. Required.
+ * @param {string} assessment - The assessment or description associated with the item. Required.
+ * @param {React.ReactNode} icon - The icon representing the item, typically a React element. Required.
+ *
  * @remarks
- * Utilizes Framer Motion for fade-in animation on mount. Integrates UI components from a design system and Lucide icons.
- * @returns {JSX.Element} A card component indicating an error state.
+ * This is a purely presentational component and does not use any hooks or cause side effects.
+ *
+ * @returns {JSX.Element} A styled container showing the item label, assessment, and icon.
+ *
  * @example
- * &lt;ErrorCard 
- *   title="Connection Failed" 
- *   message="Unable to connect to the server. Please try again later." 
- * />
+ * import React from 'react';
+ * import { FreshSenseResultItem } from 'components/ui/features/vision/fresh-sense/FreshSenseResultItem';
+ * import { FaThermometerHalf } from 'react-icons/fa';
+ *
+ * function ResultsExample() {
+ *   return (
+ *     &lt;FreshSenseResultItem
+ *       item="Temperature"
+ *       assessment="Within normal range"
+ *       icon={&lt;FaThermometerHalf />}
+ *     />
+ *   );
+ * }
  */
-export function ErrorCard({ title = "Error", message = "Ha ocurrido un problema." }) {
+export function FreshSenseResultItem({ item, assessment, icon }) {
   return (
-    &lt;motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-    >
-      &lt;Card className="border border-destructive bg-red-50 text-destructive shadow-sm">
-        &lt;CardHeader className="flex flex-row items-center gap-2">
-          &lt;AlertTriangle className="w-5 h-5 text-destructive" />
-          &lt;CardTitle className="text-base">{title}&lt;/CardTitle>
-        &lt;/CardHeader>
-        &lt;CardContent className="text-sm text-destructive-foreground">
-          {message}
-        &lt;/CardContent>
-      &lt;/Card>
-    &lt;/motion.div>
+    &lt;div className="flex justify-between items-center bg-gray-100 rounded-lg p-4">
+      &lt;div className="flex-1">
+        &lt;h4 className="text-base font-semibold text-orange-500 mb-1">
+          {item}
+        &lt;/h4>
+        &lt;p className="text-sm text-gray-700">{assessment}&lt;/p>
+      &lt;/div>
+      &lt;div className="ml-4 flex-shrink-0">
+        &lt;span className="text-2xl">{icon}&lt;/span>
+      &lt;/div>
+    &lt;/div>
   );
 }
 </code></pre>

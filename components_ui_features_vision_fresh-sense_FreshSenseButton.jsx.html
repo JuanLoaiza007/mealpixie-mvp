@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>components/ui/features/vision/fresh-sense/FreshSenseButton.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/ui/features/vision/fresh-sense/FreshSenseButton.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// components/ui/features/vision/fresh-sense/FreshSenseButton.jsx
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+
+/**
+ * Renders a button that initiates image analysis and displays loading states.
+ *
+ * @component
+ *
+ * @param {Function} onClick - Callback function invoked when the button is clicked. (required)
+ * @param {{ vision: boolean, text: boolean }} loading - Object representing loading states: `vision` for vision analysis and `text` for final response generation. (required)
+ * @param {number} phase - Current analysis phase index, used to display progress. (required)
+ * @param {number} total - Total number of analysis phases. (required)
+ *
+ * @remarks
+ * - Conditionally renders a spinner (Loader2) when either `loading.vision` or `loading.text` is true.
+ * - Disables the button during any loading phase.
+ *
+ * @returns {JSX.Element} A styled button that shows a loader and appropriate label text based on loading state.
+ *
+ * @example
+ * ```jsx
+ * import React, { useState } from "react";
+ * import { FreshSenseButton } from "@/components/ui/features/vision/fresh-sense/FreshSenseButton";
+ *
+ * function ExampleUsage() {
+ *   const [loading, setLoading] = useState({ vision: false, text: false });
+ *   const [phase, setPhase] = useState(1);
+ *   const totalPhases = 5;
+ *
+ *   const handleAnalyze = () => {
+ *     setLoading({ vision: true, text: false });
+ *     // Simulate analysis steps...
+ *     setTimeout(() => {
+ *       setLoading({ vision: false, text: true });
+ *       setTimeout(() => {
+ *         setLoading({ vision: false, text: false });
+ *         setPhase((prev) => prev + 1);
+ *       }, 1000);
+ *     }, 2000);
+ *   };
+ *
+ *   return (
+ *     &lt;FreshSenseButton
+ *       onClick={handleAnalyze}
+ *       loading={loading}
+ *       phase={phase}
+ *       total={totalPhases}
+ *     />
+ *   );
+ * }
+ * ```
+ */
+export function FreshSenseButton({ onClick, loading, phase, total }) {
+  return (
+    &lt;Button
+      className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
+      disabled={loading.vision || loading.text}
+      onClick={onClick}
+    >
+      {(loading.vision || loading.text) &amp;&amp; (
+        &lt;Loader2 className="animate-spin mr-2" />
+      )}
+      {loading.vision
+        ? `Analizando con modelo de visión ${phase}/${total}`
+        : loading.text
+        ? "Generando respuesta final"
+        : "Analizar imagen"}
+    &lt;/Button>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sat May 31 2025 03:09:27 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
