@@ -102,6 +102,8 @@ export const userNavRoutes = [
     label: "FreshSense",
     description: "Identifica cocción o frescura por color.",
     href: "/app/vision/fresh-sense",
+    long_description:
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento podremos identificar su estado de cocción o frescura por el color.",
     icon: Thermometer,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
