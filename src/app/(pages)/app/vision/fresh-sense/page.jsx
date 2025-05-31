@@ -205,4 +205,3 @@ const analyzeImage = useCallback(async () => {
     </Screen>
   );
 }
-````
