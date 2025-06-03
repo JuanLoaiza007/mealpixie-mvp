@@ -132,6 +132,8 @@ export const userNavRoutes = [
     label: "SizeSage",
     description: "Mide dimensiones y volumen con referencia.",
     href: "/app/vision/size-sage",
+    long_description:
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento podremos estimar el volumen y las dimensiones del alimento.",
     icon: Ruler,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
