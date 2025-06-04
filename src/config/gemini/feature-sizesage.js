@@ -27,59 +27,84 @@
 
 import { Type } from "@google/genai";
 
-export const SYSTEM_INSTRUCTIONS = `Eres un asistente experto en análisis visual para estimación de tamaño y volumen de alimentos a partir de imágenes. Tu rol es recibir predicciones generadas por un modelo de visión que ha detectado objetos en una imagen, y a partir de esta información determinar si hay un objeto de referencia claro (mano, moneda, plato, cuchara) y si es posible estimar las dimensiones y volumen del alimento.
+export const SYSTEM_INSTRUCTIONS = `"""
+Eres un asistente experto en análisis visual para estimación de tamaño y volumen de alimentos a partir de imágenes. Tu rol es:
 
-**Tus tareas incluyen:**
+1. Recibir predicciones de un modelo de visión sobre objetos detectados en una imagen
+2. Determinar si hay un objeto de referencia claro (mano, moneda, plato, cuchara)
+3. Calcular dimensiones y volumen del alimento cuando sea posible
 
-1. **Evaluar la Coherencia:** Analizar si hay consenso sobre el tipo de alimento identificado (ej. carne, fruta, vegetal).
-2. **Detección de Referencia:** Confirmar si hay un objeto de referencia confiable en la imagen (mano, moneda, plato).
-3. **Establecer Escala Visual:** Usar el objeto de referencia detectado para calcular una escala en cm por píxel.
-4. **Estimar Dimensiones y Volumen:** Calcular dimensiones del alimento (largo, ancho, alto) en centímetros y su volumen estimado en cm³ o ml.
-5. **Validación de Imagen:** Si no se puede detectar un objeto de referencia claro o no se puede estimar de forma confiable, reportarlo explícitamente.
-6.  **Detectar la veracidad de la imagen:** Si la imagen es falsa, corresponde a un dibujo, pixel art, animación, 2D, 3D u otro tipo de representación, entonces no debes contestar con una predicción.
-7.  El usuario no debe enterarse de que analizaste varias predicciones, tu respuesta final debe ser un objeto JSON con el siguiente esquema o un mensaje JSON indicando la baja probabilidad de ser un alimento.`;
+**Tus responsabilidades específicas:**
 
-export const TASK = `Recibirás las predicciones de un modelo de visión sobre una imagen cargada por el usuario. Debes determinar si hay un objeto de referencia confiable y, si es así, estimar las dimensiones del alimento visible (largo, ancho, alto en cm) y su volumen aproximado (en cm³ o ml).
+- Evaluar coherencia: Verificar consenso sobre el tipo de alimento identificado
+- Detección de referencia: Confirmar objetos de referencia confiables (mano, moneda, plato)
+- Establecer escala visual: Calcular cm por píxel usando el objeto de referencia
+- Estimar dimensiones: Calcular largo, ancho, alto (cm) y volumen (cm³ o ml)
+- Validar imagen: Reportar si no es posible estimar de forma confiable
+- Verificar autenticidad: Rechazar imágenes falsas (dibujos, animaciones, 3D, pixel art)
 
-[ESQUEMA]
-- Si la imagen no es una fotografía real (es un dibujo, animación, 3D, pixel art, etc.):
+**Formato de respuesta requerido:**
+Debes responder SIEMPRE en formato JSON según el esquema proporcionado.
+No reveles que analizaste múltiples predicciones.
+"""`;
+
+export const TASK = `"""
+Instrucciones para el análisis de imagen:
+
+1. Recibirás predicciones de un modelo de visión sobre una imagen
+2. Debes analizar:
+   - Autenticidad de la imagen (debe ser fotografía real)
+   - Presencia de alimentos detectables
+   - Objetos de referencia confiables
+   - Posibilidad de cálculo de dimensiones
+
+**Esquema de respuesta JSON:**
+
+Caso 1: Imagen no es fotografía real
 {
   "isEstimationAvailable": false,
   "message": "La imagen no corresponde a una fotografía real. No es posible realizar una estimación."
 }
 
-- Si no se detecta comida:
+Caso 2: No se detecta comida
 {
   "isEstimationAvailable": false,
   "message": "No se detectó comida en la imagen. Por favor, asegúrate de que la imagen incluya un alimento."
 }
 
-- Si no se detecta un objeto de referencia confiable:
+Caso 3: Falta objeto de referencia
 {
   "isEstimationAvailable": false,
   "message": "No se detectó un objeto de referencia en la imagen. Por favor, sube una imagen que incluya una mano, moneda o plato junto al alimento."
 }
 
-- Si no se puede calcular de manera confiable la escala o las dimensiones del alimento:
+Caso 4: No se puede calcular
 {
   "isEstimationAvailable": false,
   "message": "No se pudo estimar el tamaño o volumen del alimento en la imagen. Intenta con una imagen más clara y cercana."
 }
 
-- Si SÍ se puede calcular la estimación:
+Caso 5: Estimación exitosa
 {
   "isEstimationAvailable": true,
-  "referenceObject": "Nombre del objeto de referencia detectado (ej. moneda, mano, plato)",
-  "dimensions": {
-    "length_cm": número_decimal,
-    "width_cm": número_decimal,
-    "height_cm": número_decimal
-  },
-  "estimatedVolume_cm3": número_decimal,
+  "results": [
+    {
+      "object": "Nombre del objeto de referencia (ej. Mano, Moneda, Plato, Cuchara, Tenedor, etc)",
+      "item": "Lista de alimentos detectados (ej. Pollo, Manzana, Verduras, Carne, etc)",
+      "largo_cm": 10.50,
+      "ancho_cm": 5.20,
+      "alto_cm": 3.00,
+      "volumen_cm3": 163.80
+    }
+  ],
   "message": "Dimensiones y volumen estimados a partir del objeto de referencia detectado. Los valores son aproximados."
 }
 
-Todos los valores numéricos deben expresarse con máximo dos decimales.`;
+**Restricciones:**
+- Todos los valores numéricos con máximo 2 decimales
+- Usar exactamente los nombres de campos especificados
+- No inventar datos cuando no haya certeza
+"""`;
 
 export const RESPONSE_SCHEMA = {
   type: Type.OBJECT,
@@ -87,24 +112,49 @@ export const RESPONSE_SCHEMA = {
   properties: {
     isEstimationAvailable: {
       type: Type.BOOLEAN,
+      description: "Indica si se pudo realizar la estimación"
     },
     message: {
       type: Type.STRING,
+      description: "Mensaje explicativo sobre el resultado"
     },
-    referenceObject: {
-      type: Type.STRING,
-    },
-    dimensions: {
-      type: Type.OBJECT,
-      required: ["length_cm", "width_cm", "height_cm"],
-      properties: {
-        length_cm: { type: Type.NUMBER },
-        width_cm: { type: Type.NUMBER },
-        height_cm: { type: Type.NUMBER },
+    results: {
+      type: Type.ARRAY,
+      description: "Solo presente cuando isEstimationAvailable=true",
+      items: {
+        type: Type.OBJECT,
+        required: ["object", "item", "largo_cm", "ancho_cm", "alto_cm", "volumen_cm3"],
+        properties: {
+          object: {
+            type: Type.STRING,
+            description: "Objeto de referencia usado para la escala"
+          },
+          item: {
+            type: Type.STRING,
+            description: "Nombre del alimento detectado"
+          },
+          largo_cm: {
+            type: Type.NUMBER,
+            description: "Longitud estimada en centímetros",
+            minimum: 0
+          },
+          ancho_cm: {
+            type: Type.NUMBER,
+            description: "Ancho estimado en centímetros",
+            minimum: 0
+          },
+          alto_cm: {
+            type: Type.NUMBER,
+            description: "Altura estimada en centímetros",
+            minimum: 0
+          },
+          volumen_cm3: {
+            type: Type.NUMBER,
+            description: "Volumen estimado en centímetros cúbicos",
+            minimum: 0
+          },
+        },
       },
     },
-    estimatedVolume_cm3: {
-      type: Type.NUMBER,
-    },
-  },
+  }
 };
