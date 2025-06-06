@@ -24,13 +24,34 @@ import { InstructionCard } from "@/components/ui/features/common/InstructionCard
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 
 import { SizeSageMessageCard } from "@/components/ui/features/vision/size-sage/SizeSageMessageCard";
-import { SizeSageEstimationCard } from "@/components/ui/features/vision/size-sage/SizeSageEstimationCard";
+import { SizeSageResultsList } from "@/components/ui/features/vision/size-sage/SizeSageResultsList";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
-const NUM_VISION_REQUESTS = 3;
+const NUM_VISION_REQUESTS = 5;
 
+/**
+ * Renders the SizeSagePage, which allows users to analyze an uploaded image and receive size-related predictions and recommendations using AI models.
+ *
+ * @component
+ *
+ * @remarks
+ * - Uses `useEffect` to redirect if no image is loaded and to initialize a vision assistant on mount.
+ * - Employs `useCallback` to handle the asynchronous image analysis logic.
+ * - Makes multiple vision requests and then summarizes the output using Gemini.
+ * - Relies on several custom context providers: `useImage` and `useMobileTopBar`.
+ *
+ * @returns {JSX.Element} A screen containing image preview, analysis controls, and results or error messages.
+ *
+ * @example
+ * // Usage within a Next.js route
+ * import SizeSagePage from '@/app/features/vision/size-sage/page';
+ *
+ * export default function PageWrapper() {
+ *   return <SizeSagePage />;
+ * }
+ */
 export default function SizeSagePage() {
   const { imageUrl } = useImage();
   const router = useRouter();
@@ -48,7 +69,7 @@ export default function SizeSagePage() {
     (route) => route.id === NAV_IDS.sizeSage
   );
 
-  // 1) Redirigir a la página principal si no hay imagen cargada
+  // Redirigir si no hay una imagen cargada
   useEffect(() => {
     if (!imageUrl) {
       const dest = userNavRoutes.find((r) =>
@@ -58,7 +79,7 @@ export default function SizeSagePage() {
     }
   }, [imageUrl, router]);
 
-  // 2) Configurar el título y crear el “assistant” de Together
+  // Configurar título y crear el “assistant”
   useEffect(() => {
     setTitle(functionInfo.label);
     visionAssistant.current = createVisionAssistant({
@@ -66,14 +87,19 @@ export default function SizeSagePage() {
     });
   }, [setTitle]);
 
-  // 3) Función que dispara todo el flujo: visión → Gemini
+  /**
+   * Analyzes an image using a vision assistant and refines the results with Gemini AI.
+   *
+   * @param {void} — This function does not take any parameters directly but relies on external state like `imageUrl`.
+   * @returns {Promise<void>} Resolves when the analysis and response parsing are complete.
+   * @throws {Error} Throws if the vision analysis or Gemini processing fails.
+   *
+   * @example
+   * // Inside a React component with valid `imageUrl` and refs/state initialized:
+   * analyzeImage();
+   */
   const analyzeImage = useCallback(async () => {
-    console.log("🕵️‍♂️ analyzeImage invocado");
-
-    if (!imageUrl) {
-      console.log("⚠️ No hay imageUrl definido, saliendo de analyzeImage.");
-      return;
-    }
+    if (!imageUrl) return;
 
     setError(null);
     setVisionOutputs([]);
@@ -81,17 +107,10 @@ export default function SizeSagePage() {
     setShowPredictions(false);
     setLoading({ vision: true, text: false });
     setAnalysisPhase(1);
-    console.log(
-      "🔄 Estados iniciales seteados: loading:",
-      { vision: true, text: false },
-      "phase:",
-      1
-    );
 
-    // 1) Hacemos NUM_VISION_REQUESTS llamadas al assistant de visión
+    // 1) Ejecutar las peticiones de visión
     const preds = [];
     for (let i = 0; i < NUM_VISION_REQUESTS; i++) {
-      console.log(`🚀 Llamada vision #${i + 1} de ${NUM_VISION_REQUESTS}`);
       try {
         let text = "";
         const stream = await visionAssistant.current.analyzeImage(
@@ -103,42 +122,25 @@ export default function SizeSagePage() {
         }
         preds.push(text);
         setVisionOutputs((prev) => [...prev, text]);
-        console.log(
-          `✅ Predicción ${i + 1} recibida (longitud: ${
-            text.length
-          } caracteres)`
-        );
-      } catch (visionErr) {
-        console.error("❌ Error dentro del bucle de visión:", visionErr);
+      } catch {
         setError("Error durante el análisis de imagen.");
         setLoading({ vision: false, text: false });
         return;
       }
       setAnalysisPhase(i + 2);
-      console.log("⏭️ Avanzando phase:", i + 2);
 
-      // Si deseas un delay entre peticiones, descomenta esta sección:
+      // (Opcional) delay entre peticiones de visión:
       // if (i < NUM_VISION_REQUESTS - 1) {
-      //   console.log("⏱️ Esperando 500ms antes de la siguiente petición vision...");
       //   await new Promise((resolve) => setTimeout(resolve, 500));
       // }
     }
 
-    console.log("✅ Todas las predicciones de visión obtenidas:", preds);
-
-    // 2) Una vez tenemos todas las predicciones “visuales”, las combinamos con Gemini
+    // 2) Enviar a Gemini
     setLoading({ vision: false, text: true });
-    console.log("🔄 Cambio a loading.text=true, preparando llamada a Gemini");
-
     try {
       const combined =
         `${GEMINI_TASK}\n\nPredicciones:\n` +
         preds.map((p, idx) => `- Predicción ${idx + 1}:\n${p}`).join("\n\n");
-
-      console.log(
-        "📨 Enviando a Gemini (combined message):",
-        combined.slice(0, 200) + (combined.length > 200 ? "…" : "")
-      );
 
       const jsonResponse = await generateWithGemini({
         systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
@@ -147,14 +149,21 @@ export default function SizeSagePage() {
         history: [],
       });
 
-      console.log("📥 Respuesta de Gemini (raw):", jsonResponse);
-
-      const parsed = JSON.parse(jsonResponse);
-      console.log("✅ Respuesta parseada de Gemini:", parsed);
-
-      setFinalResult(parsed);
+      // Intentamos parsear; si falla, mostramos mensaje de error
+      let parsed;
+      try {
+        parsed = JSON.parse(jsonResponse);
+        console.log("Parsed SizeSage response:", parsed);
+        setFinalResult(parsed);
+      } catch (parseErr) {
+        console.error("JSON.parse falló:", parseErr);
+        console.warn("Respuesta cruda de Gemini:", jsonResponse);
+        setError(
+          "La respuesta de Gemini no es un JSON válido. Revisa la consola."
+        );
+      }
     } catch (geminiErr) {
-      console.error("❌ Error dentro del bloque de Gemini:", geminiErr);
+      console.error("Error en el bloque de Gemini:", geminiErr);
       const is429 =
         geminiErr?.status === 429 || geminiErr?.message?.includes("429");
       if (is429) {
@@ -166,12 +175,9 @@ export default function SizeSagePage() {
       }
     } finally {
       setLoading((prev) => ({ ...prev, text: false }));
-      console.log("🔄 loading.text puesto en false");
     }
   }, [imageUrl]);
 
-
-  // 4) Toggle para mostrar predicciones crudas (igual que FreshSense)
   const togglePreds = () => setShowPredictions((v) => !v);
 
   if (!imageUrl) return null;
@@ -206,10 +212,9 @@ export default function SizeSagePage() {
         </section>
 
         {/* ============================= */}
-        {/* Columna DERECHA: Resultado o mensaje */}
+        {/* Columna DERECHA: Resultados o mensaje */}
         {/* ============================= */}
         <section className="flex flex-col gap-2">
-          {/* 5) Si hay error en cualquier paso, mostrarlo arriba */}
           {error && (
             <Card>
               <CardHeader>
@@ -219,26 +224,18 @@ export default function SizeSagePage() {
             </Card>
           )}
 
-          {/* 6) Una vez tengamos finalResult, decidir qué mostrar */}
           {finalResult ? (
             finalResult.isEstimationAvailable ? (
-              // 6A) Si la estimación está disponible, pintamos DIMENSIONES+VOLUMEN
-              <SizeSageEstimationCard
-                referenceObject={finalResult.referenceObject}
-                dimensions={finalResult.dimensions}
-                estimatedVolume_cm3={finalResult.estimatedVolume_cm3}
-                message={finalResult.message}
-              />
+              // Mostrar lista de resultados cuando isEstimationAvailable = true
+              <SizeSageResultsList results={finalResult.results} />
             ) : (
+              // Mostrar mensaje cuando isEstimationAvailable = false
               <>
-                {/* 6B) Si NO está disponible, mostramos el mensaje de “no disponible” */}
                 <SizeSageMessageCard message={finalResult.message} />
-
-                {/* 6C) Si existió un resultado pero no fue posible estimar, 
-                         y el usuario pidió ver predicciones crudas, mostramos la razón */}
+                {/* Si el usuario clicó “Ver predicciones crudas”, mostrar text adicional */}
                 {showPredictions && (
                   <p className="text-xs text-gray-500 mt-2">
-                    {finalResult.reasoning || finalResult.message}
+                    {finalResult.message}
                   </p>
                 )}
               </>
