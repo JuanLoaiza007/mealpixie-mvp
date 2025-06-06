@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>app/(pages)/app/vision/insta-recipe/page.jsx - Documentation</title>
+    <title>app/(pages)/app/vision/size-sage/page.jsx - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">app/(pages)/app/vision/insta-recipe/page.jsx</h1>
+    <h1 class="page-title">app/(pages)/app/vision/size-sage/page.jsx</h1>
     
 
     
@@ -45,62 +45,67 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>"use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useImage } from "@/context/image";
+            <pre class="prettyprint source linenums"><code>// app/features/vision/size-sage/page.jsx
+"use client";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useImage } from "@/context/image";
 import { useMobileTopBar } from "@/context/mobileTopBar";
 import { createVisionAssistant } from "@/utils/togheter-factory";
 import { generateWithGemini } from "@/utils/gemini-factory";
+
 import {
   SYSTEM_INSTRUCTIONS as TOGETHER_SYSTEM_INSTRUCTIONS,
   TASK as TOGETHER_TASK,
-} from "@/config/together/feature-instarecipe";
+} from "@/config/together/feature-sizesage";
 import {
   SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
   TASK as GEMINI_TASK,
   RESPONSE_SCHEMA as GEMINI_RESPONSE_SCHEMA,
-} from "@/config/gemini/feature-instarecipe";
+} from "@/config/gemini/feature-sizesage";
+
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { InstaRecipeButton } from "@/components/ui/features/vision/insta-recipe/InstaRecipeButton";
+import { SizeSageButton } from "@/components/ui/features/vision/size-sage/SizeSageButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+
+import { SizeSageMessageCard } from "@/components/ui/features/vision/size-sage/SizeSageMessageCard";
+import { SizeSageResultsList } from "@/components/ui/features/vision/size-sage/SizeSageResultsList";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
 const NUM_VISION_REQUESTS = 5;
 
 /**
- * Analyzes an image of food ingredients using AI to extract ingredients and generate recipe suggestions.
+ * Renders the SizeSagePage, which allows users to analyze an uploaded image and receive size-related predictions and recommendations using AI models.
  *
  * @component
+ *
  * @remarks
- * - Uses a vision assistant and Gemini AI to process food-related images.
- * - Performs multiple image analysis requests (defined by NUM_VISION_REQUESTS) to improve output robustness.
- * - Generates a list of detected ingredients and recipe suggestions based on predictions.
- * - Displays result cards conditionally based on analysis outcome (ingredients found or not).
- * - Includes developer-only debug view to inspect raw vision outputs.
- * - Requires `imageUrl` from context and redirects if not present.
- * @returns {JSX.Element} Ingredient analysis and recipe suggestion interface with image preview, results, and fallback UI.
+ * - Uses `useEffect` to redirect if no image is loaded and to initialize a vision assistant on mount.
+ * - Employs `useCallback` to handle the asynchronous image analysis logic.
+ * - Makes multiple vision requests and then summarizes the output using Gemini.
+ * - Relies on several custom context providers: `useImage` and `useMobileTopBar`.
+ *
+ * @returns {JSX.Element} A screen containing image preview, analysis controls, and results or error messages.
+ *
  * @example
- * // Used as a route/page component for vision-based recipe generation:
- * export default function IngredientsRecipePage() {
- *   return &lt;IngredientsRecipePage />;
+ * // Usage within a Next.js route
+ * import SizeSagePage from '@/app/features/vision/size-sage/page';
+ *
+ * export default function PageWrapper() {
+ *   return &lt;SizeSagePage />;
  * }
  */
-export default function IngredientsRecipePage() {
+export default function SizeSagePage() {
   const { imageUrl } = useImage();
   const router = useRouter();
   const { setTitle } = useMobileTopBar();
   const visionAssistant = useRef(null);
 
-  const [visionOutputs, setVisionOutputs] = useState([]);
+  const [visionOutputs, setVisionOutputs] = useState([]); // predicciones crudas
   const [analysisPhase, setAnalysisPhase] = useState(0);
   const [finalResult, setFinalResult] = useState(null);
   const [loading, setLoading] = useState({ vision: false, text: false });
@@ -108,18 +113,20 @@ export default function IngredientsRecipePage() {
   const [showPredictions, setShowPredictions] = useState(false);
 
   const functionInfo = userNavRoutes.find(
-    (route) => route.id === NAV_IDS.instaRecipe
+    (route) => route.id === NAV_IDS.sizeSage
   );
 
+  // Redirigir si no hay una imagen cargada
   useEffect(() => {
     if (!imageUrl) {
-      const destinationRoute = userNavRoutes.find((route) =>
-        route.tags.includes(NAV_TAGS.mainPage)
+      const dest = userNavRoutes.find((r) =>
+        r.tags.includes(NAV_TAGS.mainPage)
       );
-      router.push(destinationRoute.href);
+      router.push(dest.href);
     }
   }, [imageUrl, router]);
 
+  // Configurar título y crear el “assistant”
   useEffect(() => {
     setTitle(functionInfo.label);
     visionAssistant.current = createVisionAssistant({
@@ -128,19 +135,19 @@ export default function IngredientsRecipePage() {
   }, [setTitle]);
 
   /**
-  * Analyzes an image to detect ingredients and generate suggested recipes.
-  *
-  * @async
-  * @throws {Error} If an error occurs during vision analysis or generation of the final response.
-  * @returns {Promise&lt;void>} Resolves when the vision analysis and response generation are complete.
-  *
-  * @example
-  * analyzeImage().then(() => {
-  *   console.log("Analysis completed");
-  * });
-  */
-  const analyzeIngredients = useCallback(async () => {
+   * Analyzes an image using a vision assistant and refines the results with Gemini AI.
+   *
+   * @param {void} — This function does not take any parameters directly but relies on external state like `imageUrl`.
+   * @returns {Promise&lt;void>} Resolves when the analysis and response parsing are complete.
+   * @throws {Error} Throws if the vision analysis or Gemini processing fails.
+   *
+   * @example
+   * // Inside a React component with valid `imageUrl` and refs/state initialized:
+   * analyzeImage();
+   */
+  const analyzeImage = useCallback(async () => {
     if (!imageUrl) return;
+
     setError(null);
     setVisionOutputs([]);
     setFinalResult(null);
@@ -148,6 +155,7 @@ export default function IngredientsRecipePage() {
     setLoading({ vision: true, text: false });
     setAnalysisPhase(1);
 
+    // 1) Ejecutar las peticiones de visión
     const preds = [];
     for (let i = 0; i &lt; NUM_VISION_REQUESTS; i++) {
       try {
@@ -156,32 +164,62 @@ export default function IngredientsRecipePage() {
           imageUrl,
           TOGETHER_TASK
         );
-        for await (const part of stream) text += part;
+        for await (const part of stream) {
+          text += part;
+        }
         preds.push(text);
         setVisionOutputs((prev) => [...prev, text]);
       } catch {
-        setError("Error during vision analysis.");
+        setError("Error durante el análisis de imagen.");
         setLoading({ vision: false, text: false });
         return;
       }
       setAnalysisPhase(i + 2);
+
+      // (Opcional) delay entre peticiones de visión:
+      // if (i &lt; NUM_VISION_REQUESTS - 1) {
+      //   await new Promise((resolve) => setTimeout(resolve, 500));
+      // }
     }
 
+    // 2) Enviar a Gemini
     setLoading({ vision: false, text: true });
     try {
       const combined =
         `${GEMINI_TASK}\n\nPredicciones:\n` +
-        preds.map((p, i) => `- Predicción ${i + 1}:\n${p}`).join("\n\n");
+        preds.map((p, idx) => `- Predicción ${idx + 1}:\n${p}`).join("\n\n");
+
       const jsonResponse = await generateWithGemini({
         systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
         task: combined,
         responseSchema: GEMINI_RESPONSE_SCHEMA,
         history: [],
       });
-      setFinalResult(JSON.parse(jsonResponse));
-    } catch (e) {
-      setError("Error generating final response.");
-      console.error(e);
+
+      // Intentamos parsear; si falla, mostramos mensaje de error
+      let parsed;
+      try {
+        parsed = JSON.parse(jsonResponse);
+        console.log("Parsed SizeSage response:", parsed);
+        setFinalResult(parsed);
+      } catch (parseErr) {
+        console.error("JSON.parse falló:", parseErr);
+        console.warn("Respuesta cruda de Gemini:", jsonResponse);
+        setError(
+          "La respuesta de Gemini no es un JSON válido. Revisa la consola."
+        );
+      }
+    } catch (geminiErr) {
+      console.error("Error en el bloque de Gemini:", geminiErr);
+      const is429 =
+        geminiErr?.status === 429 || geminiErr?.message?.includes("429");
+      if (is429) {
+        setError(
+          "Has excedido el límite de solicitudes. Espera unos segundos e inténtalo de nuevo."
+        );
+      } else {
+        setError("Error generando respuesta final.");
+      }
     } finally {
       setLoading((prev) => ({ ...prev, text: false }));
     }
@@ -189,41 +227,40 @@ export default function IngredientsRecipePage() {
 
   const togglePreds = () => setShowPredictions((v) => !v);
 
-  if (!imageUrl) {
-    return null;
-  }
+  if (!imageUrl) return null;
 
   return (
     &lt;Screen inPageTitle={functionInfo.label}>
       &lt;div className="flex flex-col md:flex-row gap-2">
+        {/* ============================= */}
+        {/* Columna IZQUIERDA: Imagen + botón + Instruction/Prediction */}
+        {/* ============================= */}
         &lt;section className="flex flex-col gap-2">
-          &lt;ImagePreviewCard
-            className="w-full sm md:w-60 lg:w-100 gap-0"
-            imageUrl={imageUrl}
-            alt="Analysis Image"
-          >
-            &lt;InstaRecipeButton
-              onClick={analyzeIngredients}
+          &lt;ImagePreviewCard imageUrl={imageUrl} alt="SizeSage Image">
+            &lt;SizeSageButton
+              onClick={analyzeImage}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              disabled={loading.vision || loading.text}
             />
           &lt;/ImagePreviewCard>
 
           {!finalResult ? (
             &lt;InstructionCard functionInfo={functionInfo} />
           ) : (
-            process.env.NODE_ENV === "development" &amp;&amp; (
-              &lt;PredictionCard
-                finalResult={finalResult}
-                showPredictions={showPredictions}
-                toggle={togglePreds}
-                visionOutputs={visionOutputs}
-              />
-            )
+            &lt;PredictionCard
+              finalResult={finalResult}
+              showPredictions={showPredictions}
+              toggle={togglePreds}
+              visionOutputs={visionOutputs}
+            />
           )}
         &lt;/section>
 
+        {/* ============================= */}
+        {/* Columna DERECHA: Resultados o mensaje */}
+        {/* ============================= */}
         &lt;section className="flex flex-col gap-2">
           {error &amp;&amp; (
             &lt;Card>
@@ -234,46 +271,23 @@ export default function IngredientsRecipePage() {
             &lt;/Card>
           )}
 
-          {!error &amp;&amp; finalResult &amp;&amp; !finalResult.isFoodDetected &amp;&amp; (
-            &lt;Card>
-              &lt;CardHeader>
-                &lt;CardTitle>No se detectaron ingredientes&lt;/CardTitle>
-              &lt;/CardHeader>
-              &lt;CardContent>{finalResult.message}&lt;/CardContent>
-            &lt;/Card>
-          )}
-
-          {!error &amp;&amp; finalResult &amp;&amp; finalResult.isFoodDetected &amp;&amp; (
-            &lt;>
-              &lt;Card>
-                &lt;CardHeader>
-                  &lt;CardTitle>Ingredientes&lt;/CardTitle>
-                &lt;/CardHeader>
-                &lt;CardContent>
-                  &lt;ul className="list-disc list-inside">
-                    {finalResult.ingredients.map((ing, idx) => (
-                      &lt;li key={idx}>{ing}&lt;/li>
-                    ))}
-                  &lt;/ul>
-                &lt;/CardContent>
-              &lt;/Card>
-
-              &lt;Card>
-                &lt;CardHeader>
-                  &lt;CardTitle>Recetas&lt;/CardTitle>
-                &lt;/CardHeader>
-                &lt;CardContent>
-                  &lt;ul className="list-decimal list-inside">
-                    {finalResult.suggestions.map((rec, idx) => (
-                      &lt;li key={idx} className="mb-2">
-                        &lt;strong>{rec.name}:&lt;/strong> {rec.description}
-                      &lt;/li>
-                    ))}
-                  &lt;/ul>
-                &lt;/CardContent>
-              &lt;/Card>
-            &lt;/>
-          )}
+          {finalResult ? (
+            finalResult.isEstimationAvailable ? (
+              // Mostrar lista de resultados cuando isEstimationAvailable = true
+              &lt;SizeSageResultsList results={finalResult.results} />
+            ) : (
+              // Mostrar mensaje cuando isEstimationAvailable = false
+              &lt;>
+                &lt;SizeSageMessageCard message={finalResult.message} />
+                {/* Si el usuario clicó “Ver predicciones crudas”, mostrar text adicional */}
+                {showPredictions &amp;&amp; (
+                  &lt;p className="text-xs text-gray-500 mt-2">
+                    {finalResult.message}
+                  &lt;/p>
+                )}
+              &lt;/>
+            )
+          ) : null}
         &lt;/section>
       &lt;/div>
     &lt;/Screen>
