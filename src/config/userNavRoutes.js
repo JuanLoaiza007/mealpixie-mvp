@@ -124,6 +124,8 @@ export const userNavRoutes = [
     label: "PricePeek",
     description: "Estima el costo por unidad o porción.",
     href: "/app/vision/price-peek",
+    long_description:
+      "Presiona analizar para empezar a estudiar tu imagen. Si es un alimento, fruta, snack o cualquier cosa comestible, podremos identificarlo y estimar su costo por unidad o porción en base a un promedio.",
     icon: DollarSign,
     tags: [NAV_TAGS.functionality, NAV_TAGS.requiredTopBar],
   },
