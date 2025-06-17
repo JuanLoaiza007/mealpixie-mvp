@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>components/ui/features/vision/fresh-sense/FreshSenseResultsList.jsx - Documentation</title>
+    <title>components/ui/features/vision/price-peek/TotalPriceCard.jsx - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">components/ui/features/vision/fresh-sense/FreshSenseResultsList.jsx</h1>
+    <h1 class="page-title">components/ui/features/vision/price-peek/TotalPriceCard.jsx</h1>
     
 
     
@@ -45,57 +45,51 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// components/ui/features/vision/fresh-sense/FreshSenseResultsList.jsx
-import React from 'react';
-import { FreshSenseResultItem } from '@/components/ui/features/vision/fresh-sense/FreshSenseResultItem';
-
+            <pre class="prettyprint source linenums"><code>"use client";
+import { motion } from "framer-motion";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { ScrollText } from "lucide-react";
 
 /**
- * Renders a list of FreshSenseResultItem components for given vision analysis results.
+ * Displays the total price inside a styled animated card component.
  *
  * @component
- *
- * @param {Array&lt;{item: string, assessment: string, emoji: string}>} props.results - An array of result objects, each containing the item name, its assessment, and an associated emoji; defaults to an empty array; optional.
+ * @param {Object} props - Component props.
+ * @param {string | number} props.total - The total price to display. Required.
  *
  * @remarks
- * This component returns null if the `results` array is empty or undefined.
+ * - Uses `framer-motion` for animation effects on hover and tap.
+ * - Renders a styled card layout with Lucide icon and text content.
  *
- * @returns {JSX.Element|null} A container with a header and a grid of FreshSenseResultItem components, or null if no results are provided.
+ * @returns {JSX.Element} A card element displaying the total price with animation and styling.
  *
  * @example
- * ```jsx
- * import React from 'react';
- * import { FreshSenseResultsList } from 'components/ui/features/vision/fresh-sense/FreshSenseResultsList';
- *
- * const sampleResults = [
- *   { item: 'Tomato', assessment: 'fresh', emoji: '🍅' },
- *   { item: 'Lettuce', assessment: 'wilted', emoji: '🥬' },
- * ];
- *
- * function App() {
- *   return &lt;FreshSenseResultsList results={sampleResults} />;
- * }
- * ```
+ * &lt;TotalPriceCard total="$24,000 COP" />
  */
-export function FreshSenseResultsList({ results }) {
-  if (!results || results.length === 0) return null;
+export function TotalPriceCard({ total }) {
 
   return (
-    &lt;div className="w-full rounded-lg border border-gray-300 bg-white p-6">
-      &lt;h3 className="text-lg font-semibold text-orange-500 mb-4">
-        Ingredientes
-      &lt;/h3>
-      &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {results.map((r, idx) => (
-          &lt;FreshSenseResultItem
-            key={idx}
-            item={r.item}
-            assessment={r.assessment}
-            icon={r.emoji}
-          />
-        ))}
-      &lt;/div>
-    &lt;/div>
+	&lt;motion.div
+	initial={{ opacity: 0, y: 12 }}
+	animate={{ opacity: 1, y: 0 }}
+	whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
+	whileTap={{ scale: 0.97 }}
+	transition={{ duration: 0.3, ease: "easeOut" }}
+	>
+	  &lt;Card className="flex flex-col h-full shadow-md border border-border">
+		&lt;CardHeader className="flex flex-row items-center justify-between gap-3 pb-2">
+		  &lt;div className="flex items-center gap-3">
+			&lt;ScrollText className="w-4 h-4" />
+			&lt;CardTitle className="text-base text-foreground">Valor Total&lt;/CardTitle>
+		  &lt;/div>
+		&lt;/CardHeader>
+		&lt;CardContent className="text-sm text-muted-foreground">
+		  &lt;p>
+			{total}
+		  &lt;/p>
+		&lt;/CardContent>
+	  &lt;/Card>
+	&lt;/motion.div>
   );
 }
 </code></pre>

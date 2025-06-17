@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>app/(pages)/app/vision/insta-recipe/page.jsx - Documentation</title>
+    <title>app/(pages)/app/vision/price-peek/page.jsx - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">app/(pages)/app/vision/insta-recipe/page.jsx</h1>
+    <h1 class="page-title">app/(pages)/app/vision/price-peek/page.jsx</h1>
     
 
     
@@ -55,68 +55,66 @@ import { generateWithGemini } from "@/utils/gemini-factory";
 import {
   SYSTEM_INSTRUCTIONS as TOGETHER_SYSTEM_INSTRUCTIONS,
   TASK as TOGETHER_TASK,
-} from "@/config/together/feature-instarecipe";
+} from "@/config/together/feature-pricepeek";
 import {
   SYSTEM_INSTRUCTIONS as GEMINI_SYSTEM_INSTRUCTIONS,
   TASK as GEMINI_TASK,
   RESPONSE_SCHEMA as GEMINI_RESPONSE_SCHEMA,
-} from "@/config/gemini/feature-instarecipe";
+} from "@/config/gemini/feature-pricepeek";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { InstaRecipeButton } from "@/components/ui/features/vision/insta-recipe/InstaRecipeButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
-import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+import { NAV_IDS, NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
 
-const NUM_VISION_REQUESTS = 5;
+
+import { PriceCard } from "@/components/ui/features/vision/price-peek/PriceCard";
+import { TotalPriceCard } from "@/components/ui/features/vision/price-peek/TotalPriceCard";
+import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { ErrorCard } from "@/components/ui/features/vision/labellens/ErrorCard";
+
+const NUM_VISION_REQUESTS = 3;
 
 /**
- * Analyzes an image of food ingredients using AI to extract ingredients and generate recipe suggestions.
+ * Displays the Price Peek feature page, allowing users to analyze an image and extract food pricing data.
  *
  * @component
+ *
  * @remarks
- * - Uses a vision assistant and Gemini AI to process food-related images.
- * - Performs multiple image analysis requests (defined by NUM_VISION_REQUESTS) to improve output robustness.
- * - Generates a list of detected ingredients and recipe suggestions based on predictions.
- * - Displays result cards conditionally based on analysis outcome (ingredients found or not).
- * - Includes developer-only debug view to inspect raw vision outputs.
- * - Requires `imageUrl` from context and redirects if not present.
- * @returns {JSX.Element} Ingredient analysis and recipe suggestion interface with image preview, results, and fallback UI.
+ * - Uses `useImage` to access the uploaded image URL.
+ * - Integrates a vision assistant (from Together AI) to process the image and extract textual predictions.
+ * - Uses the Gemini API to summarize and validate predictions against a response schema.
+ * - Employs `useMobileTopBar` to dynamically set the top bar title based on the feature context.
+ * - Navigates back to the main page if no image is provided.
+ * - Animates transitions between phases and shows different UI states based on processing results.
+ *
+ * @returns {JSX.Element} A fully interactive screen that displays image preview, instructions, analysis controls, and price results.
+ *
  * @example
- * // Used as a route/page component for vision-based recipe generation:
- * export default function IngredientsRecipePage() {
- *   return &lt;IngredientsRecipePage />;
- * }
+ * // Rendered as part of a Next.js route, no props needed:
+ * &lt;PricePeekPage />
  */
-export default function IngredientsRecipePage() {
+export default function PricePeekPage() {
   const { imageUrl } = useImage();
   const router = useRouter();
   const { setTitle } = useMobileTopBar();
   const visionAssistant = useRef(null);
 
-  const [visionOutputs, setVisionOutputs] = useState([]);
-  const [analysisPhase, setAnalysisPhase] = useState(0);
+  const [outputs, setOutputs] = useState([]);
+  const [phase, setPhase] = useState(0);
   const [finalResult, setFinalResult] = useState(null);
   const [loading, setLoading] = useState({ vision: false, text: false });
   const [error, setError] = useState(null);
-  const [showPredictions, setShowPredictions] = useState(false);
 
   const functionInfo = userNavRoutes.find(
-    (route) => route.id === NAV_IDS.instaRecipe
+    (route) => route.id === NAV_IDS.pricePeek
   );
 
   useEffect(() => {
     if (!imageUrl) {
-      const destinationRoute = userNavRoutes.find((route) =>
-        route.tags.includes(NAV_TAGS.mainPage)
+      const fallback = userNavRoutes.find((r) =>
+        r.tags.includes(NAV_TAGS.mainPage)
       );
-      router.push(destinationRoute.href);
+      router.push(fallback.href);
     }
   }, [imageUrl, router]);
 
@@ -127,26 +125,13 @@ export default function IngredientsRecipePage() {
     });
   }, [setTitle]);
 
-  /**
-  * Analyzes an image to detect ingredients and generate suggested recipes.
-  *
-  * @async
-  * @throws {Error} If an error occurs during vision analysis or generation of the final response.
-  * @returns {Promise&lt;void>} Resolves when the vision analysis and response generation are complete.
-  *
-  * @example
-  * analyzeImage().then(() => {
-  *   console.log("Analysis completed");
-  * });
-  */
-  const analyzeIngredients = useCallback(async () => {
+  const analyze = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
-    setVisionOutputs([]);
+    setOutputs([]);
     setFinalResult(null);
-    setShowPredictions(false);
     setLoading({ vision: true, text: false });
-    setAnalysisPhase(1);
+    setPhase(1);
 
     const preds = [];
     for (let i = 0; i &lt; NUM_VISION_REQUESTS; i++) {
@@ -158,40 +143,38 @@ export default function IngredientsRecipePage() {
         );
         for await (const part of stream) text += part;
         preds.push(text);
-        setVisionOutputs((prev) => [...prev, text]);
+        setOutputs((prev) => [...prev, text]);
       } catch {
-        setError("Error during vision analysis.");
+        setError("No se pudo procesar la imagen.");
         setLoading({ vision: false, text: false });
         return;
       }
-      setAnalysisPhase(i + 2);
+      setPhase(i + 2);
     }
 
     setLoading({ vision: false, text: true });
     try {
-      const combined =
+      const formattedInput =
         `${GEMINI_TASK}\n\nPredicciones:\n` +
-        preds.map((p, i) => `- Predicción ${i + 1}:\n${p}`).join("\n\n");
+        preds.map((p, i) => `- ${i + 1}:\n${p}`).join("\n\n");
+
       const jsonResponse = await generateWithGemini({
         systemInstruction: GEMINI_SYSTEM_INSTRUCTIONS,
-        task: combined,
+        task: formattedInput,
         responseSchema: GEMINI_RESPONSE_SCHEMA,
         history: [],
       });
+
+      console.log("Respuesta de Gemini:", jsonResponse);
       setFinalResult(JSON.parse(jsonResponse));
-    } catch (e) {
-      setError("Error generating final response.");
-      console.error(e);
+    } catch {
+      setError("Error generando respuesta final.");
     } finally {
       setLoading((prev) => ({ ...prev, text: false }));
     }
   }, [imageUrl]);
 
-  const togglePreds = () => setShowPredictions((v) => !v);
-
-  if (!imageUrl) {
-    return null;
-  }
+  if (!imageUrl) return null;
 
   return (
     &lt;Screen inPageTitle={functionInfo.label}>
@@ -200,79 +183,37 @@ export default function IngredientsRecipePage() {
           &lt;ImagePreviewCard
             className="w-full sm md:w-60 lg:w-100 gap-0"
             imageUrl={imageUrl}
-            alt="Analysis Image"
+            alt="Etiqueta Nutricional"
           >
-            &lt;InstaRecipeButton
-              onClick={analyzeIngredients}
+            &lt;AnalyzeButton
+              onClick={analyze}
               loading={loading}
-              phase={analysisPhase}
+              phase={phase}
               total={NUM_VISION_REQUESTS}
             />
           &lt;/ImagePreviewCard>
-
-          {!finalResult ? (
-            &lt;InstructionCard functionInfo={functionInfo} />
-          ) : (
-            process.env.NODE_ENV === "development" &amp;&amp; (
-              &lt;PredictionCard
-                finalResult={finalResult}
-                showPredictions={showPredictions}
-                toggle={togglePreds}
-                visionOutputs={visionOutputs}
-              />
-            )
-          )}
+          &lt;InstructionCard functionInfo={functionInfo} />
         &lt;/section>
-
         &lt;section className="flex flex-col gap-2">
           {error &amp;&amp; (
-            &lt;Card>
-              &lt;CardHeader>
-                &lt;CardTitle>Error&lt;/CardTitle>
-              &lt;/CardHeader>
-              &lt;CardContent>{error}&lt;/CardContent>
-            &lt;/Card>
+            &lt;ErrorCard title="Error" message={`${error} Asegúrate de que la imagen esté clara y enfocada.`} />
           )}
 
-          {!error &amp;&amp; finalResult &amp;&amp; !finalResult.isFoodDetected &amp;&amp; (
-            &lt;Card>
-              &lt;CardHeader>
-                &lt;CardTitle>No se detectaron ingredientes&lt;/CardTitle>
-              &lt;/CardHeader>
-              &lt;CardContent>{finalResult.message}&lt;/CardContent>
-            &lt;/Card>
+          {finalResult?.isValidLabel &amp;&amp; (
+            &lt;div className="w-full space-y-4">
+              {finalResult.multipleFoods &amp;&amp; (
+                &lt;TotalPriceCard total={finalResult.totalPrice} />
+              )}
+              &lt;div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                {finalResult.foods?.map((food, index) => (
+                  &lt;PriceCard field={food} key={index} />
+                ))}
+              &lt;/div>
+            &lt;/div>
           )}
 
-          {!error &amp;&amp; finalResult &amp;&amp; finalResult.isFoodDetected &amp;&amp; (
-            &lt;>
-              &lt;Card>
-                &lt;CardHeader>
-                  &lt;CardTitle>Ingredientes&lt;/CardTitle>
-                &lt;/CardHeader>
-                &lt;CardContent>
-                  &lt;ul className="list-disc list-inside">
-                    {finalResult.ingredients.map((ing, idx) => (
-                      &lt;li key={idx}>{ing}&lt;/li>
-                    ))}
-                  &lt;/ul>
-                &lt;/CardContent>
-              &lt;/Card>
-
-              &lt;Card>
-                &lt;CardHeader>
-                  &lt;CardTitle>Recetas&lt;/CardTitle>
-                &lt;/CardHeader>
-                &lt;CardContent>
-                  &lt;ul className="list-decimal list-inside">
-                    {finalResult.suggestions.map((rec, idx) => (
-                      &lt;li key={idx} className="mb-2">
-                        &lt;strong>{rec.name}:&lt;/strong> {rec.description}
-                      &lt;/li>
-                    ))}
-                  &lt;/ul>
-                &lt;/CardContent>
-              &lt;/Card>
-            &lt;/>
+          {!finalResult?.isValidLabel &amp;&amp; finalResult?.reasoning &amp;&amp; (
+            &lt;ErrorCard title="No se pudo interpretar la etiqueta" message={finalResult.reasoning} />
           )}
         &lt;/section>
       &lt;/div>
