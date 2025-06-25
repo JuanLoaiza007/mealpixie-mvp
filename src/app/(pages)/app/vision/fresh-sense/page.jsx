@@ -17,7 +17,7 @@ import {
 } from "@/config/gemini/feature-freshsense";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { FreshSenseButton } from "@/components/ui/features/vision/fresh-sense/FreshSenseButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { FreshSenseResultsList } from "@/components/ui/features/vision/fresh-sense/FreshSenseResultsList";
@@ -73,7 +73,9 @@ export default function FreshSensePage() {
 
   useEffect(() => {
     if (!imageUrl) {
-      const dest = userNavRoutes.find((r) => r.tags.includes(NAV_TAGS.mainPage));
+      const dest = userNavRoutes.find((r) =>
+        r.tags.includes(NAV_TAGS.mainPage)
+      );
       router.push(dest.href);
     }
   }, [imageUrl, router]);
@@ -86,23 +88,23 @@ export default function FreshSensePage() {
   }, [setTitle]);
 
   /**
- * Performs asynchronous image analysis by sending multiple requests to a vision assistant and aggregating results with Gemini, updating component state accordingly.
- *
- * @returns {Promise<void>} A promise that resolves when analysis and state updates are complete.
- *
- * @example
- * // Within a React component using hooks and context:
- * import React from "react";
- * function ExampleComponent() {
- *   // assume analyzeImage, loading, and other state setters are defined
- *   return (
- *     <button onClick={async () => { await analyzeImage(); }}>
- *       Analyze Image
- *     </button>
- *   );
- * }
- */
-const analyzeImage = useCallback(async () => {
+   * Performs asynchronous image analysis by sending multiple requests to a vision assistant and aggregating results with Gemini, updating component state accordingly.
+   *
+   * @returns {Promise<void>} A promise that resolves when analysis and state updates are complete.
+   *
+   * @example
+   * // Within a React component using hooks and context:
+   * import React from "react";
+   * function ExampleComponent() {
+   *   // assume analyzeImage, loading, and other state setters are defined
+   *   return (
+   *     <button onClick={async () => { await analyzeImage(); }}>
+   *       Analyze Image
+   *     </button>
+   *   );
+   * }
+   */
+  const analyzeImage = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
     setVisionOutputs([]);
@@ -149,7 +151,6 @@ const analyzeImage = useCallback(async () => {
     }
   }, [imageUrl]);
 
-
   const togglePreds = () => setShowPredictions((v) => !v);
 
   if (!imageUrl) {
@@ -162,11 +163,14 @@ const analyzeImage = useCallback(async () => {
         {/* Sección izquierda: imagen, botón, InstructionCard + PredictionCard */}
         <section className="flex flex-col gap-2">
           <ImagePreviewCard imageUrl={imageUrl} alt="Fresh Sense Image">
-            <FreshSenseButton
+            <ActionAnimatedButton
               onClick={analyzeImage}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Analizar frescura"
+              visionLoadingText="Generando hipótesis sobre imagen {{phase}}/{{total}}"
+              textLoadingText="Generando información final"
             />
           </ImagePreviewCard>
 

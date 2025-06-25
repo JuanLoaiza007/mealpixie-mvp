@@ -16,15 +16,10 @@ import {
 } from "@/config/gemini/feature-instarecipe";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { InstaRecipeButton } from "@/components/ui/features/vision/insta-recipe/InstaRecipeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
 const NUM_VISION_REQUESTS = 5;
@@ -81,17 +76,17 @@ export default function IngredientsRecipePage() {
   }, [setTitle]);
 
   /**
-  * Analyzes an image to detect ingredients and generate suggested recipes.
-  *
-  * @async
-  * @throws {Error} If an error occurs during vision analysis or generation of the final response.
-  * @returns {Promise<void>} Resolves when the vision analysis and response generation are complete.
-  *
-  * @example
-  * analyzeImage().then(() => {
-  *   console.log("Analysis completed");
-  * });
-  */
+   * Analyzes an image to detect ingredients and generate suggested recipes.
+   *
+   * @async
+   * @throws {Error} If an error occurs during vision analysis or generation of the final response.
+   * @returns {Promise<void>} Resolves when the vision analysis and response generation are complete.
+   *
+   * @example
+   * analyzeImage().then(() => {
+   *   console.log("Analysis completed");
+   * });
+   */
   const analyzeIngredients = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
@@ -155,11 +150,14 @@ export default function IngredientsRecipePage() {
             imageUrl={imageUrl}
             alt="Analysis Image"
           >
-            <InstaRecipeButton
+            <ActionAnimatedButton
               onClick={analyzeIngredients}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Generar receta con estos ingredientes"
+              visionLoadingText="Analizando ingredientes {{phase}}/{{total}}"
+              textLoadingText="Generando recetas"
             />
           </ImagePreviewCard>
 

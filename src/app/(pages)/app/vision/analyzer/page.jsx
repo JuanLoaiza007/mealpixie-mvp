@@ -16,7 +16,7 @@ import {
 } from "@/config/gemini/feature-analyzer";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { DetailSection } from "@/components/ui/features/vision/analyzer/DetailSection";
@@ -122,11 +122,14 @@ export default function AnalyzerPage() {
             imageUrl={imageUrl}
             alt="Analysis Image"
           >
-            <AnalyzeButton
+            <ActionAnimatedButton
               onClick={analyzeImage}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Analizar imagen"
+              visionLoadingText="Analizando con modelo de visión {{phase}}/{{total}}"
+              textLoadingText="Organizando información"
             />
           </ImagePreviewCard>
 

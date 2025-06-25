@@ -16,7 +16,7 @@ import {
 } from "@/config/gemini/feature-foodtype-atlas";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import {
@@ -126,11 +126,14 @@ export default function FoodTypeAtlasPage() {
             imageUrl={imageUrl}
             alt="Analysis Image"
           >
-            <AnalyzeButton
+            <ActionAnimatedButton
               onClick={analyzeImage}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Analizar composición nutricional"
+              visionLoadingText="Analizando composición {{phase}}/{{total}}"
+              textLoadingText="Organizando información nutricional"
             />
           </ImagePreviewCard>
 

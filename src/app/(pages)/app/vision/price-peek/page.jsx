@@ -18,11 +18,9 @@ import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { NAV_IDS, NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
-
-
 import { PriceCard } from "@/components/ui/features/vision/price-peek/PriceCard";
 import { TotalPriceCard } from "@/components/ui/features/vision/price-peek/TotalPriceCard";
-import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { ErrorCard } from "@/components/ui/features/vision/labellens/ErrorCard";
 
 const NUM_VISION_REQUESTS = 3;
@@ -138,18 +136,24 @@ export default function PricePeekPage() {
             imageUrl={imageUrl}
             alt="Etiqueta Nutricional"
           >
-            <AnalyzeButton
+            <ActionAnimatedButton
               onClick={analyze}
               loading={loading}
               phase={phase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Estimar precio"
+              visionLoadingText="Recopilando información visual {{phase}}/{{total}}"
+              textLoadingText="Estimando precio"
             />
           </ImagePreviewCard>
           <InstructionCard functionInfo={functionInfo} />
         </section>
         <section className="flex flex-col gap-2">
           {error && (
-            <ErrorCard title="Error" message={`${error} Asegúrate de que la imagen esté clara y enfocada.`} />
+            <ErrorCard
+              title="Error"
+              message={`${error} Asegúrate de que la imagen esté clara y enfocada.`}
+            />
           )}
 
           {finalResult?.isValidLabel && (
@@ -166,7 +170,10 @@ export default function PricePeekPage() {
           )}
 
           {!finalResult?.isValidLabel && finalResult?.reasoning && (
-            <ErrorCard title="No se pudo interpretar la etiqueta" message={finalResult.reasoning} />
+            <ErrorCard
+              title="No se pudo interpretar la etiqueta"
+              message={finalResult.reasoning}
+            />
           )}
         </section>
       </div>
