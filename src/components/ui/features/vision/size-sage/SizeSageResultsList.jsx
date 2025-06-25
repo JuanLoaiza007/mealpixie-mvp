@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { SizeSageResultItem } from "@/components/ui/features/vision/size-sage/SizeSageResultItem";
+import { Box } from "lucide-react"
 
 /**
  * Displays a list of estimated volume results in a card with a total volume summary.
@@ -57,11 +58,17 @@ export function SizeSageResultsList({ results }) {
   );
 
   return (
-    <Card className="border-gray-300">
-      <CardHeader>
-        <CardTitle>Volumen estimado</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      <>
+        {/* Total de volumenes */}
+        <div className="bg-white rounded-lg p-4 border border-gray-300">
+          <h4 className="text-base flex item-center gap-2 font-semibold text-orange-500 mb-2">
+            <Box />
+            Volumen total
+          </h4>
+          <p className="text-xl font-bold text-gray-900">
+            {totalVolume.toFixed(2)} cm³
+          </p>
+        </div>
         {/* Grid de resultados individuales */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {results.map((r, idx) => (
@@ -75,18 +82,7 @@ export function SizeSageResultsList({ results }) {
               volumen_cm3={r.volumen_cm3}
             />
           ))}
-        </div>
-
-        {/* Total de volumenes */}
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h4 className="text-base font-semibold text-orange-500 mb-2">
-            Volumen total
-          </h4>
-          <p className="text-xl font-bold text-gray-900">
-            {totalVolume.toFixed(2)} cm³
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+        </div>        
+      </>
   );
 }
