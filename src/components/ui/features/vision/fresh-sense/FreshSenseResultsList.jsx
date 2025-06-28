@@ -1,6 +1,7 @@
 // components/ui/features/vision/fresh-sense/FreshSenseResultsList.jsx
 import React from 'react';
 import { FreshSenseResultItem } from '@/components/ui/features/vision/fresh-sense/FreshSenseResultItem';
+import { Utensils } from 'lucide-react';
 
 
 /**
@@ -34,8 +35,9 @@ export function FreshSenseResultsList({ results }) {
   if (!results || results.length === 0) return null;
 
   return (
-    <div className="w-full rounded-lg border border-gray-300 bg-white p-6">
-      <h3 className="text-lg font-semibold text-orange-500 mb-4">
+    <>
+      <h3 className="w-full rounded-lg border border-gray-300 flex item-center gap-2 bg-white p-6 text-lg font-semibold text-orange-500 mb-4">
+        <Utensils />
         Ingredientes
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -48,6 +50,6 @@ export function FreshSenseResultsList({ results }) {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }

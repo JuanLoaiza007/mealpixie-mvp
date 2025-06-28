@@ -200,16 +200,7 @@ export default function SizeSagePage() {
             />
           </ImagePreviewCard>
 
-          {!finalResult ? (
-            <InstructionCard functionInfo={functionInfo} />
-          ) : (
-            <PredictionCard
-              finalResult={finalResult}
-              showPredictions={showPredictions}
-              toggle={togglePreds}
-              visionOutputs={visionOutputs}
-            />
-          )}
+          <InstructionCard functionInfo={functionInfo} />
         </section>
 
         {/* ============================= */}

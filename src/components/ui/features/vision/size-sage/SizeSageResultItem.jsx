@@ -39,7 +39,7 @@ export function SizeSageResultItem({
   volumen_cm3 = 0,
 }) {
   return (
-    <div className="flex flex-col justify-center items-start bg-gray-100 rounded-lg p-4 space-y-2">
+    <div className="flex flex-col justify-center items-start bg-white rounded-lg p-4 space-y-2 border border-gray-300">
       <h4 className="text-base font-semibold text-orange-500">
         {item}
       </h4>

@@ -21,6 +21,7 @@ import { InstructionCard } from "@/components/ui/features/common/InstructionCard
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+import { UtensilsCrossed, ScrollText } from "lucide-react"
 
 const NUM_VISION_REQUESTS = 5;
 
@@ -164,14 +165,7 @@ export default function IngredientsRecipePage() {
           {!finalResult ? (
             <InstructionCard functionInfo={functionInfo} />
           ) : (
-            process.env.NODE_ENV === "development" && (
-              <PredictionCard
-                finalResult={finalResult}
-                showPredictions={showPredictions}
-                toggle={togglePreds}
-                visionOutputs={visionOutputs}
-              />
-            )
+            <InstructionCard functionInfo={functionInfo} />
           )}
         </section>
 
@@ -197,7 +191,8 @@ export default function IngredientsRecipePage() {
           {!error && finalResult && finalResult.isFoodDetected && (
             <>
               <Card>
-                <CardHeader>
+                <CardHeader className="flex items-center gap-2">
+                  <UtensilsCrossed />
                   <CardTitle>Ingredientes</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -210,7 +205,8 @@ export default function IngredientsRecipePage() {
               </Card>
 
               <Card>
-                <CardHeader>
+                <CardHeader className="flex items-center gap-2">
+                  <ScrollText />
                   <CardTitle>Recetas</CardTitle>
                 </CardHeader>
                 <CardContent>

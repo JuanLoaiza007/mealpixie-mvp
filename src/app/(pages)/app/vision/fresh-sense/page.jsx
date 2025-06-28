@@ -174,16 +174,7 @@ export default function FreshSensePage() {
             />
           </ImagePreviewCard>
 
-          {!finalResult ? (
-            <InstructionCard functionInfo={functionInfo} />
-          ) : (
-            <PredictionCard
-              finalResult={finalResult}
-              showPredictions={showPredictions}
-              toggle={togglePreds}
-              visionOutputs={visionOutputs}
-            />
-          )}
+          <InstructionCard functionInfo={functionInfo} />
         </section>
 
         {/* Sección derecha: resultados procesados o razonamiento */}
