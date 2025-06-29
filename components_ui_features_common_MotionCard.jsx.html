@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>components/ui/features/vision/size-sage/SizeSageMessageCard.jsx - Documentation</title>
+    <title>components/ui/features/common/MotionCard.jsx - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">components/ui/features/vision/size-sage/SizeSageMessageCard.jsx</h1>
+    <h1 class="page-title">components/ui/features/common/MotionCard.jsx</h1>
     
 
     
@@ -45,36 +45,42 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// features/vision/size-sage/SizeSageMessageCard.jsx
-import React from "react";
-import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { MotionCard } from "@/components/ui/features/common/MotionCard";
+            <pre class="prettyprint source linenums"><code>"use client";
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
 
 /**
- * Displays a message indicating that a size estimation is not available.
+ * MotionCard Component
  *
  * @component
- * @param {Object} props - The component props.
- * @param {string} props.message - Message to display inside the card. Required.
+ * @param {Object} props - Component properties.
+ * @param {React.ReactNode} props.children - Content to be rendered inside the animated card.
+ * @param {string} [props.className] - Additional CSS classes for the card, or any other prop supported by the underlying Card component.
  *
- * @remarks
- * Utilizes React and custom UI components such as MotionCard, CardHeader, CardTitle, and CardContent.
- *
- * @returns {JSX.Element} A card element with a title and a descriptive message.
+ * @returns {JSX.Element} A card wrapped in `motion.div` with entry and hover animations.
  *
  * @example
- * &lt;SizeSageMessageCard message="Unable to determine size from the provided image." />
+ * // Example with custom className and other props for the Card
+ * &lt;MotionCard className="custom-card-style" data-testid="my-card-element">
+ * &lt;CardHeader>
+ * &lt;CardTitle>My Title&lt;/CardTitle>
+ * &lt;/CardHeader>
+ * &lt;CardContent>
+ * &lt;p>My content.&lt;/p>
+ * &lt;/CardContent>
+ * &lt;/MotionCard>
  */
-export function SizeSageMessageCard({ message }) {
+export function MotionCard({ children, ...props }) {
   return (
-    &lt;MotionCard className="border-gray-300">
-      &lt;CardHeader>
-        &lt;CardTitle>Estimación no disponible&lt;/CardTitle>
-      &lt;/CardHeader>
-      &lt;CardContent>
-        &lt;p className="text-gray-700">{message}&lt;/p>
-      &lt;/CardContent>
-    &lt;/MotionCard>
+    &lt;motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.3 }}
+      // El className del motion.div se manejaría aquí si fuera necesario
+    >
+      &lt;Card {...props}>{children}&lt;/Card>
+    &lt;/motion.div>
   );
 }
 </code></pre>

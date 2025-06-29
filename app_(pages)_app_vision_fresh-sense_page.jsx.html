@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageButton">SizeSageButton</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ActionAnimatedButton">ActionAnimatedButton</a></li><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#MotionCard">MotionCard</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
     
 </nav>
 
@@ -64,12 +64,12 @@ import {
 } from "@/config/gemini/feature-freshsense";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { FreshSenseButton } from "@/components/ui/features/vision/fresh-sense/FreshSenseButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { FreshSenseResultsList } from "@/components/ui/features/vision/fresh-sense/FreshSenseResultsList";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 const NUM_VISION_REQUESTS = 6;
 
@@ -120,7 +120,9 @@ export default function FreshSensePage() {
 
   useEffect(() => {
     if (!imageUrl) {
-      const dest = userNavRoutes.find((r) => r.tags.includes(NAV_TAGS.mainPage));
+      const dest = userNavRoutes.find((r) =>
+        r.tags.includes(NAV_TAGS.mainPage)
+      );
       router.push(dest.href);
     }
   }, [imageUrl, router]);
@@ -133,23 +135,23 @@ export default function FreshSensePage() {
   }, [setTitle]);
 
   /**
- * Performs asynchronous image analysis by sending multiple requests to a vision assistant and aggregating results with Gemini, updating component state accordingly.
- *
- * @returns {Promise&lt;void>} A promise that resolves when analysis and state updates are complete.
- *
- * @example
- * // Within a React component using hooks and context:
- * import React from "react";
- * function ExampleComponent() {
- *   // assume analyzeImage, loading, and other state setters are defined
- *   return (
- *     &lt;button onClick={async () => { await analyzeImage(); }}>
- *       Analyze Image
- *     &lt;/button>
- *   );
- * }
- */
-const analyzeImage = useCallback(async () => {
+   * Performs asynchronous image analysis by sending multiple requests to a vision assistant and aggregating results with Gemini, updating component state accordingly.
+   *
+   * @returns {Promise&lt;void>} A promise that resolves when analysis and state updates are complete.
+   *
+   * @example
+   * // Within a React component using hooks and context:
+   * import React from "react";
+   * function ExampleComponent() {
+   *   // assume analyzeImage, loading, and other state setters are defined
+   *   return (
+   *     &lt;button onClick={async () => { await analyzeImage(); }}>
+   *       Analyze Image
+   *     &lt;/button>
+   *   );
+   * }
+   */
+  const analyzeImage = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
     setVisionOutputs([]);
@@ -196,7 +198,6 @@ const analyzeImage = useCallback(async () => {
     }
   }, [imageUrl]);
 
-
   const togglePreds = () => setShowPredictions((v) => !v);
 
   if (!imageUrl) {
@@ -209,35 +210,29 @@ const analyzeImage = useCallback(async () => {
         {/* Sección izquierda: imagen, botón, InstructionCard + PredictionCard */}
         &lt;section className="flex flex-col gap-2">
           &lt;ImagePreviewCard imageUrl={imageUrl} alt="Fresh Sense Image">
-            &lt;FreshSenseButton
+            &lt;ActionAnimatedButton
               onClick={analyzeImage}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Analizar frescura"
+              visionLoadingText="Generando hipótesis sobre imagen {{phase}}/{{total}}"
+              textLoadingText="Generando información final"
             />
           &lt;/ImagePreviewCard>
 
-          {!finalResult ? (
-            &lt;InstructionCard functionInfo={functionInfo} />
-          ) : (
-            &lt;PredictionCard
-              finalResult={finalResult}
-              showPredictions={showPredictions}
-              toggle={togglePreds}
-              visionOutputs={visionOutputs}
-            />
-          )}
+          &lt;InstructionCard functionInfo={functionInfo} />
         &lt;/section>
 
         {/* Sección derecha: resultados procesados o razonamiento */}
         &lt;section className="flex flex-col gap-2">
           {error &amp;&amp; (
-            &lt;Card>
+            &lt;MotionCard>
               &lt;CardHeader>
                 &lt;CardTitle>Error&lt;/CardTitle>
               &lt;/CardHeader>
               &lt;CardContent>{error}&lt;/CardContent>
-            &lt;/Card>
+            &lt;/MotionCard>
           )}
 
           {finalResult &amp;&amp; finalResult.isFreshnessDetected &amp;&amp; (
@@ -266,7 +261,7 @@ const analyzeImage = useCallback(async () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Jun 17 2025 18:13:50 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jun 29 2025 16:50:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

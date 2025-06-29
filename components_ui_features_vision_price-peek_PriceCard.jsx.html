@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageButton">SizeSageButton</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ActionAnimatedButton">ActionAnimatedButton</a></li><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#MotionCard">MotionCard</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
     
 </nav>
 
@@ -46,10 +46,10 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>"use client";
-import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign } from "lucide-react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 /**
  * Displays a styled card with price information and affordability level for a given item.
@@ -74,31 +74,24 @@ import { DollarSign } from "lucide-react";
  * />
  */
 export function PriceCard({ field }) {
-
   return (
-	&lt;motion.div
-	initial={{ opacity: 0, y: 12 }}
-	animate={{ opacity: 1, y: 0 }}
-	whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
-	whileTap={{ scale: 0.97 }}
-	transition={{ duration: 0.3, ease: "easeOut" }}
-	>
-	  &lt;Card className="flex flex-col h-full shadow-md border border-border">
-		&lt;CardHeader className="flex flex-row items-center justify-between gap-3 pb-2">
-		  &lt;div className="flex items-center gap-3">
-			&lt;DollarSign className="w-4 h-4" />
-			&lt;CardTitle className="text-base text-foreground">{field.name}&lt;/CardTitle>
-		  &lt;/div>
-		  &lt;Badge variant="success">{field.expensiveLevel}&lt;/Badge>
-		&lt;/CardHeader>
-		&lt;CardContent className="text-sm text-muted-foreground">
-		  &lt;p>
-			&lt;span className="font-semibold text-foreground">Valor:&lt;/span>{" "}
-			{field.price}
-		  &lt;/p>
-		&lt;/CardContent>
-	  &lt;/Card>
-	&lt;/motion.div>
+    &lt;MotionCard className="flex flex-col h-full shadow-md border border-border">
+      &lt;CardHeader className="flex flex-row items-center justify-between gap-3 pb-2">
+        &lt;div className="flex items-center gap-3">
+          &lt;DollarSign className="w-4 h-4 text-orange-600" />
+          &lt;CardTitle className="text-base text-foreground">
+            {field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+          &lt;/CardTitle>
+        &lt;/div>
+        &lt;Badge variant="success">{field.expensiveLevel}&lt;/Badge>
+      &lt;/CardHeader>
+      &lt;CardContent className="text-sm text-muted-foreground">
+        &lt;p>
+          &lt;span className="font-semibold text-foreground">Valor:&lt;/span>{" "}
+          {field.price}
+        &lt;/p>
+      &lt;/CardContent>
+    &lt;/MotionCard>
   );
 }
 </code></pre>
@@ -115,7 +108,7 @@ export function PriceCard({ field }) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Jun 17 2025 18:13:50 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jun 29 2025 16:50:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

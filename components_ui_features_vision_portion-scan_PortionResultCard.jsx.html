@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageButton">SizeSageButton</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ActionAnimatedButton">ActionAnimatedButton</a></li><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#MotionCard">MotionCard</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
     
 </nav>
 
@@ -46,9 +46,9 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>"use client";
-import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Utensils, Hash, Weight, Flame } from "lucide-react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 /**
  * Capitalizes the first letter of each word in a given string.
@@ -60,8 +60,7 @@ import { Utensils, Hash, Weight, Flame } from "lucide-react";
  * const name = formatName("john doe");
  * console.log(name); // "John Doe"
  */
-const formatName = (str) =>
-	str.replace(/\b\w/g, (char) => char.toUpperCase());
+const formatName = (str) => str.replace(/\b\w/g, (char) => char.toUpperCase());
 
 /**
  * Renders a visual card displaying portion details such as count, estimated weight, and calories.
@@ -94,54 +93,44 @@ const formatName = (str) =>
  */
 
 export function PortionResultCard({ item }) {
-	return (
-		&lt;motion.div
-			initial={{ opacity: 0, y: 12 }}
-			animate={{ opacity: 1, y: 0 }}
-			whileHover={{ scale: 1.02 }}
-			transition={{ duration: 0.3 }}
-		>
-			&lt;Card className="h-full shadow-sm border border-border">
-				&lt;CardHeader className="flex flex-row items-center justify-between pb-2">
-					&lt;div className="flex items-center gap-3">
-						&lt;Utensils className="w-5 h-5 text-orange-600" />
-						&lt;CardTitle className="text-base text-foreground">
-							{formatName(item.name)}
-						&lt;/CardTitle>
-					&lt;/div>
-					&lt;span className="text-lg font-bold text-orange-700">
-						× {item.count}
-					&lt;/span>
-				&lt;/CardHeader>
-				&lt;CardContent className="text-sm text-muted-foreground space-y-2">
-					&lt;p className="flex items-center gap-2">
-						&lt;Hash className="w-4 h-4 text-muted-foreground" />
-						&lt;span>
-							&lt;strong>Cantidad:&lt;/strong> {item.count}
-						&lt;/span>
-					&lt;/p>
-					{item.estimatedWeightKg &amp;&amp; (
-						&lt;p className="flex items-center gap-2">
-							&lt;Weight className="w-4 h-4 text-muted-foreground" />
-							&lt;span>
-								&lt;strong>Peso estimado:&lt;/strong>{" "}
-								{item.estimatedWeightKg.toFixed(2)} kg
-							&lt;/span>
-						&lt;/p>
-					)}
-					{item.estimatedCalories &amp;&amp; (
-						&lt;p className="flex items-center gap-2">
-							&lt;Flame className="w-4 h-4 text-muted-foreground" />
-							&lt;span>
-								&lt;strong>Calorías estimadas:&lt;/strong>{" "}
-								{item.estimatedCalories} kcal
-							&lt;/span>
-						&lt;/p>
-					)}
-				&lt;/CardContent>
-			&lt;/Card>
-		&lt;/motion.div>
-	);
+  return (
+    &lt;MotionCard className="h-full shadow-sm border border-border">
+      &lt;CardHeader className="flex flex-row items-center justify-between pb-2">
+        &lt;div className="flex items-center gap-3">
+          &lt;Utensils className="w-5 h-5 text-orange-600" />
+          &lt;CardTitle>{formatName(item.name)}&lt;/CardTitle>
+        &lt;/div>
+        &lt;span className="text-lg font-bold text-orange-700">
+          × {item.count}
+        &lt;/span>
+      &lt;/CardHeader>
+      &lt;CardContent className="text-sm text-muted-foreground space-y-2">
+        &lt;p className="flex items-center gap-2">
+          &lt;Hash className="w-4 h-4 text-muted-foreground" />
+          &lt;span>
+            &lt;strong>Cantidad:&lt;/strong> {item.count}
+          &lt;/span>
+        &lt;/p>
+        {item.estimatedWeightKg &amp;&amp; (
+          &lt;p className="flex items-center gap-2">
+            &lt;Weight className="w-4 h-4 text-muted-foreground" />
+            &lt;span>
+              &lt;strong>Peso estimado:&lt;/strong>{" "}
+              {item.estimatedWeightKg.toFixed(2)} kg
+            &lt;/span>
+          &lt;/p>
+        )}
+        {item.estimatedCalories &amp;&amp; (
+          &lt;p className="flex items-center gap-2">
+            &lt;Flame className="w-4 h-4 text-muted-foreground" />
+            &lt;span>
+              &lt;strong>Calorías estimadas:&lt;/strong> {item.estimatedCalories} kcal
+            &lt;/span>
+          &lt;/p>
+        )}
+      &lt;/CardContent>
+    &lt;/MotionCard>
+  );
 }
 </code></pre>
         </article>
@@ -157,7 +146,7 @@ export function PortionResultCard({ item }) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Jun 17 2025 18:13:50 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jun 29 2025 16:50:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

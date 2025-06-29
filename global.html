@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageButton">SizeSageButton</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ActionAnimatedButton">ActionAnimatedButton</a></li><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#MotionCard">MotionCard</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
     
 </nav>
 
@@ -130,6 +130,652 @@
 
     
 
+    <h4 class="name" id="ActionAnimatedButton"><span class="type-signature"></span>ActionAnimatedButton<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>Renders an animated action button with customizable text, icons, and loading states.</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_ui_features_common_ActionAnimatedButton.jsx.html">components/ui/features/common/ActionAnimatedButton.jsx</a>, <a href="components_ui_features_common_ActionAnimatedButton.jsx.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;ActionAnimatedButton
+onClick={handleAnalyze}
+loading={{ vision: true, text: false }}
+phase={1}
+total={3}
+defaultText="Analyze Image"
+visionLoadingText="Analyzing vision model {{phase}}/{{total}}"
+textLoadingText="Generating final response"
+Icon={Search}
+className="bg-blue-500"
+containerClassName="top-4"
+/></code></pre>
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The props object.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>onClick</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Callback function triggered on button click.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>loading</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Loading state flags.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>vision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Indicates if the primary (vision) process is in progress.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Indicates if the secondary (text/analysis) process is in progress.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>phase</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Current phase or step number for the primary loading state.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>total</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Total number of steps for the primary loading state.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Text to display when no loading is active.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visionLoadingText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Text to display when `loading.vision` is true.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>textLoadingText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Text to display when `loading.text` is true.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Icon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">React.ElementType</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Lucide-react icon component to display when not loading.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>className</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>""</code>
+                
+                </td>
+            
+
+            <td class="description last">Additional Tailwind CSS classes for the internal Button component.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>containerClassName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>""</code>
+                
+                </td>
+            
+
+            <td class="description last">Additional Tailwind CSS classes for the outer motion.div container.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    An animated button with dynamic content based on loading states.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">JSX.Element</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="ErrorCard"><span class="type-signature"></span>ErrorCard<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
 
     
@@ -193,9 +839,9 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>&lt;ErrorCard 
-  title="Connection Failed" 
-  message="Unable to connect to the server. Please try again later." 
+    <pre class="prettyprint"><code>&lt;ErrorCard
+  title="Connection Failed"
+  message="Unable to connect to the server. Please try again later."
 /></code></pre>
 
 
@@ -380,271 +1026,6 @@
         
 <div class="param-desc">
     A card component indicating an error state.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">JSX.Element</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="FreshSenseButton"><span class="type-signature"></span>FreshSenseButton<span class="signature">(onClick, loading, phase, total)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Renders a button that initiates image analysis and displays loading states.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_fresh-sense_FreshSenseButton.jsx.html">components/ui/features/vision/fresh-sense/FreshSenseButton.jsx</a>, <a href="components_ui_features_vision_fresh-sense_FreshSenseButton.jsx.html#line55">line 55</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-examples">Example</h5>
-    
-    <pre class="prettyprint"><code>```jsx
-import React, { useState } from "react";
-import { FreshSenseButton } from "@/components/ui/features/vision/fresh-sense/FreshSenseButton";
-
-function ExampleUsage() {
-  const [loading, setLoading] = useState({ vision: false, text: false });
-  const [phase, setPhase] = useState(1);
-  const totalPhases = 5;
-
-  const handleAnalyze = () => {
-    setLoading({ vision: true, text: false });
-    // Simulate analysis steps...
-    setTimeout(() => {
-      setLoading({ vision: false, text: true });
-      setTimeout(() => {
-        setLoading({ vision: false, text: false });
-        setPhase((prev) => prev + 1);
-      }, 1000);
-    }, 2000);
-  };
-
-  return (
-    &lt;FreshSenseButton
-      onClick={handleAnalyze}
-      loading={loading}
-      phase={phase}
-      total={totalPhases}
-    />
-  );
-}
-```</code></pre>
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>onClick</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Callback function invoked when the button is clicked. (required)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>loading</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Object representing loading states: `vision` for vision analysis and `text` for final response generation. (required)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>phase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Current analysis phase index, used to display progress. (required)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>total</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Total number of analysis phases. (required)</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    A styled button that shows a loader and appropriate label text based on loading state.
 </div>
 
 
@@ -858,7 +1239,7 @@ function App() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_fresh-sense_FreshSenseResultItem.jsx.html">components/ui/features/vision/fresh-sense/FreshSenseResultItem.jsx</a>, <a href="components_ui_features_vision_fresh-sense_FreshSenseResultItem.jsx.html#line33">line 33</a>
+        <a href="components_ui_features_vision_fresh-sense_FreshSenseResultItem.jsx.html">components/ui/features/vision/fresh-sense/FreshSenseResultItem.jsx</a>, <a href="components_ui_features_vision_fresh-sense_FreshSenseResultItem.jsx.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -1081,7 +1462,7 @@ function ResultsExample() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_fresh-sense_FreshSenseResultsList.jsx.html">components/ui/features/vision/fresh-sense/FreshSenseResultsList.jsx</a>, <a href="components_ui_features_vision_fresh-sense_FreshSenseResultsList.jsx.html#line33">line 33</a>
+        <a href="components_ui_features_vision_fresh-sense_FreshSenseResultsList.jsx.html">components/ui/features/vision/fresh-sense/FreshSenseResultsList.jsx</a>, <a href="components_ui_features_vision_fresh-sense_FreshSenseResultsList.jsx.html#line35">line 35</a>
     </li></ul></dd>
     
 
@@ -1557,7 +1938,7 @@ function App() {
 
     
 
-    <h4 class="name" id="LabelLensButton"><span class="type-signature"></span>LabelLensButton<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
+    <h4 class="name" id="MotionCard"><span class="type-signature"></span>MotionCard<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
 
     
 
@@ -1567,13 +1948,13 @@ function App() {
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Renders an animated button for initiating label scanning and displaying OCR or analysis status.</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>MotionCard Component</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_labellens_LabellensButton.jsx.html">components/ui/features/vision/labellens/LabellensButton.jsx</a>, <a href="components_ui_features_vision_labellens_LabellensButton.jsx.html#line29">line 29</a>
+        <a href="components_ui_features_common_MotionCard.jsx.html">components/ui/features/common/MotionCard.jsx</a>, <a href="components_ui_features_common_MotionCard.jsx.html#line26">line 26</a>
     </li></ul></dd>
     
 
@@ -1620,12 +2001,15 @@ function App() {
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>&lt;LabelLensButton 
-  onClick={handleScan}
-  loading={{ vision: true, text: false }}
-  phase={1}
-  total={3}
-/></code></pre>
+    <pre class="prettyprint"><code>// Example with custom className and other props for the Card
+&lt;MotionCard className="custom-card-style" data-testid="my-card-element">
+&lt;CardHeader>
+&lt;CardTitle>My Title&lt;/CardTitle>
+&lt;/CardHeader>
+&lt;CardContent>
+&lt;p>My content.&lt;/p>
+&lt;/CardContent>
+&lt;/MotionCard></code></pre>
 
 
 
@@ -1672,7 +2056,7 @@ function App() {
 
             
 
-            <td class="description last">The props object.
+            <td class="description last">Component properties.
                 <h6>Properties</h6>
                 
 
@@ -1686,72 +2070,7 @@ function App() {
         <th>Type</th>
 
         
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>onClick</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Callback function triggered on button click. Required.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>loading</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Loading state flags. Required.
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
+        <th>Attributes</th>
         
 
         
@@ -1765,13 +2084,13 @@ function App() {
 
         <tr>
             
-                <td class="name"><code>vision</code></td>
+                <td class="name"><code>children</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">React.ReactNode</span>
 
 
 
@@ -1779,23 +2098,31 @@ function App() {
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">Indicates if OCR extraction is in progress. Required.</td>
+            <td class="description last">Content to be rendered inside the animated card.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>text</code></td>
+                <td class="name"><code>className</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">string</span>
 
 
 
@@ -1803,65 +2130,20 @@ function App() {
             </td>
 
             
-
-            
-
-            <td class="description last">Indicates if nutritional analysis is in progress. Required.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>phase</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Current OCR phase or step number. Required.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>total</code></td>
-            
-
-            <td class="type">
-            
+                    &lt;optional><br>
                 
-<span class="param-type">number</span>
 
+                
 
-
-            
-            </td>
-
+                
+                </td>
             
 
             
 
-            <td class="description last">Total number of OCR steps. Required.</td>
+            <td class="description last">Additional CSS classes for the card, or any other prop supported by the underlying Card component.</td>
         </tr>
 
     
@@ -1894,7 +2176,7 @@ function App() {
 
         
 <div class="param-desc">
-    An animated scanning button with status-dependent icons and text.
+    A card wrapped in `motion.div` with entry and hover animations.
 </div>
 
 
@@ -2580,7 +2862,7 @@ function App() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_portion-scan_PortionResultCard.jsx.html">components/ui/features/vision/portion-scan/PortionResultCard.jsx</a>, <a href="components_ui_features_vision_portion-scan_PortionResultCard.jsx.html#line49">line 49</a>
+        <a href="components_ui_features_vision_portion-scan_PortionResultCard.jsx.html">components/ui/features/vision/portion-scan/PortionResultCard.jsx</a>, <a href="components_ui_features_vision_portion-scan_PortionResultCard.jsx.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -2944,370 +3226,6 @@ function App() {
 
     
 
-    <h4 class="name" id="PortionScanButton"><span class="type-signature"></span>PortionScanButton<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Button component for initiating or displaying the progress of a portion scan process.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_portion-scan_PortionscanButton.jsx.html">components/ui/features/vision/portion-scan/PortionscanButton.jsx</a>, <a href="components_ui_features_vision_portion-scan_PortionscanButton.jsx.html#line36">line 36</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-examples">Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;PortionScanButton
-  onClick={handleScan}
-  loading={{ vision: true, text: false }}
-  phase={2}
-  total={3}
-/></code></pre>
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>props</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Component props.
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>onClick</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Callback function triggered on button click. Required.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>loading</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Loading state object. Required.
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>vision</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Indicates if the vision process is ongoing. Required.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Indicates if the text analysis is ongoing. Required.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>phase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Current step in the scanning process. Required.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>total</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Total number of vision scanning steps. Required.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    A styled, animated button that initiates or shows progress of a portion scan.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">JSX.Element</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="PriceCard"><span class="type-signature"></span>PriceCard<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
 
     
@@ -3527,271 +3445,6 @@ function App() {
 
     
 
-    <h4 class="name" id="SizeSageButton"><span class="type-signature"></span>SizeSageButton<span class="signature">(onClick, loading, phase, total)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Renders a button that initiates image analysis and displays loading states.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_size-sage_SizeSageButton.jsx.html">components/ui/features/vision/size-sage/SizeSageButton.jsx</a>, <a href="components_ui_features_vision_size-sage_SizeSageButton.jsx.html#line55">line 55</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-examples">Example</h5>
-    
-    <pre class="prettyprint"><code>```jsx
-import React, { useState } from "react";
-import { SizeSageButton } from "@/components/ui/features/vision/size-sage/SizeSageButton";
-
-function ExampleUsage() {
-  const [loading, setLoading] = useState({ vision: false, text: false });
-  const [phase, setPhase] = useState(1);
-  const totalPhases = 5;
-
-  const handleAnalyze = () => {
-    setLoading({ vision: true, text: false });
-    // Simulate analysis steps...
-    setTimeout(() => {
-      setLoading({ vision: false, text: true });
-      setTimeout(() => {
-        setLoading({ vision: false, text: false });
-        setPhase((prev) => prev + 1);
-      }, 1000);
-    }, 2000);
-  };
-
-  return (
-    &lt;SizeSageButton
-      onClick={handleAnalyze}
-      loading={loading}
-      phase={phase}
-      total={totalPhases}
-    />
-  );
-}
-```</code></pre>
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>onClick</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Callback function invoked when the button is clicked. (required)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>loading</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Object representing loading states: `vision` for vision analysis and `text` for final response generation. (required)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>phase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Current analysis phase index, used to display progress. (required)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>total</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Total number of analysis phases. (required)</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    A styled button that shows a loader and appropriate label text based on loading state.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">JSX.Element</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="SizeSageMessageCard"><span class="type-signature"></span>SizeSageMessageCard<span class="signature">(props)</span><span class="type-signature"> &rarr; {JSX.Element}</span></h4>
 
     
@@ -3808,7 +3461,7 @@ function ExampleUsage() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_size-sage_SizeSageMessageCard.jsx.html">components/ui/features/vision/size-sage/SizeSageMessageCard.jsx</a>, <a href="components_ui_features_vision_size-sage_SizeSageMessageCard.jsx.html#line20">line 20</a>
+        <a href="components_ui_features_vision_size-sage_SizeSageMessageCard.jsx.html">components/ui/features/vision/size-sage/SizeSageMessageCard.jsx</a>, <a href="components_ui_features_vision_size-sage_SizeSageMessageCard.jsx.html#line21">line 21</a>
     </li></ul></dd>
     
 
@@ -4021,7 +3674,7 @@ function ExampleUsage() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_size-sage_SizeSageResultItem.jsx.html">components/ui/features/vision/size-sage/SizeSageResultItem.jsx</a>, <a href="components_ui_features_vision_size-sage_SizeSageResultItem.jsx.html#line33">line 33</a>
+        <a href="components_ui_features_vision_size-sage_SizeSageResultItem.jsx.html">components/ui/features/vision/size-sage/SizeSageResultItem.jsx</a>, <a href="components_ui_features_vision_size-sage_SizeSageResultItem.jsx.html#line40">line 40</a>
     </li></ul></dd>
     
 
@@ -4313,7 +3966,7 @@ function ExampleUsage() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_ui_features_vision_size-sage_SizeSageResultsList.jsx.html">components/ui/features/vision/size-sage/SizeSageResultsList.jsx</a>, <a href="components_ui_features_vision_size-sage_SizeSageResultsList.jsx.html#line50">line 50</a>
+        <a href="components_ui_features_vision_size-sage_SizeSageResultsList.jsx.html">components/ui/features/vision/size-sage/SizeSageResultsList.jsx</a>, <a href="components_ui_features_vision_size-sage_SizeSageResultsList.jsx.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -5870,7 +5523,7 @@ getImpactLevel("Este ingrediente no afecta la salud.");
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Jun 17 2025 18:13:50 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jun 29 2025 16:50:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

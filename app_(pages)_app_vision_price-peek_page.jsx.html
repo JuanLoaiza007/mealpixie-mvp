@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageButton">SizeSageButton</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ActionAnimatedButton">ActionAnimatedButton</a></li><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#MotionCard">MotionCard</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
     
 </nav>
 
@@ -65,11 +65,9 @@ import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { NAV_IDS, NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
-
-
 import { PriceCard } from "@/components/ui/features/vision/price-peek/PriceCard";
 import { TotalPriceCard } from "@/components/ui/features/vision/price-peek/TotalPriceCard";
-import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { ErrorCard } from "@/components/ui/features/vision/labellens/ErrorCard";
 
 const NUM_VISION_REQUESTS = 3;
@@ -185,18 +183,24 @@ export default function PricePeekPage() {
             imageUrl={imageUrl}
             alt="Etiqueta Nutricional"
           >
-            &lt;AnalyzeButton
+            &lt;ActionAnimatedButton
               onClick={analyze}
               loading={loading}
               phase={phase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Estimar precio"
+              visionLoadingText="Recopilando información visual {{phase}}/{{total}}"
+              textLoadingText="Estimando precio"
             />
           &lt;/ImagePreviewCard>
           &lt;InstructionCard functionInfo={functionInfo} />
         &lt;/section>
         &lt;section className="flex flex-col gap-2">
           {error &amp;&amp; (
-            &lt;ErrorCard title="Error" message={`${error} Asegúrate de que la imagen esté clara y enfocada.`} />
+            &lt;ErrorCard
+              title="Error"
+              message={`${error} Asegúrate de que la imagen esté clara y enfocada.`}
+            />
           )}
 
           {finalResult?.isValidLabel &amp;&amp; (
@@ -213,7 +217,10 @@ export default function PricePeekPage() {
           )}
 
           {!finalResult?.isValidLabel &amp;&amp; finalResult?.reasoning &amp;&amp; (
-            &lt;ErrorCard title="No se pudo interpretar la etiqueta" message={finalResult.reasoning} />
+            &lt;ErrorCard
+              title="No se pudo interpretar la etiqueta"
+              message={finalResult.reasoning}
+            />
           )}
         &lt;/section>
       &lt;/div>
@@ -234,7 +241,7 @@ export default function PricePeekPage() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Jun 17 2025 18:13:50 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jun 29 2025 16:50:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

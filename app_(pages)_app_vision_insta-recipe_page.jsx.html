@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageButton">SizeSageButton</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ActionAnimatedButton">ActionAnimatedButton</a></li><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#MotionCard">MotionCard</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
     
 </nav>
 
@@ -63,16 +63,12 @@ import {
 } from "@/config/gemini/feature-instarecipe";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { InstaRecipeButton } from "@/components/ui/features/vision/insta-recipe/InstaRecipeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+import { UtensilsCrossed, ScrollText } from "lucide-react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 const NUM_VISION_REQUESTS = 5;
 
@@ -128,17 +124,17 @@ export default function IngredientsRecipePage() {
   }, [setTitle]);
 
   /**
-  * Analyzes an image to detect ingredients and generate suggested recipes.
-  *
-  * @async
-  * @throws {Error} If an error occurs during vision analysis or generation of the final response.
-  * @returns {Promise&lt;void>} Resolves when the vision analysis and response generation are complete.
-  *
-  * @example
-  * analyzeImage().then(() => {
-  *   console.log("Analysis completed");
-  * });
-  */
+   * Analyzes an image to detect ingredients and generate suggested recipes.
+   *
+   * @async
+   * @throws {Error} If an error occurs during vision analysis or generation of the final response.
+   * @returns {Promise&lt;void>} Resolves when the vision analysis and response generation are complete.
+   *
+   * @example
+   * analyzeImage().then(() => {
+   *   console.log("Analysis completed");
+   * });
+   */
   const analyzeIngredients = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
@@ -202,51 +198,48 @@ export default function IngredientsRecipePage() {
             imageUrl={imageUrl}
             alt="Analysis Image"
           >
-            &lt;InstaRecipeButton
+            &lt;ActionAnimatedButton
               onClick={analyzeIngredients}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Generar receta con estos ingredientes"
+              visionLoadingText="Analizando ingredientes {{phase}}/{{total}}"
+              textLoadingText="Generando recetas"
             />
           &lt;/ImagePreviewCard>
 
           {!finalResult ? (
             &lt;InstructionCard functionInfo={functionInfo} />
           ) : (
-            process.env.NODE_ENV === "development" &amp;&amp; (
-              &lt;PredictionCard
-                finalResult={finalResult}
-                showPredictions={showPredictions}
-                toggle={togglePreds}
-                visionOutputs={visionOutputs}
-              />
-            )
+            &lt;InstructionCard functionInfo={functionInfo} />
           )}
         &lt;/section>
 
         &lt;section className="flex flex-col gap-2">
           {error &amp;&amp; (
-            &lt;Card>
+            &lt;MotionCard>
               &lt;CardHeader>
                 &lt;CardTitle>Error&lt;/CardTitle>
               &lt;/CardHeader>
               &lt;CardContent>{error}&lt;/CardContent>
-            &lt;/Card>
+            &lt;/MotionCard>
           )}
 
           {!error &amp;&amp; finalResult &amp;&amp; !finalResult.isFoodDetected &amp;&amp; (
-            &lt;Card>
+            &lt;MotionCard>
               &lt;CardHeader>
                 &lt;CardTitle>No se detectaron ingredientes&lt;/CardTitle>
               &lt;/CardHeader>
               &lt;CardContent>{finalResult.message}&lt;/CardContent>
-            &lt;/Card>
+            &lt;/MotionCard>
           )}
 
           {!error &amp;&amp; finalResult &amp;&amp; finalResult.isFoodDetected &amp;&amp; (
             &lt;>
-              &lt;Card>
-                &lt;CardHeader>
+              &lt;MotionCard>
+                &lt;CardHeader className="flex items-center gap-2">
+                  &lt;UtensilsCrossed className="text-orange-600" />
                   &lt;CardTitle>Ingredientes&lt;/CardTitle>
                 &lt;/CardHeader>
                 &lt;CardContent>
@@ -256,10 +249,11 @@ export default function IngredientsRecipePage() {
                     ))}
                   &lt;/ul>
                 &lt;/CardContent>
-              &lt;/Card>
+              &lt;/MotionCard>
 
-              &lt;Card>
-                &lt;CardHeader>
+              &lt;MotionCard>
+                &lt;CardHeader className="flex items-center gap-2">
+                  &lt;ScrollText className="text-orange-600" />
                   &lt;CardTitle>Recetas&lt;/CardTitle>
                 &lt;/CardHeader>
                 &lt;CardContent>
@@ -271,7 +265,7 @@ export default function IngredientsRecipePage() {
                     ))}
                   &lt;/ul>
                 &lt;/CardContent>
-              &lt;/Card>
+              &lt;/MotionCard>
             &lt;/>
           )}
         &lt;/section>
@@ -293,7 +287,7 @@ export default function IngredientsRecipePage() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Jun 17 2025 18:13:50 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jun 29 2025 16:50:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

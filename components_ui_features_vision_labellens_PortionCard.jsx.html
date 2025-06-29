@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseButton">FreshSenseButton</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#LabelLensButton">LabelLensButton</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PortionScanButton">PortionScanButton</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageButton">SizeSageButton</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ActionAnimatedButton">ActionAnimatedButton</a></li><li><a href="global.html#ErrorCard">ErrorCard</a></li><li><a href="global.html#FreshSenseMessageCard">FreshSenseMessageCard</a></li><li><a href="global.html#FreshSenseResultItem">FreshSenseResultItem</a></li><li><a href="global.html#FreshSenseResultsList">FreshSenseResultsList</a></li><li><a href="global.html#IngredientsCard">IngredientsCard</a></li><li><a href="global.html#MotionCard">MotionCard</a></li><li><a href="global.html#NutrientCard">NutrientCard</a></li><li><a href="global.html#PortionCard">PortionCard</a></li><li><a href="global.html#PortionResultCard">PortionResultCard</a></li><li><a href="global.html#PriceCard">PriceCard</a></li><li><a href="global.html#SizeSageMessageCard">SizeSageMessageCard</a></li><li><a href="global.html#SizeSageResultItem">SizeSageResultItem</a></li><li><a href="global.html#SizeSageResultsList">SizeSageResultsList</a></li><li><a href="global.html#TotalPriceCard">TotalPriceCard</a></li><li><a href="global.html#VitaminCard">VitaminCard</a></li><li><a href="global.html#formatName">formatName</a></li><li><a href="global.html#getIconForField">getIconForField</a></li><li><a href="global.html#getImpactLevel">getImpactLevel</a></li></ul>
     
 </nav>
 
@@ -45,9 +45,9 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { motion } from "framer-motion";
-import { Cookie, HelpCircle } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+            <pre class="prettyprint source linenums"><code>import { Cookie, HelpCircle } from "lucide-react";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 /**
  * Displays a card containing the portion size information extracted from a label, or a fallback message if unavailable.
@@ -65,42 +65,22 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
  */
 export function PortionCard({ portion }) {
   return (
-    &lt;motion.div
-      className="w-fit max-w-sm"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-    >
-
-      &lt;Card className="min-h-[60px] w-sm flex flex-col justify-between">
-        &lt;CardHeader className="flex flex-row items-center gap-2">
-          &lt;Cookie className="w-5 h-5 text-orange-500" />
-          &lt;CardTitle>Porción&lt;/CardTitle>
-        &lt;/CardHeader>
-        &lt;CardContent className="text-sm text-muted-foreground">
-          {portion ? (
-            &lt;motion.p
-              key="portion"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              {portion}
-            &lt;/motion.p>
-          ) : (
-            &lt;motion.div
-              key="no-portion"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center gap-2 text-yellow-600"
-            >
-              &lt;HelpCircle className="w-4 h-4" />
-              &lt;span>No se encontró el tamaño de la porción en la etiqueta.&lt;/span>
-            &lt;/motion.div>
-          )}
-        &lt;/CardContent>
-      &lt;/Card>
-    &lt;/motion.div>
+    &lt;MotionCard className="min-h-[60px] w-sm flex flex-col justify-between">
+      &lt;CardHeader className="flex flex-row items-center gap-2">
+        &lt;Cookie className="w-5 h-5 text-orange-500" />
+        &lt;CardTitle>Porción&lt;/CardTitle>
+      &lt;/CardHeader>
+      &lt;CardContent className="text-sm text-muted-foreground">
+        {portion ? (
+          &lt;p>{portion}&lt;/p>
+        ) : (
+          &lt;div className="flex items-center gap-2 text-yellow-600">
+            &lt;HelpCircle className="w-4 h-4" />
+            &lt;span>No se encontró el tamaño de la porción en la etiqueta.&lt;/span>
+          &lt;/div>
+        )}
+      &lt;/CardContent>
+    &lt;/MotionCard>
   );
 }
 </code></pre>
@@ -117,7 +97,7 @@ export function PortionCard({ portion }) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Jun 17 2025 18:13:50 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jun 29 2025 16:50:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
