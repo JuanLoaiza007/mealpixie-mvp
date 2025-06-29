@@ -1,7 +1,14 @@
 // components/ui/features/vision/size-sage/SizeSageResultsList.jsx
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  CardHeader,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 import { SizeSageResultItem } from "@/components/ui/features/vision/size-sage/SizeSageResultItem";
+import { Box } from "lucide-react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 /**
  * Displays a list of estimated volume results in a card with a total volume summary.
@@ -51,42 +58,40 @@ export function SizeSageResultsList({ results }) {
   if (!results || results.length === 0) return null;
 
   // Calcular la suma total de todos los volumenes_cm3
-  const totalVolume = results.reduce(
-    (sum, r) => sum + (r.volumen_cm3 || 0),
-    0
-  );
+  const totalVolume = results.reduce((sum, r) => sum + (r.volumen_cm3 || 0), 0);
 
   return (
-    <Card className="border-gray-300">
-      <CardHeader>
-        <CardTitle>Volumen estimado</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Grid de resultados individuales */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {results.map((r, idx) => (
-            <SizeSageResultItem
-              key={idx}
-              object={r.object}
-              item={r.item}
-              largo_cm={r.largo_cm}
-              ancho_cm={r.ancho_cm}
-              alto_cm={r.alto_cm}
-              volumen_cm3={r.volumen_cm3}
-            />
-          ))}
-        </div>
-
-        {/* Total de volumenes */}
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h4 className="text-base font-semibold text-orange-500 mb-2">
-            Volumen total
-          </h4>
-          <p className="text-xl font-bold text-gray-900">
+    <>
+      {/* Total de volumenes */}
+      <MotionCard className="p-4 gap-2">
+        <CardHeader className={"gap-0"}>
+          <CardTitle className={"gap-0"}>
+            <h2 className="text-base text-foreground flex item-center gap-2 font-semibold">
+              <Box className="text-orange-600" />
+              Volumen total
+            </h2>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CardDescription className="text-xl font-bold text-gray-900">
             {totalVolume.toFixed(2)} cm³
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+          </CardDescription>
+        </CardContent>
+      </MotionCard>
+      {/* Grid de resultados individuales */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {results.map((r, idx) => (
+          <SizeSageResultItem
+            key={idx}
+            object={r.object}
+            item={r.item}
+            largo_cm={r.largo_cm}
+            ancho_cm={r.ancho_cm}
+            alto_cm={r.alto_cm}
+            volumen_cm3={r.volumen_cm3}
+          />
+        ))}
+      </div>
+    </>
   );
 }

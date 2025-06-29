@@ -10,9 +10,9 @@ export function PredictionCard({
   visionOutputs,
 }) {
   return (
-    <Card className="w-full sm md:w-60 lg:w-100 gap-0">
+    <Card className="w-full sm md:w-60 lg:w-100 gap-1 bg-amber-100">
       <CardHeader className="gap-0">
-        <CardTitle className="text-xl">
+        <CardTitle className="text-xl text-orange-600">
           {finalResult?.isFood ? finalResult.name : "No he detectado nada"}
         </CardTitle>
         <button

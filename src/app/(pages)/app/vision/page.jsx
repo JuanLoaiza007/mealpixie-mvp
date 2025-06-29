@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState, useCallback } from "react";
 import { ImagePlus, Trash2 } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogTrigger,
@@ -18,6 +17,7 @@ import { SUPPORTED_IMAGE_TYPES } from "@/config/together/common";
 import ImageSourceDialog from "@/components/ui/features/vision/imageSourceDialog";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { userNavRoutes, NAV_TAGS } from "@/config/userNavRoutes";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 export default function VisionToolsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -120,7 +120,7 @@ export default function VisionToolsPage() {
           {userNavRoutes.map((feat) => {
             if (feat.tags.includes(NAV_TAGS.functionality)) {
               const card = (
-                <Card
+                <MotionCard
                   key={feat.id}
                   className="aspect-square w-full hover:shadow-md transition-shadow duration-200 flex flex-col items-center justify-center overflow-hidden p-0 px-2 md:px-4 gap-2"
                 >
@@ -129,7 +129,7 @@ export default function VisionToolsPage() {
                   <p className="text-xs text-slate-500 text-center">
                     {feat.description}
                   </p>
-                </Card>
+                </MotionCard>
               );
 
               // Si no hay imagen, abrimos diálogo de carga

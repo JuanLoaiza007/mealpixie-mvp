@@ -16,16 +16,12 @@ import {
 } from "@/config/gemini/feature-instarecipe";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { InstaRecipeButton } from "@/components/ui/features/vision/insta-recipe/InstaRecipeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+import { UtensilsCrossed, ScrollText } from "lucide-react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 const NUM_VISION_REQUESTS = 5;
 
@@ -81,17 +77,17 @@ export default function IngredientsRecipePage() {
   }, [setTitle]);
 
   /**
-  * Analyzes an image to detect ingredients and generate suggested recipes.
-  *
-  * @async
-  * @throws {Error} If an error occurs during vision analysis or generation of the final response.
-  * @returns {Promise<void>} Resolves when the vision analysis and response generation are complete.
-  *
-  * @example
-  * analyzeImage().then(() => {
-  *   console.log("Analysis completed");
-  * });
-  */
+   * Analyzes an image to detect ingredients and generate suggested recipes.
+   *
+   * @async
+   * @throws {Error} If an error occurs during vision analysis or generation of the final response.
+   * @returns {Promise<void>} Resolves when the vision analysis and response generation are complete.
+   *
+   * @example
+   * analyzeImage().then(() => {
+   *   console.log("Analysis completed");
+   * });
+   */
   const analyzeIngredients = useCallback(async () => {
     if (!imageUrl) return;
     setError(null);
@@ -155,51 +151,48 @@ export default function IngredientsRecipePage() {
             imageUrl={imageUrl}
             alt="Analysis Image"
           >
-            <InstaRecipeButton
+            <ActionAnimatedButton
               onClick={analyzeIngredients}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Generar receta con estos ingredientes"
+              visionLoadingText="Analizando ingredientes {{phase}}/{{total}}"
+              textLoadingText="Generando recetas"
             />
           </ImagePreviewCard>
 
           {!finalResult ? (
             <InstructionCard functionInfo={functionInfo} />
           ) : (
-            process.env.NODE_ENV === "development" && (
-              <PredictionCard
-                finalResult={finalResult}
-                showPredictions={showPredictions}
-                toggle={togglePreds}
-                visionOutputs={visionOutputs}
-              />
-            )
+            <InstructionCard functionInfo={functionInfo} />
           )}
         </section>
 
         <section className="flex flex-col gap-2">
           {error && (
-            <Card>
+            <MotionCard>
               <CardHeader>
                 <CardTitle>Error</CardTitle>
               </CardHeader>
               <CardContent>{error}</CardContent>
-            </Card>
+            </MotionCard>
           )}
 
           {!error && finalResult && !finalResult.isFoodDetected && (
-            <Card>
+            <MotionCard>
               <CardHeader>
                 <CardTitle>No se detectaron ingredientes</CardTitle>
               </CardHeader>
               <CardContent>{finalResult.message}</CardContent>
-            </Card>
+            </MotionCard>
           )}
 
           {!error && finalResult && finalResult.isFoodDetected && (
             <>
-              <Card>
-                <CardHeader>
+              <MotionCard>
+                <CardHeader className="flex items-center gap-2">
+                  <UtensilsCrossed className="text-orange-600" />
                   <CardTitle>Ingredientes</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -209,10 +202,11 @@ export default function IngredientsRecipePage() {
                     ))}
                   </ul>
                 </CardContent>
-              </Card>
+              </MotionCard>
 
-              <Card>
-                <CardHeader>
+              <MotionCard>
+                <CardHeader className="flex items-center gap-2">
+                  <ScrollText className="text-orange-600" />
                   <CardTitle>Recetas</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -224,7 +218,7 @@ export default function IngredientsRecipePage() {
                     ))}
                   </ul>
                 </CardContent>
-              </Card>
+              </MotionCard>
             </>
           )}
         </section>

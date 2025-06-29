@@ -1,5 +1,12 @@
 // components/ui/features/vision/size-sage/SizeSageResultItem.jsx
 import React from "react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
+import {
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 /**
  * Displays measurement results for a detected item with a reference object.
@@ -39,27 +46,27 @@ export function SizeSageResultItem({
   volumen_cm3 = 0,
 }) {
   return (
-    <div className="flex flex-col justify-center items-start bg-gray-100 rounded-lg p-4 space-y-2">
-      <h4 className="text-base font-semibold text-orange-500">
-        {item}
-      </h4>
-      <p className="text-sm text-gray-700">
-        <span className="font-medium">Referencia:</span> {object}
-      </p>
-      <div className="text-gray-800">
-        <p>
-          <span className="font-medium">Largo:</span> {largo_cm.toFixed(2)} cm
-        </p>
-        <p>
-          <span className="font-medium">Ancho:</span> {ancho_cm.toFixed(2)} cm
-        </p>
-        <p>
-          <span className="font-medium">Alto:</span> {alto_cm.toFixed(2)} cm
-        </p>
-      </div>
-      <p className="text-lg font-bold text-gray-900">
-        Volumen: {volumen_cm3.toFixed(2)} cm³
-      </p>
-    </div>
+    <MotionCard className="flex flex-col p-4 space-y-2 gap-0">
+      <CardHeader className={"gap-0"}>
+        <CardTitle>⭐ {item}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription
+          className={`flex flex-col text-sm text-gray-900 gap-2`}
+        >
+          <p className="text-md font-semibold">
+            <span>Referencia:</span> {object}
+          </p>
+          <div className="flex flex-col gap-2 text-sm">
+            <span>Largo:{largo_cm.toFixed(2)} cm </span>
+            <span>Ancho:{ancho_cm.toFixed(2)} cm </span>
+            <span>Alto: {alto_cm.toFixed(2)} cm </span>
+          </div>
+          <p className="text-md font-bold ">
+            Volumen: {volumen_cm3.toFixed(2)} cm³
+          </p>
+        </CardDescription>
+      </CardContent>
+    </MotionCard>
   );
 }

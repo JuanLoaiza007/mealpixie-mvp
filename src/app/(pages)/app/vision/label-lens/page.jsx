@@ -19,11 +19,9 @@ import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { NAV_IDS, NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
-
-
 import { PortionCard } from "@/components/ui/features/vision/labellens/PortionCard";
 import { NutrientCard } from "@/components/ui/features/vision/labellens/NutrientCard";
-import { LabelLensButton } from "@/components/ui/features/vision/labellens/LabellensButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { VitaminCard } from "@/components/ui/features/vision/labellens/VitaminCard";
 import { IngredientsCard } from "@/components/ui/features/vision/labellens/IngredientsCard";
 import { ErrorCard } from "@/components/ui/features/vision/labellens/ErrorCard";
@@ -152,18 +150,24 @@ export default function NutritionOCRPage() {
             imageUrl={imageUrl}
             alt="Etiqueta Nutricional"
           >
-            <LabelLensButton
+            <ActionAnimatedButton
               onClick={analyzeOCR}
               loading={loading}
               phase={phase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Escanear etiqueta"
+              visionLoadingText="Extrayendo texto OCR {{phase}}/{{total}}"
+              textLoadingText="Analizando contenido nutricional"
             />
           </ImagePreviewCard>
           <InstructionCard functionInfo={functionInfo} />
         </section>
         <section className="flex flex-col gap-2">
           {error && (
-            <ErrorCard title="Error" message={`${error} Asegúrate de que la imagen esté clara y enfocada.`} />
+            <ErrorCard
+              title="Error"
+              message={`${error} Asegúrate de que la imagen esté clara y enfocada.`}
+            />
           )}
 
           {finalResult?.isValidLabel && (
@@ -206,7 +210,10 @@ export default function NutritionOCRPage() {
           )}
 
           {!finalResult?.isValidLabel && finalResult?.reasoning && (
-            <ErrorCard title="No se pudo interpretar la etiqueta" message={finalResult.reasoning} />
+            <ErrorCard
+              title="No se pudo interpretar la etiqueta"
+              message={finalResult.reasoning}
+            />
           )}
         </section>
       </div>

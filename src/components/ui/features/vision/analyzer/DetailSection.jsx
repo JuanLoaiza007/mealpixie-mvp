@@ -1,17 +1,18 @@
 "use client";
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 import { CheckCircle, AlertTriangle } from "lucide-react";
 
 export function DetailSection({ finalResult }) {
   return (
     <>
       <div className="grid grid-cols-2 gap-2">
-        <Card className="gap-0">
+        <MotionCard className="gap-0">
           <CardHeader className="px-4" data-testid="advantages-header">
             <CardTitle>
-              <h2 className="text-sm md:text-md flex items-center text-orange-500">
-                <CheckCircle className="mr-2" /> Ventajas
+              <h2 className="text-base text-foreground flex items-center">
+                <CheckCircle className="mr-2 text-orange-600" /> Ventajas
               </h2>
             </CardTitle>
           </CardHeader>
@@ -24,13 +25,13 @@ export function DetailSection({ finalResult }) {
               ))}
             </ul>
           </CardContent>
-        </Card>
+        </MotionCard>
 
-        <Card className="gap-0">
+        <MotionCard className="gap-0">
           <CardHeader className="px-4" data-testid="disadvantages-header">
             <CardTitle>
-              <h2 className="text-sm md:text-md flex items-center text-orange-500">
-                <AlertTriangle className="mr-2" /> Desventajas
+              <h2 className="text-base text-foreground flex items-center ">
+                <AlertTriangle className="mr-2 text-orange-600" /> Desventajas
               </h2>
             </CardTitle>
           </CardHeader>
@@ -43,7 +44,7 @@ export function DetailSection({ finalResult }) {
               ))}
             </ul>
           </CardContent>
-        </Card>
+        </MotionCard>
       </div>
     </>
   );

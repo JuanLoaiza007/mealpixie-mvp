@@ -16,13 +16,14 @@ import {
 } from "@/config/gemini/feature-analyzer";
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { AnalyzeButton } from "@/components/ui/features/vision/analyzer/AnalyzeButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { DetailSection } from "@/components/ui/features/vision/analyzer/DetailSection";
 import { NutritionSection } from "@/components/ui/features/vision/analyzer/NutritionSection";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 const NUM_VISION_REQUESTS = 3;
 
@@ -122,11 +123,14 @@ export default function AnalyzerPage() {
             imageUrl={imageUrl}
             alt="Analysis Image"
           >
-            <AnalyzeButton
+            <ActionAnimatedButton
               onClick={analyzeImage}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
+              defaultText="Analizar imagen"
+              visionLoadingText="Analizando con modelo de visión {{phase}}/{{total}}"
+              textLoadingText="Organizando información"
             />
           </ImagePreviewCard>
 
@@ -144,12 +148,12 @@ export default function AnalyzerPage() {
 
         <section className="flex flex-col gap-2">
           {error && (
-            <Card>
+            <MotionCard>
               <CardHeader>
                 <CardTitle>Error</CardTitle>
               </CardHeader>
               <CardContent>{error}</CardContent>
-            </Card>
+            </MotionCard>
           )}
 
           {finalResult && finalResult.isFood && (

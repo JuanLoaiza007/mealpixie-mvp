@@ -1,7 +1,9 @@
 // components/ui/features/vision/fresh-sense/FreshSenseResultsList.jsx
-import React from 'react';
-import { FreshSenseResultItem } from '@/components/ui/features/vision/fresh-sense/FreshSenseResultItem';
-
+import React from "react";
+import { FreshSenseResultItem } from "@/components/ui/features/vision/fresh-sense/FreshSenseResultItem";
+import { Utensils } from "lucide-react";
+import { MotionCard } from "../../common/MotionCard";
+import { CardHeader } from "@/components/ui/card";
 
 /**
  * Renders a list of FreshSenseResultItem components for given vision analysis results.
@@ -34,10 +36,15 @@ export function FreshSenseResultsList({ results }) {
   if (!results || results.length === 0) return null;
 
   return (
-    <div className="w-full rounded-lg border border-gray-300 bg-white p-6">
-      <h3 className="text-lg font-semibold text-orange-500 mb-4">
-        Ingredientes
-      </h3>
+    <>
+      <MotionCard>
+        <CardHeader>
+          <h2 className="text-base text-foreground font-bold flex item-center gap-2">
+            <Utensils className="text-orange-600" />
+            Ingredientes
+          </h2>
+        </CardHeader>
+      </MotionCard>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {results.map((r, idx) => (
           <FreshSenseResultItem
@@ -48,6 +55,6 @@ export function FreshSenseResultsList({ results }) {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }

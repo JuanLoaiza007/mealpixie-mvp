@@ -19,13 +19,12 @@ import {
 
 import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
-import { SizeSageButton } from "@/components/ui/features/vision/size-sage/SizeSageButton";
+import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
-
 import { SizeSageMessageCard } from "@/components/ui/features/vision/size-sage/SizeSageMessageCard";
 import { SizeSageResultsList } from "@/components/ui/features/vision/size-sage/SizeSageResultsList";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
@@ -190,25 +189,18 @@ export default function SizeSagePage() {
         {/* ============================= */}
         <section className="flex flex-col gap-2">
           <ImagePreviewCard imageUrl={imageUrl} alt="SizeSage Image">
-            <SizeSageButton
+            <ActionAnimatedButton
               onClick={analyzeImage}
               loading={loading}
               phase={analysisPhase}
               total={NUM_VISION_REQUESTS}
-              disabled={loading.vision || loading.text}
+              defaultText="Estimar tamaño"
+              visionLoadingText="Generando hipótesis de tamaño {{phase}}/{{total}}"
+              textLoadingText="Generando respuesta final"
             />
           </ImagePreviewCard>
 
-          {!finalResult ? (
-            <InstructionCard functionInfo={functionInfo} />
-          ) : (
-            <PredictionCard
-              finalResult={finalResult}
-              showPredictions={showPredictions}
-              toggle={togglePreds}
-              visionOutputs={visionOutputs}
-            />
-          )}
+          <InstructionCard functionInfo={functionInfo} />
         </section>
 
         {/* ============================= */}
@@ -216,12 +208,12 @@ export default function SizeSagePage() {
         {/* ============================= */}
         <section className="flex flex-col gap-2">
           {error && (
-            <Card>
+            <MotionCard>
               <CardHeader>
                 <CardTitle>Error</CardTitle>
               </CardHeader>
               <CardContent>{error}</CardContent>
-            </Card>
+            </MotionCard>
           )}
 
           {finalResult ? (

@@ -1,5 +1,6 @@
 // components/ui/features/vision/fresh-sense/FreshSenseResultItem.jsx
-import React from 'react';
+import React from "react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 /**
  * Displays a result item with its label, assessment text, and an associated icon.
@@ -32,16 +33,14 @@ import React from 'react';
  */
 export function FreshSenseResultItem({ item, assessment, icon }) {
   return (
-    <div className="flex justify-between items-center bg-gray-100 rounded-lg p-4">
+    <MotionCard className="flex justify-between items-center p-4">
       <div className="flex-1">
-        <h4 className="text-base font-semibold text-orange-500 mb-1">
-          {item}
-        </h4>
+        <h4 className="text-base text-foreground font-semibold">⭐ {item}</h4>
         <p className="text-sm text-gray-700">{assessment}</p>
       </div>
       <div className="ml-4 flex-shrink-0">
         <span className="text-2xl">{icon}</span>
       </div>
-    </div>
+    </MotionCard>
   );
 }
