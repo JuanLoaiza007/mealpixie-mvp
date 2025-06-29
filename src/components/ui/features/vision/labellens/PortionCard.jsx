@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
 import { Cookie, HelpCircle } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 /**
  * Displays a card containing the portion size information extracted from a label, or a fallback message if unavailable.
@@ -18,41 +18,21 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
  */
 export function PortionCard({ portion }) {
   return (
-    <motion.div
-      className="w-fit max-w-sm"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-    >
-
-      <Card className="min-h-[60px] w-sm flex flex-col justify-between">
-        <CardHeader className="flex flex-row items-center gap-2">
-          <Cookie className="w-5 h-5 text-orange-500" />
-          <CardTitle>Porción</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          {portion ? (
-            <motion.p
-              key="portion"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              {portion}
-            </motion.p>
-          ) : (
-            <motion.div
-              key="no-portion"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center gap-2 text-yellow-600"
-            >
-              <HelpCircle className="w-4 h-4" />
-              <span>No se encontró el tamaño de la porción en la etiqueta.</span>
-            </motion.div>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
+    <MotionCard className="min-h-[60px] w-sm flex flex-col justify-between">
+      <CardHeader className="flex flex-row items-center gap-2">
+        <Cookie className="w-5 h-5 text-orange-500" />
+        <CardTitle>Porción</CardTitle>
+      </CardHeader>
+      <CardContent className="text-sm text-muted-foreground">
+        {portion ? (
+          <p>{portion}</p>
+        ) : (
+          <div className="flex items-center gap-2 text-yellow-600">
+            <HelpCircle className="w-4 h-4" />
+            <span>No se encontró el tamaño de la porción en la etiqueta.</span>
+          </div>
+        )}
+      </CardContent>
+    </MotionCard>
   );
 }

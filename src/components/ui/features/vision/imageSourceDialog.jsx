@@ -1,4 +1,3 @@
-// components/modals/ImageSourceDialog.jsx
 import {
   Dialog,
   DialogContent,

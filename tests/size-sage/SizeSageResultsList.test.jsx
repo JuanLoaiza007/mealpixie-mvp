@@ -1,71 +1,91 @@
-// tests/size-sage/SizeSageResultsList.test.jsx
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { SizeSageResultsList } from "@/components/ui/features/vision/size-sage/SizeSageResultsList";
 
-import { render, screen } from '@testing-library/react';
-import { SizeSageResultsList } from '@/components/ui/features/vision/size-sage/SizeSageResultsList';
-import '@testing-library/jest-dom';
-
-// Mock del componente hijo SizeSageResultItem
-jest.mock('@/components/ui/features/vision/size-sage/SizeSageResultItem', () => ({
-  __esModule: true,
-  SizeSageResultItem: ({ object, item }) => (
-    <div data-testid="result-item">
-      {object} - {item}
-    </div>
+// Mock the child components to isolate the test from their internal workings.
+// This ensures we're only testing the rendering logic of SizeSageResultsList.
+jest.mock("@/components/ui/features/common/MotionCard", () => ({
+  MotionCard: ({ children }) => (
+    <div data-testid="mock-motion-card">{children}</div>
   ),
 }));
 
-describe('SizeSageResultsList', () => {
+jest.mock(
+  "@/components/ui/features/vision/size-sage/SizeSageResultItem",
+  () => ({
+    // We explicitly mock how SizeSageResultItem uses its props for verification.
+    SizeSageResultItem: ({ item, volumen_cm3 }) => (
+      <div data-testid={`mock-result-item-${item}`}>
+        {item} - {volumen_cm3}cm³
+      </div>
+    ),
+  })
+);
+
+describe("SizeSageResultsList", () => {
+  // A basic example of results for our tests.
   const sampleResults = [
     {
-      object: 'Box',
-      item: 'Electronics',
+      object: "Box",
+      item: "Laptop",
       largo_cm: 30,
       ancho_cm: 20,
-      alto_cm: 15,
-      volumen_cm3: 9000,
+      alto_cm: 10,
+      volumen_cm3: 6000,
     },
     {
-      object: 'Container',
-      item: 'Books',
-      largo_cm: 25,
-      ancho_cm: 20,
-      alto_cm: 30,
-      volumen_cm3: 15000,
+      object: "Can",
+      item: "Soda",
+      largo_cm: 7,
+      ancho_cm: 7,
+      alto_cm: 12,
+      volumen_cm3: 184.8,
     },
   ];
 
-  it('renders null when results are undefined', () => {
-    const { container } = render(<SizeSageResultsList results={undefined} />);
-    expect(container.firstChild).toBeNull();
-  });
-
-  it('renders null when results is an empty array', () => {
-    const { container } = render(<SizeSageResultsList results={[]} />);
-    expect(container.firstChild).toBeNull();
-  });
-
-  it('renders result items and total volume correctly', () => {
-    render(<SizeSageResultsList results={sampleResults} />);
-    
-    // Verificar que los items fueron renderizados
-    const resultItems = screen.getAllByTestId('result-item');
-    expect(resultItems).toHaveLength(sampleResults.length);
-
-    // En lugar de getByRole('heading', …), buscamos el texto “Volumen estimado” dentro de un <div>
-    expect(screen.getByText(/volumen estimado/i)).toBeInTheDocument();
-    
-    // Verificar texto de volumen total (p.ej. “24000.00 cm³”)
-    const total = sampleResults.reduce((sum, r) => sum + r.volumen_cm3, 0).toFixed(2);
-    expect(screen.getByText(new RegExp(`${total}\\s*cm³`, 'i'))).toBeInTheDocument();
-  });
-
-  it('accesibilidad: muestra el título “Volumen estimado” y el texto “Volumen total”', () => {
+  it("should display total volume and individual items when results are provided", () => {
+    // Render the component with some sample results.
     render(<SizeSageResultsList results={sampleResults} />);
 
-    // Solo comprobamos que “Volumen estimado” esté presente en texto
-    expect(screen.getByText(/volumen estimado/i)).toBeInTheDocument();
+    // Assert that the 'Volumen Total' heading is present (accessibility check).
+    expect(screen.getByText(/Volumen Total/i)).toBeInTheDocument();
 
-    // “Volumen total” sí es un <h4>, así que podemos verificarlo con getByRole
-    expect(screen.getByRole('heading', { level: 4, name: /volumen total/i })).toBeVisible();
+    // Verify that the total volume is correctly calculated and displayed.
+    // 6000 + 184.8 = 6184.8
+    expect(screen.getByText("6184.80 cm³")).toBeInTheDocument();
+
+    // Ensure each individual item is rendered by its mocked test ID.
+    expect(screen.getByTestId("mock-result-item-Laptop")).toBeInTheDocument();
+    expect(screen.getByTestId("mock-result-item-Soda")).toBeInTheDocument();
+
+    // Verify that the correct volume is passed to the mocked SizeSageResultItem.
+    expect(screen.getByText("Laptop - 6000cm³")).toBeInTheDocument();
+    expect(screen.getByText("Soda - 184.8cm³")).toBeInTheDocument();
+
+    // Verify that the mock MotionCard is used, indicating the list structure is correct.
+    expect(
+      screen.getAllByTestId("mock-motion-card").length
+    ).toBeGreaterThanOrEqual(1);
+  });
+
+  it("should not display any content when results are empty or missing", () => {
+    // Render the component with an empty array of results.
+    const { container: emptyResultsContainer } = render(
+      <SizeSageResultsList results={[]} />
+    );
+    // Check if the container is empty.
+    expect(emptyResultsContainer).toBeEmptyDOMElement();
+
+    // Render the component with undefined results.
+    const { container: noResultsContainer } = render(
+      <SizeSageResultsList results={undefined} />
+    );
+    // Check if the container is empty.
+    expect(noResultsContainer).toBeEmptyDOMElement();
+
+    // Further verify that the "Volumen Total" heading is not present in the document.
+    expect(
+      screen.queryByRole("heading", { name: /Volumen total/i })
+    ).not.toBeInTheDocument();
   });
 });

@@ -1,8 +1,8 @@
 "use client";
-import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign } from "lucide-react";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 /**
  * Displays a styled card with price information and affordability level for a given item.
@@ -27,30 +27,23 @@ import { DollarSign } from "lucide-react";
  * />
  */
 export function PriceCard({ field }) {
-
   return (
-	<motion.div
-	initial={{ opacity: 0, y: 12 }}
-	animate={{ opacity: 1, y: 0 }}
-	whileHover={{ scale: 1.03, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
-	whileTap={{ scale: 0.97 }}
-	transition={{ duration: 0.3, ease: "easeOut" }}
-	>
-	  <Card className="flex flex-col h-full shadow-md border border-border">
-		<CardHeader className="flex flex-row items-center justify-between gap-3 pb-2">
-		  <div className="flex items-center gap-3">
-			<DollarSign className="w-4 h-4" />
-			<CardTitle className="text-base text-foreground">{field.name}</CardTitle>
-		  </div>
-		  <Badge variant="success">{field.expensiveLevel}</Badge>
-		</CardHeader>
-		<CardContent className="text-sm text-muted-foreground">
-		  <p>
-			<span className="font-semibold text-foreground">Valor:</span>{" "}
-			{field.price}
-		  </p>
-		</CardContent>
-	  </Card>
-	</motion.div>
+    <MotionCard className="flex flex-col h-full shadow-md border border-border">
+      <CardHeader className="flex flex-row items-center justify-between gap-3 pb-2">
+        <div className="flex items-center gap-3">
+          <DollarSign className="w-4 h-4 text-orange-600" />
+          <CardTitle className="text-base text-foreground">
+            {field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+          </CardTitle>
+        </div>
+        <Badge variant="success">{field.expensiveLevel}</Badge>
+      </CardHeader>
+      <CardContent className="text-sm text-muted-foreground">
+        <p>
+          <span className="font-semibold text-foreground">Valor:</span>{" "}
+          {field.price}
+        </p>
+      </CardContent>
+    </MotionCard>
   );
 }

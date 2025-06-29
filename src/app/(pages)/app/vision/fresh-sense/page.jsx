@@ -19,10 +19,10 @@ import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { FreshSenseResultsList } from "@/components/ui/features/vision/fresh-sense/FreshSenseResultsList";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 const NUM_VISION_REQUESTS = 6;
 
@@ -180,12 +180,12 @@ export default function FreshSensePage() {
         {/* Sección derecha: resultados procesados o razonamiento */}
         <section className="flex flex-col gap-2">
           {error && (
-            <Card>
+            <MotionCard>
               <CardHeader>
                 <CardTitle>Error</CardTitle>
               </CardHeader>
               <CardContent>{error}</CardContent>
-            </Card>
+            </MotionCard>
           )}
 
           {finalResult && finalResult.isFreshnessDetected && (

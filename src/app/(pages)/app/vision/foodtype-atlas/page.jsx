@@ -20,12 +20,12 @@ import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnim
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
 import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import {
-  Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
 const NUM_VISION_REQUESTS = 5;
@@ -137,47 +137,27 @@ export default function FoodTypeAtlasPage() {
             />
           </ImagePreviewCard>
 
-          {!finalResult ? (
-            <InstructionCard functionInfo={functionInfo} />
-          ) : (
-            <>
-              {process.env.NODE_ENV === "development" && (
-                <PredictionCard
-                  finalResult={finalResult}
-                  showPredictions={showPredictions}
-                  toggle={togglePreds}
-                  visionOutputs={visionOutputs}
-                />
-              )}
-            </>
-          )}
+          <InstructionCard functionInfo={functionInfo} />
         </section>
 
         <section className="flex flex-col gap-2">
           {error && (
-            <Card>
+            <MotionCard>
               <CardHeader>
                 <CardTitle>Error</CardTitle>
               </CardHeader>
               <CardContent>{error}</CardContent>
-            </Card>
-          )}
-
-          {finalResult && !finalResult.isFoodDetected && (
-            <Card>
-              <CardHeader>
-                <CardTitle>No se detectaron alimentos</CardTitle>
-              </CardHeader>
-              <CardContent>{finalResult.message}</CardContent>
-            </Card>
+            </MotionCard>
           )}
 
           {finalResult && finalResult.isFoodDetected && (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
               {finalResult.classifications.map((c, i) => (
-                <Card className={"gap-2 justify-between"}>
+                <MotionCard className={"gap-2 justify-between"}>
                   <CardHeader className={"text-orange-500"}>
-                    <CardTitle>{c.type}</CardTitle>
+                    <CardTitle className={"text-base text-foreground"}>
+                      🧬 {c.type}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-center">
@@ -192,7 +172,7 @@ export default function FoodTypeAtlasPage() {
                   <CardFooter>
                     <p className="text-xs">{c.definition}</p>
                   </CardFooter>
-                </Card>
+                </MotionCard>
               ))}
             </div>
           )}

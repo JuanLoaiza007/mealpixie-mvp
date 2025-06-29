@@ -21,10 +21,10 @@ import Screen from "@/components/ui/features/common/Screen";
 import ImagePreviewCard from "@/components/ui/features/common/ImagePreviewCard";
 import { ActionAnimatedButton } from "@/components/ui/features/common/ActionAnimatedButton";
 import { InstructionCard } from "@/components/ui/features/common/InstructionCard";
-import { PredictionCard } from "@/components/ui/features/common/PredictionCard";
 import { SizeSageMessageCard } from "@/components/ui/features/vision/size-sage/SizeSageMessageCard";
 import { SizeSageResultsList } from "@/components/ui/features/vision/size-sage/SizeSageResultsList";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { MotionCard } from "@/components/ui/features/common/MotionCard";
 
 import { NAV_TAGS, NAV_IDS, userNavRoutes } from "@/config/userNavRoutes";
 
@@ -208,12 +208,12 @@ export default function SizeSagePage() {
         {/* ============================= */}
         <section className="flex flex-col gap-2">
           {error && (
-            <Card>
+            <MotionCard>
               <CardHeader>
                 <CardTitle>Error</CardTitle>
               </CardHeader>
               <CardContent>{error}</CardContent>
-            </Card>
+            </MotionCard>
           )}
 
           {finalResult ? (
