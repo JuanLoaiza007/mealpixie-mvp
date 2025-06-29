@@ -1,6 +1,5 @@
 import { Type } from "@google/genai";
 
-
 /**
  * Defines the JSON schema for validating the structure of a consolidated food price analysis response.
  *
@@ -32,9 +31,8 @@ export const SYSTEM_INSTRUCTIONS = `
 Eres un asistente experto en análisis de precios de alimentos. Tu rol consiste en analizar información proveniente de una imagen de uno o varios alimentos. Recibirás varias versiones de texto extraídas por un sistema de reconocimiento de imagenes.
 
 Tu respuesta debe considerar todas las predicciones recibidas para generar una respuesta. 
-Nunca debes mencionar que hubo varias predicciones ni mostrar inconsistencias al usuario. Si el alimento es irreconocible o no es real, debes indicarlo explícitamente.
+Nunca debes mencionar que hubo varias predicciones ni mostrar inconsistencias al usuario. Si el alimento es irreconocible o no es real, debes indicarlo explícitamente. El precio debe estar en pesos colombianos y considerar la situación actual del país.
 `;
-
 
 export const TASK = `
 Recibirás múltiples versiones del texto extraído mediante reconocimiento de imagenes desde la misma fotografía.
@@ -79,26 +77,24 @@ export const RESPONSE_SCHEMA = {
   type: Type.OBJECT,
   required: ["isValidLabel", "foods", "multipleFoods", "totalPrice"],
   properties: {
-	isValidLabel: { type: Type.BOOLEAN },
-	reasoning: { type: Type.STRING },
-	foods: {
-	  type: Type.ARRAY,
-	  items: {
-		type: Type.OBJECT,
-		required: ["name", "price", "expensiveLevel"],
-		properties: {
-		  name: { type: Type.STRING },
-		  price: { type: Type.STRING },
-		  expensiveLevel: {
-			type: Type.STRING,
-			enum: ["$", "$$", "$$$"],
-		  },
-		},
-	  },
-	},
-	multipleFoods: { type: Type.BOOLEAN },
-	totalPrice: { type: Type.STRING }
+    isValidLabel: { type: Type.BOOLEAN },
+    reasoning: { type: Type.STRING },
+    foods: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        required: ["name", "price", "expensiveLevel"],
+        properties: {
+          name: { type: Type.STRING },
+          price: { type: Type.STRING },
+          expensiveLevel: {
+            type: Type.STRING,
+            enum: ["$", "$$", "$$$"],
+          },
+        },
+      },
+    },
+    multipleFoods: { type: Type.BOOLEAN },
+    totalPrice: { type: Type.STRING },
   },
 };
-
-
