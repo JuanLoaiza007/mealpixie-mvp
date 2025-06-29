@@ -63,9 +63,9 @@ export function SizeSageResultsList({ results }) {
   return (
     <>
       {/* Total de volumenes */}
-      <MotionCard className="p-4">
-        <CardHeader>
-          <CardTitle>
+      <MotionCard className="p-4 gap-2">
+        <CardHeader className={"gap-0"}>
+          <CardTitle className={"gap-0"}>
             <h2 className="text-base text-foreground flex item-center gap-2 font-semibold">
               <Box className="text-orange-600" />
               Volumen total

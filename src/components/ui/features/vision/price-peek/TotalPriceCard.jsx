@@ -24,7 +24,7 @@ export function TotalPriceCard({ total }) {
     <MotionCard className="flex flex-col h-full shadow-md border border-border">
       <CardHeader className="flex flex-row items-center justify-between gap-3 pb-2">
         <div className="flex items-center gap-3">
-          <ScrollText className="w-4 h-4" />
+          <ScrollText className="w-4 h-4 text-orange-600" />
           <CardTitle className="text-base text-foreground">
             Valor Total
           </CardTitle>
