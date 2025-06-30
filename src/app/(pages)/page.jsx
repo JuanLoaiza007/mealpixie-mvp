@@ -13,13 +13,34 @@ import {
   ArrowRight,
   Users,
   Target,
-  CheckCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { assets } from "@/assets/assets";
+import { APP_NAME } from "@/config/constantsApp";
+import { NAV_TAGS, userNavRoutes } from "@/config/userNavRoutes";
 
+/**
+ * Renders the main landing page of the application, showcasing features, target audience, and navigation.
+ *
+ * @component
+ * @remarks
+ * - Uses `framer-motion` for animation effects on scroll and load.
+ * - Tracks scroll state with `useEffect` and updates the header background accordingly.
+ * - Includes smooth-scrolling behavior for navigation buttons.
+ * - Depends on constants and assets from configuration and design modules.
+ * @returns {JSX.Element} The complete landing page layout including header, hero, problem, audience, features, and footer sections.
+ * @example
+ * // Used as the root component for the landing page
+ * export default function HomePage() {
+ *   return <Home />;
+ * }
+ */
 export default function Home() {
+  const APP_MAIN_ROUTE = userNavRoutes.find((route) =>
+    route.tags.includes(NAV_TAGS.mainPage)
+  );
+  const getStartedRoute = APP_MAIN_ROUTE?.href;
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -30,13 +51,16 @@ export default function Home() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const sectionVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 },
-  };
-
-  const handleGetStarted = () => {
-    window.alert("Coming soon!");
   };
 
   return (
@@ -46,55 +70,59 @@ export default function Home() {
         className={`
           fixed top-0 left-0 right-0 z-50
           transition-colors backdrop-blur
-          ${
-            scrolled
-              ? "bg-background/50 supports-[backdrop-filter]:bg-background/30 border-b"
-              : "bg-transparent border-none"
+          ${scrolled
+            ? "bg-background/150 supports-[backdrop-filter]:bg-background/85 border-b"
+            : "bg-transparent border-none"
           }
         `}
       >
-        <div className="container flex h-16 items-center justify-between p-4">
-          <div className="flex items-center gap-2 font-bold text-xl">
+        <div className="flex h-16 items-center justify-between p-4">
+          <Link
+            className="flex items-center gap-2 font-bold text-xl select-none"
+            href="/"
+          >
             <img
               src={assets.logo}
-              alt="MealPixie Logo"
+              alt="{APP_NAME} Logo"
               className="h-10 w-10 object-contain"
+              draggable={false}
             />
-            <span className="text-orange-500">MealPixie</span>
-          </div>
+            <span className="text-orange-500">{APP_NAME}</span>
+          </Link>
           <nav className="flex items-center gap-4">
             <div className="hidden md:flex gap-4">
-              <Link
-                href="#features"
+              <button
+                onClick={() => scrollTo("features")}
                 className="text-sm font-medium hover:underline"
               >
                 Funciones
-              </Link>
-              <Link
-                href="#audience"
+              </button>
+              <button
+                onClick={() => scrollTo("audience")}
                 className="text-sm font-medium hover:underline"
               >
-                Para quién
-              </Link>
-              <Link
-                href="#problem"
+                Para quién?
+              </button>
+              <button
+                onClick={() => scrollTo("problem")}
                 className="text-sm font-medium hover:underline"
               >
                 Problema
-              </Link>
+              </button>
             </div>
-            <Button
-              variant="default"
-              className="bg-orange-500 hover:bg-orange-600"
-              onClick={handleGetStarted}
-            >
-              Comenzar
-            </Button>
+            <Link className="flex items-center gap-2 pointer-none:" href={getStartedRoute}>
+              <Button
+                variant="default"
+                className="bg-orange-500 hover:bg-orange-600"
+              >
+                Comenzar
+              </Button>
+            </Link>
           </nav>
         </div>
       </header>
 
-      <main className="flex-1 py-14">
+      <main className="flex-1 py-14 bg-white">
         {/* Hero Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -113,20 +141,20 @@ export default function Home() {
                 Conoce tu comida al instante
               </span>
               <h1 className="text-3xl font-bold sm:text-5xl md:text-6xl">
-                MealPixie
+                {APP_NAME}
               </h1>
               <p className="text-xl text-muted-foreground">
                 Tu asistente nutricional visual e instantáneo. Fotografía tu
                 comida y obtén información al momento.
               </p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button
-                  className="bg-orange-500 hover:bg-orange-600 flex items-center"
-                  onClick={handleGetStarted}
-                >
+              <Link
+                className="flex flex-col sm:flex-row gap-2"
+                href={getStartedRoute}
+              >
+                <Button className="bg-orange-500 hover:bg-orange-600 flex items-center">
                   Probar ahora <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </div>
+              </Link>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -136,7 +164,7 @@ export default function Home() {
             >
               <img
                 src={assets.demo}
-                alt="MealPixie App Demo"
+                alt="{APP_NAME} App Demo"
                 className="relative w-[80%] md:w-full max-w-md overflow-hidden rounded-xl border shadow-xl"
               />
             </motion.div>
@@ -153,7 +181,7 @@ export default function Home() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="flex-1 bg-white md:min-h-[calc(100vh-10rem)] text-center items-center"
         >
-          <div className="container px-4 md:px-40">
+          <div className="px-4 md:px-40">
             <div className="flex flex-col items-center text-center space-y-6 py-10 md:py-20">
               <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl pt-10">
                 El Problema
@@ -197,10 +225,10 @@ export default function Home() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="py-12 bg-orange-50 md:min-h-[calc(100vh-10rem)]"
         >
-          <div className="container px-4 md:px-40">
+          <div className="px-4 md:px-40">
             <div className="flex flex-col items-center text-center space-y-6">
               <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl pt-14">
-                ¿Para quién es MealPixie?
+                ¿Para quién es {APP_NAME}?
               </h2>
               <p className="max-w-lg text-muted-foreground md:text-xl">
                 Nuestra aplicación está diseñada para diversos perfiles de
@@ -225,10 +253,10 @@ export default function Home() {
                       {role === "Saludables"
                         ? "Quienes buscan info rápida sin tracking detallado."
                         : role === "Curiosos nutricionales"
-                        ? "Quieren aprender más sobre su comida."
-                        : role === "Estudiantes y educadores"
-                        ? "Herramienta didáctica para analizar alimentos."
-                        : "Analizar productos en el supermercado rápidamente."}
+                          ? "Quieren aprender más sobre su comida."
+                          : role === "Estudiantes y educadores"
+                            ? "Herramienta didáctica para analizar alimentos."
+                            : "Analizar productos en el supermercado rápidamente."}
                     </p>
                   </div>
                 ))}
@@ -247,13 +275,13 @@ export default function Home() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="py-12 bg-white"
         >
-          <div className="container px-4 md:px-40">
+          <div className="px-4 md:px-40">
             <div className="flex flex-col items-center text-center space-y-6 pt-14">
               <h2 className="text-3xl font-bold sm:text-4xl md:text-5xl">
                 Funcionalidades
               </h2>
               <p className="max-w-lg text-muted-foreground md:text-xl">
-                MealPixie ofrece múltiples herramientas para analizar tus
+                {APP_NAME} ofrece múltiples herramientas para analizar tus
                 alimentos al instante.
               </p>
               <div className="flex flex-col sm:flex-row flex-wrap gap-6 justify-center">
@@ -318,17 +346,17 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="w-full border-t py-6 bg-black text-white">
-        <div className="container flex flex-col md:flex-row items-center justify-between px-4 gap-4 md:px-10">
+        <div className="flex flex-col md:flex-row items-center justify-between px-4 gap-4 md:px-10">
           <div className="flex items-center gap-2 font-bold">
             <img
               src={assets.logo}
-              alt="MealPixie Logo"
+              alt="{APP_NAME} Logo"
               className="h-10 w-10 object-contain"
             />
-            <span>MealPixie</span>
+            <span>{APP_NAME}</span>
           </div>
           <p className="text-center text-sm text-muted-foreground md:text-left">
-            © 2025 MealPixie. Todos los derechos reservados.
+            © 2025 {APP_NAME}. Todos los derechos reservados.
           </p>
         </div>
       </footer>
